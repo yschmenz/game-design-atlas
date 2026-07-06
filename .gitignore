@@ -1,3 +1,6 @@
 node_modules/
 _site/
 .DS_Store
+# session recordings stay local — GitHub blocks files >100MB; link YouTube instead
+*.mp4
+*.mov
