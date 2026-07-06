@@ -43,6 +43,16 @@ the site generates the live version from the game folders).
 | The Witcher 3 | to-play | | |
 | The Witness | to-play | | |
 
+| DREDGE | playing | | |
+| Caves of Qud | playing | | |
+| Fallout: New Vegas | playing | | |
+| ANIMAL WELL | playing | | |
+| NORCO | playing | | |
+| SIGNALIS | playing | | |
+| Mouthwashing | to-play | | |
+| Diaries of a Spaceport Janitor | to-play | | |
+| Proteus | to-play | | |
+
 ## Rules of the queue
 
 - Finished recording findings? Set the game's `status: recorded` in its `index.md`.
