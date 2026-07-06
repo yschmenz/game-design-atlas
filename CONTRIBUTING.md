@@ -10,6 +10,7 @@
    - `topics`: from the 20 core topics, kebab-case (e.g. `[navigation, curiosity]`)
    - `patterns`: related prototyping principles (e.g. `[PP-02]`)
    - `author`: `schmenz` or `jachym`
+   - `date`: `YYYY-MM-DD`, optionally with time (`2026-07-06 23:00`) — time decides the order in "Latest entries" when several land on one day
 4. Below the frontmatter: total freedom. Text, images, YouTube links (they auto-embed, timestamps work).
    Long reference material (full transcripts, walkthroughs) goes in a collapsible block so the entry stays scannable:
    `<details><summary><strong>▸ title</strong></summary>` … `</details>`

@@ -7,7 +7,7 @@ topics: [adaptive-music, diegetic-vs-non-diegetic, spatial-audio, music-gameplay
 patterns: [GP-05, PP-11]
 prototypes: []
 author: schmenz
-date: 2026-07-06
+date: 2026-07-06 23:00
 status: done
 ---
 
