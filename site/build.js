@@ -104,6 +104,19 @@ function page(titleText, active, content, depth = 0) {
 const typeLabel = { 'reverse-engineering': 'Reverse Engineering', 'rebuild-fragment': 'Rebuild Fragment', 'topic-case-study': 'Case Study' };
 const chip = (txt, cls = '') => `<span class="chip ${cls}">${esc(txt)}</span>`;
 
+/* lookup maps so tags can link to their pages (cross-wing safe) */
+const topicWing = {}, patternRef = {};
+for (const w of wings) {
+  for (const t of w.topics) topicWing[t.slug] ??= w.slug;
+  for (const p of w.patterns) patternRef[p.meta.pattern] ??= { wing: w.slug, slug: p.slug };
+}
+const topicChip = (t, p) => topicWing[t]
+  ? `<a class="chip" href="${p}atlas/${topicWing[t]}/topics/${t}.html">${esc(title(t))}</a>`
+  : chip(title(t));
+const patternChip = (id, p) => patternRef[id]
+  ? `<a class="chip pp" href="${p}atlas/${patternRef[id].wing}/patterns/${patternRef[id].slug}.html">${esc(id)}</a>`
+  : chip(id, 'pp');
+
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
   const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort();
@@ -143,8 +156,13 @@ const chip = (txt, cls = '') => `<span class="chip ${cls}">${esc(txt)}</span>`;
       c.style.display = ok ? '' : 'none';
     });
   });</script>`;
+  const latest = allEntries.filter(e => e.meta.date)
+    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date))).slice(0, 5);
+  const feed = latest.length ? `<h2>Latest entries</h2><ul class="entry-list">` + latest.map(e =>
+    `<li><a href="games/${e.game.slug}/index.html#${e.slug}">${esc(e.meta.title)}</a>
+     <span class="dim">— ${esc(e.game.meta.title)}, ${esc(e.meta.author || '?')}, ${esc(e.meta.date)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></li>`).join('') + `</ul>` : '';
   write(path.join(OUT, 'index.html'), page('Games', 'games',
-    `<h1>The Games <span class="count">${games.length}</span></h1>${filters}<div class="grid">${cards}</div>${js}`));
+    `<h1>The Games <span class="count">${games.length}</span></h1>${feed}<h2>All games</h2>${filters}<div class="grid">${cards}</div>${js}`));
 })();
 
 /* ---------- game pages ---------- */
@@ -157,9 +175,10 @@ for (const g of games) {
     return `<article class="entry" id="${e.slug}">
       <div class="entry-head"><h2>${esc(e.meta.title || e.slug)}</h2>
       <div class="meta">${chip(typeLabel[e.meta.type] || e.meta.type, 'type')}
-      ${(e.meta.topics || []).map(t => chip(title(t))).join('')}
-      ${(e.meta.patterns || []).map(p => chip(p, 'pp')).join('')}
-      ${e.meta.author ? chip(e.meta.author, 'author') : ''}${e.meta.date ? chip(e.meta.date) : ''}</div></div>
+      ${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
+      ${(e.meta.patterns || []).map(p => patternChip(p, '../../')).join('')}
+      ${e.meta.author ? chip(e.meta.author, 'author') : ''}${e.meta.date ? chip(e.meta.date) : ''}
+      ${e.meta.status === 'draft' ? chip('draft', 'draft') : ''}</div></div>
       ${md2html(e.body)}${protos}</article>`;
   }).join('\n');
   const otherProtos = g.prototypes.filter(p => !g.entries.some(e => (e.meta.prototypes || []).includes(p)));

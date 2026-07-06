@@ -36,6 +36,9 @@ code { font: 14px monospace; background: var(--panel); padding: 1px 5px; border-
 .chip.st-to-play { color: var(--ink); background: var(--st-to-play); border: none; }
 .chip.st-playing { color: var(--bg); background: var(--st-playing); border: none; }
 .chip.st-recorded { color: var(--bg); background: var(--st-recorded); border: none; }
+.chip.draft { color: #c98a8a; border-color: #c98a8a; }
+a.chip { text-decoration: none; }
+a.chip:hover { border-color: var(--accent); color: var(--ink); }
 
 /* filters + grid */
 .filters { display: flex; flex-direction: column; gap: .3rem; margin: 1rem 0 1.5rem;
