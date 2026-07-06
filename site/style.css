@@ -55,6 +55,8 @@ a.chip:hover { border-color: var(--accent); color: var(--ink); }
 .card h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
 .card img.cover { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 7px;
   margin-bottom: .7rem; display: block; }
+.card img.cover.wide { aspect-ratio: 2/3; object-fit: cover; } /* header art cropped to match grid */
+img.cover-page.wide { width: 260px; aspect-ratio: 460/215; }
 img.cover-page { float: right; width: 170px; aspect-ratio: 2/3; object-fit: cover;
   border-radius: 10px; margin: 0 0 1rem 1.5rem; border: 1px solid var(--line); }
 @media (max-width: 640px) { img.cover-page { width: 110px; } }
