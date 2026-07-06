@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prototype — rename me</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #hud { position: fixed; top: 8px; left: 8px; color: #eee; font: 13px/1.4 monospace;
+         background: rgba(0,0,0,.5); padding: 6px 10px; border-radius: 6px; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="hud">WASD / arrows to move — describe your experiment here</div>
+<canvas id="c"></canvas>
+<script>
+// ============================================================
+// PROTOTYPE STARTER — one file, no build step, no engine.
+// Pattern: PP-?? — what question does this experiment answer?
+// ============================================================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const keys = {};
+addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+addEventListener('keyup',   e => keys[e.key.toLowerCase()] = false);
+
+const player = { x: 100, y: 100, r: 10, speed: 220 };
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  update(dt);
+  render();
+  requestAnimationFrame(loop);
+}
+
+function update(dt) {
+  let dx = (keys['d'] || keys['arrowright'] ? 1 : 0) - (keys['a'] || keys['arrowleft'] ? 1 : 0);
+  let dy = (keys['s'] || keys['arrowdown']  ? 1 : 0) - (keys['w'] || keys['arrowup']   ? 1 : 0);
+  const len = Math.hypot(dx, dy) || 1;
+  player.x += dx / len * player.speed * dt;
+  player.y += dy / len * player.speed * dt;
+}
+
+function render() {
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // --- your experiment goes here ---
+  ctx.fillStyle = '#e8e4d8';
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

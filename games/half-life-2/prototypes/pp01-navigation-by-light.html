@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PP-01 — Navigation by Light</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #hud { position: fixed; top: 8px; left: 8px; color: #cfc9b8; font: 13px/1.5 monospace;
+         background: rgba(0,0,0,.55); padding: 6px 10px; border-radius: 6px; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="hud">PP-01 Navigation by Light — no landmarks, no map, no objective marker.<br>
+WASD/arrows: move · L: toggle lights (the experiment) · reach the lit window</div>
+<canvas id="c"></canvas>
+<script>
+// EXPERIMENT: Remove every landmark. Can the player reach the destination
+// using only light sources? Press L to kill the lights and feel the difference.
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const keys = {};
+addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true;
+  if (e.key.toLowerCase() === 'l') lights = !lights; });
+addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+const W = 2400, H = 1800;                       // world size
+const player = { x: 200, y: H - 200, r: 9, speed: 260 };
+const goal   = { x: W - 260, y: 240 };          // the lit window
+let lights = true, won = false;
+
+// breadcrumb torches — a loose, imperfect line toward the goal
+const torches = [];
+for (let i = 1; i <= 6; i++) {
+  const t = i / 7;
+  torches.push({
+    x: player.x + (goal.x - player.x) * t + (Math.sin(i * 2.7) * 220),
+    y: player.y + (goal.y - player.y) * t + (Math.cos(i * 1.9) * 160),
+    phase: Math.random() * 6.28
+  });
+}
+
+let last = performance.now(), time = 0;
+function loop(now){
+  const dt = Math.min((now - last) / 1000, .05); last = now; time += dt;
+  if (!won) {
+    let dx = (keys['d']||keys['arrowright']?1:0) - (keys['a']||keys['arrowleft']?1:0);
+    let dy = (keys['s']||keys['arrowdown'] ?1:0) - (keys['w']||keys['arrowup']  ?1:0);
+    const len = Math.hypot(dx, dy) || 1;
+    player.x = Math.max(20, Math.min(W - 20, player.x + dx/len * player.speed * dt));
+    player.y = Math.max(20, Math.min(H - 20, player.y + dy/len * player.speed * dt));
+    if (Math.hypot(player.x - goal.x, player.y - goal.y) < 40) won = true;
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+function glow(x, y, r, color, alpha){
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, color.replace('A', alpha));
+  g.addColorStop(1, color.replace('A', 0));
+  ctx.fillStyle = g;
+  ctx.fillRect(x - r, y - r, r * 2, r * 2);
+}
+
+function render(){
+  // camera
+  const cx = Math.max(canvas.width/2,  Math.min(W - canvas.width/2,  player.x));
+  const cy = Math.max(canvas.height/2, Math.min(H - canvas.height/2, player.y));
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.translate(canvas.width/2 - cx, canvas.height/2 - cy);
+
+  if (lights) {
+    // torches flicker
+    for (const t of torches) {
+      const f = .8 + .2 * Math.sin(time * 7 + t.phase);
+      glow(t.x, t.y, 130 * f, 'rgba(255,150,40,A)', .35);
+      ctx.fillStyle = '#ffb347';
+      ctx.fillRect(t.x - 2, t.y - 8, 4, 8);
+    }
+    // the lit window
+    glow(goal.x, goal.y, 260, 'rgba(255,220,120,A)', .5);
+    ctx.fillStyle = '#ffe9a8';
+    ctx.fillRect(goal.x - 12, goal.y - 16, 24, 32);
+    ctx.strokeStyle = '#665c3a'; ctx.lineWidth = 3;
+    ctx.strokeRect(goal.x - 12, goal.y - 16, 24, 32);
+    ctx.beginPath(); ctx.moveTo(goal.x, goal.y - 16); ctx.lineTo(goal.x, goal.y + 16);
+    ctx.moveTo(goal.x - 12, goal.y); ctx.lineTo(goal.x + 12, goal.y); ctx.stroke();
+  }
+
+  // player: small lantern only — you always see a little
+  glow(player.x, player.y, 90, 'rgba(180,190,255,A)', .25);
+  ctx.fillStyle = '#e8e4d8';
+  ctx.beginPath(); ctx.arc(player.x, player.y, player.r, 0, 6.29); ctx.fill();
+
+  if (won) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = 'rgba(0,0,0,.6)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffe9a8';
+    ctx.font = '20px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('You found the window. Now press L off and try again — how lost do you feel?',
+      canvas.width/2, canvas.height/2);
+  }
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
