@@ -1,13 +1,13 @@
 ---
 title: <short title of the case study>
-game: <game-slug>
+game: the-norwood-suite
 type: topic-case-study
 wing: sound-design
-topics: [<primary-topic>]     # at least one of the 20 core topics
+topics: []     # from atlas/sound-design/topics/, e.g. [adaptive-music, soundscape-identity]
 patterns: []
 prototypes: []
-author: <schmenz | jachym>
-date: <YYYY-MM-DD>
+author: schmenz
+date: 2026-07-06
 status: draft
 ---
 
