@@ -33,7 +33,8 @@ Opening chapters — path to the village, mill tower, ice floes.
 6. **Calm arrival at the village** — realism; a distinct ramp reads as the exit from the village.
 7. **Path across the ice floes** — puzzle mechanic utilising physics, when player has to stand on one end of the ice floe to raise the other end and create a ramp - nice touch.
 
-## From the narrated recording (structured transcript)
+<details>
+<summary><strong>▸ Full walkthrough from the recording (structured transcript)</strong></summary>
 
 Jachym's commentary from the session recording, cleaned & structured — detail layer for the observations above.
 
@@ -52,6 +53,8 @@ Jachym's commentary from the session recording, cleaned & structured — detail 
 **Level 6 — Deníkovka village (obs. 6).** Very detailed environment, deliberately slow pacing — time to explore. The goal (the giant, exaggerated mill) is visible across impassable water; the last building before the dam has an **exaggerated ramp — plausible for the inhabitants, but really there to lead the player onto the water crossing**. A small shed midway confirms you're on the right path; landmarks + repeated dialogue lines keep pointing the direction.
 
 **Level 7 — ice floes (obs. 7).** Physics puzzle: stand on one end of a floe to raise the other into a ramp.
+
+</details>
 
 ### New threads from the recording (beyond the scribble)
 

@@ -11,6 +11,8 @@
    - `patterns`: related prototyping principles (e.g. `[PP-02]`)
    - `author`: `schmenz` or `jachym`
 4. Below the frontmatter: total freedom. Text, images, YouTube links (they auto-embed, timestamps work).
+   Long reference material (full transcripts, walkthroughs) goes in a collapsible block so the entry stays scannable:
+   `<details><summary><strong>▸ title</strong></summary>` … `</details>`
 5. Commit + push.
 
 ## Add a sketch
