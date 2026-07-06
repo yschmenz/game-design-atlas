@@ -1,6 +1,6 @@
 ---
 title: The Norwood Suite
-status: to-play
+status: playing
 added-by: schmenz
 steam: 696480
 recommended-by:
