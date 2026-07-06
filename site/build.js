@@ -124,12 +124,13 @@ function coverUrl(g, localPath) {
     copy(path.join(g.dir, 'cover.jpg'), path.join(OUT, 'games', g.slug, 'cover.jpg'));
     return localPath;
   }
+  if (g.meta.cover) return g.meta.cover;   // full URL override from frontmatter
   if (g.meta.steam) return `https://cdn.cloudflare.steamstatic.com/steam/apps/${g.meta.steam}/library_600x900.jpg`;
   return null;
 }
 /* steam covers fall back: vertical art -> header.jpg -> no image */
 const coverImg = (url, cls) => url
-  ? `<img class="${cls}" loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header');this.classList.add('wide')}else{this.remove()}">` : '';
+  ? `<img class="${cls}${url.includes('header') ? ' wide' : ''}" loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header');this.classList.add('wide')}else{this.remove()}">` : '';
 
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
