@@ -1,6 +1,7 @@
 ---
 title: Indika
 status: playing
+added-by: jachym
 recommended-by:
 ---
 

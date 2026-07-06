@@ -1,6 +1,7 @@
 ---
 title: GRIS
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Hail to the Rainbow
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

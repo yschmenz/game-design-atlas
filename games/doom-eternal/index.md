@@ -1,6 +1,7 @@
 ---
 title: Doom Eternal
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

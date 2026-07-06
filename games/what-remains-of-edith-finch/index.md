@@ -1,6 +1,7 @@
 ---
 title: What Remains of Edith Finch
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Disco Elysium
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

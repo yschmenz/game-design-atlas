@@ -1,6 +1,7 @@
 ---
 title: Viewfinder
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

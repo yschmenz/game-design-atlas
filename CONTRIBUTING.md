@@ -2,7 +2,7 @@
 
 ## Add an entry about a game
 
-1. Find the game's folder in `games/` (e.g. `games/half-life-2/`). If it's missing, copy any existing game folder and edit `index.md`.
+1. Find the game's folder in `games/` (e.g. `games/half-life-2/`). If it's missing, copy any existing game folder, edit `index.md`, and set `added-by:` to yourself.
 2. Copy the matching template from `templates/` into that folder. Name it something like `2026-07-canal-navigation.md`.
 3. Fill in the frontmatter (the `---` block at the top) — it powers search and filtering on the site:
    - `type`: `reverse-engineering` | `rebuild-fragment` | `topic-case-study`

@@ -1,6 +1,7 @@
 ---
 title: The Stanley Parable
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

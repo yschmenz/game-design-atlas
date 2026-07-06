@@ -1,6 +1,7 @@
 ---
 title: Return of the Obra Dinn
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

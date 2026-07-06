@@ -1,6 +1,7 @@
 ---
 title: Outer Wilds
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

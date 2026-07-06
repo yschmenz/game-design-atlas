@@ -1,6 +1,7 @@
 ---
 title: Firewatch
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

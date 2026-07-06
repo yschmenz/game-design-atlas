@@ -1,6 +1,7 @@
 ---
 title: Alan Wake
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

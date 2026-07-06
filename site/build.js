@@ -170,6 +170,7 @@ for (const g of games) {
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
     `<h1>${esc(g.meta.title)}</h1>
      <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
+     ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
@@ -221,12 +222,13 @@ for (const w of wings) {
   const rows = games.map(g => `<tr>
     <td><a href="games/${g.slug}/index.html">${esc(g.meta.title)}</a></td>
     <td>${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}</td>
+    <td>${esc(g.meta['added-by'] || '')}</td>
     <td>${esc(g.meta['recommended-by'] || '')}</td>
     <td>${g.entries.length || ''}</td></tr>`).join('\n');
   write(path.join(OUT, 'to-play.html'), page('To Play', 'to-play',
     `<h1>To Play — the shared queue</h1>
      <p class="dim">Live view generated from each game's <code>index.md</code>. ★ = recommended to the other one.</p>
-     <table><thead><tr><th>Game</th><th>Status</th><th>Recommended by</th><th>Entries</th></tr></thead>
+     <table><thead><tr><th>Game</th><th>Status</th><th>Added by</th><th>Recommended by</th><th>Entries</th></tr></thead>
      <tbody>${rows}</tbody></table>`));
 })();
 

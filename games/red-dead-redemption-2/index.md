@@ -1,6 +1,7 @@
 ---
 title: Red Dead Redemption 2
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 

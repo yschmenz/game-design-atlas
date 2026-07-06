@@ -1,6 +1,7 @@
 ---
 title: Cyberpunk 2077
 status: to-play
+added-by: jachym
 recommended-by:
 ---
 
