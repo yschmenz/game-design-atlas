@@ -1,6 +1,6 @@
 ---
 title: Sable
-status: to-play
+status: playing
 added-by: jachym
 recommended-by:
 ---
