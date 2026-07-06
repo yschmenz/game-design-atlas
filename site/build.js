@@ -3,7 +3,15 @@
    Reads games/ + atlas/, writes _site/. No framework, one dependency (marked). */
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 const { marked } = require('marked');
+
+/* when was this file last committed? (tiebreaker for same-day entries; 0 if unknown) */
+function gitTime(file) {
+  try {
+    return +execSync(`git log -1 --format=%at -- "${file}"`, { cwd: path.join(__dirname, '..'), stdio: ['pipe', 'pipe', 'ignore'] }).toString().trim() || 0;
+  } catch { return 0; }
+}
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, '_site');
@@ -59,8 +67,9 @@ const games = listDirs(path.join(ROOT, 'games')).map(slug => {
   const idx = parseFrontmatter(read(path.join(dir, 'index.md')));
   const entries = listFiles(dir, '.md').filter(f => f !== 'index.md').map(f => {
     const e = parseFrontmatter(read(path.join(dir, f)));
-    return { file: f, slug: f.replace(/\.md$/, ''), meta: e.meta, body: e.body };
-  }).sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)));
+    return { file: f, slug: f.replace(/\.md$/, ''), meta: e.meta, body: e.body,
+      added: gitTime(path.join('games', slug, f)) };
+  }).sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added);
   const prototypes = listFiles(path.join(dir, 'prototypes'), '.html');
   const sketches = listFiles(path.join(dir, 'sketches')).filter(f => !f.startsWith('.'));
   return { slug, dir, meta: idx.meta, body: idx.body, entries, prototypes, sketches };
@@ -173,7 +182,7 @@ const coverImg = (url, cls) => url
     });
   });</script>`;
   const latest = allEntries.filter(e => e.meta.date)
-    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date))).slice(0, 5);
+    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 5);
   const feed = latest.length ? `<h2>Latest entries</h2><ul class="entry-list">` + latest.map(e =>
     `<li><a href="games/${e.game.slug}/index.html#${e.slug}">${esc(e.meta.title)}</a>
      <span class="dim">— ${esc(e.game.meta.title)}, ${esc(e.meta.author || '?')}, ${esc(e.meta.date)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></li>`).join('') + `</ul>` : '';
