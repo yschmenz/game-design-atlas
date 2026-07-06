@@ -1,6 +1,6 @@
 ---
 title: Indika
-status: to-play
+status: playing
 recommended-by:
 ---
 
