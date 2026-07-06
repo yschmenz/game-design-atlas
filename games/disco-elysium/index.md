@@ -2,6 +2,7 @@
 title: Disco Elysium
 status: to-play
 added-by: jachym
+steam: 632470
 recommended-by:
 ---
 

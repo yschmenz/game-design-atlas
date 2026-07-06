@@ -2,6 +2,7 @@
 title: Diaries of a Spaceport Janitor
 status: to-play
 added-by: schmenz
+steam: 436500
 recommended-by:
 ---
 

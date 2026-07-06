@@ -2,6 +2,7 @@
 title: BioShock
 status: to-play
 added-by: jachym
+steam: 7670
 recommended-by:
 ---
 

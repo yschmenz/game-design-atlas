@@ -53,6 +53,11 @@ a.chip:hover { border-color: var(--accent); color: var(--ink); }
   padding: 1rem 1.1rem; text-decoration: none; color: var(--ink); transition: border-color .15s; }
 .card:hover { border-color: var(--accent); }
 .card h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+.card img.cover { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 7px;
+  margin-bottom: .7rem; display: block; }
+img.cover-page { float: right; width: 170px; aspect-ratio: 2/3; object-fit: cover;
+  border-radius: 10px; margin: 0 0 1rem 1.5rem; border: 1px solid var(--line); }
+@media (max-width: 640px) { img.cover-page { width: 110px; } }
 
 /* entries */
 .entry { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;

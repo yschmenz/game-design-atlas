@@ -2,6 +2,7 @@
 title: Kingdom Come
 status: to-play
 added-by: jachym
+steam: 379430
 recommended-by:
 ---
 

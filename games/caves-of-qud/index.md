@@ -2,6 +2,7 @@
 title: Caves of Qud
 status: playing
 added-by: schmenz
+steam: 333640
 recommended-by:
 ---
 

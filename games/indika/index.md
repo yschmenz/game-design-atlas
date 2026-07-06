@@ -2,6 +2,7 @@
 title: Indika
 status: playing
 added-by: jachym
+steam: 1373960
 recommended-by:
 ---
 

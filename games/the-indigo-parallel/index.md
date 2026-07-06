@@ -2,6 +2,7 @@
 title: The Indigo Parallel
 status: to-play
 added-by: jachym
+steam: 1550870
 recommended-by:
 ---
 

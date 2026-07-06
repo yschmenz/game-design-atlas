@@ -2,6 +2,7 @@
 title: Hades
 status: to-play
 added-by: jachym
+steam: 1145360
 recommended-by:
 ---
 

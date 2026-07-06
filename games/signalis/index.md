@@ -2,6 +2,7 @@
 title: SIGNALIS
 status: playing
 added-by: schmenz
+steam: 1262350
 recommended-by:
 ---
 

@@ -2,6 +2,7 @@
 title: The Stanley Parable
 status: to-play
 added-by: jachym
+steam: 1703340
 recommended-by:
 ---
 

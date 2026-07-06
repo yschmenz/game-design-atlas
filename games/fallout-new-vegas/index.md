@@ -2,6 +2,7 @@
 title: Fallout: New Vegas
 status: playing
 added-by: schmenz
+steam: 22380
 recommended-by:
 ---
 

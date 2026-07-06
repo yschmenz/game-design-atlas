@@ -2,6 +2,7 @@
 title: Doom Eternal
 status: to-play
 added-by: jachym
+steam: 782330
 recommended-by:
 ---
 

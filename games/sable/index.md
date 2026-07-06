@@ -2,6 +2,7 @@
 title: Sable
 status: playing
 added-by: jachym
+steam: 757310
 recommended-by:
 ---
 

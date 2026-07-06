@@ -2,6 +2,7 @@
 title: Hail to the Rainbow
 status: to-play
 added-by: jachym
+steam: 1699230
 recommended-by:
 ---
 

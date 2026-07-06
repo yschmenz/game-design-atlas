@@ -2,6 +2,7 @@
 title: Myst
 status: to-play
 added-by: jachym
+steam: 1255560
 recommended-by:
 ---
 

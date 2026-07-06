@@ -2,6 +2,7 @@
 title: Outer Wilds
 status: to-play
 added-by: jachym
+steam: 753640
 recommended-by:
 ---
 

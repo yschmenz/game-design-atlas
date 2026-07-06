@@ -2,6 +2,7 @@
 title: Return of the Obra Dinn
 status: to-play
 added-by: jachym
+steam: 653530
 recommended-by:
 ---
 

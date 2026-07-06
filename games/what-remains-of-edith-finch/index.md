@@ -2,6 +2,7 @@
 title: What Remains of Edith Finch
 status: to-play
 added-by: jachym
+steam: 501300
 recommended-by:
 ---
 

@@ -117,6 +117,19 @@ const patternChip = (id, p) => patternRef[id]
   ? `<a class="chip pp" href="${p}atlas/${patternRef[id].wing}/patterns/${patternRef[id].slug}.html">${esc(id)}</a>`
   : chip(id, 'pp');
 
+/* cover art: local cover.jpg wins, else Steam CDN, else none.
+   localPath = how to reach games/<slug>/cover.jpg from the page being rendered */
+function coverUrl(g, localPath) {
+  if (exists(path.join(g.dir, 'cover.jpg'))) {
+    copy(path.join(g.dir, 'cover.jpg'), path.join(OUT, 'games', g.slug, 'cover.jpg'));
+    return localPath;
+  }
+  if (g.meta.steam) return `https://cdn.cloudflare.steamstatic.com/steam/apps/${g.meta.steam}/library_600x900.jpg`;
+  return null;
+}
+const coverImg = (url, cls) => url
+  ? `<img class="${cls}" loading="lazy" src="${url}" alt="" onerror="this.remove()">` : '';
+
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
   const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort();
@@ -136,6 +149,7 @@ const patternChip = (id, p) => patternRef[id]
     const n = g.entries.length, np = g.prototypes.length;
     return `<a class="card" href="games/${g.slug}/index.html" data-status="${esc(g.meta.status || 'to-play')}"
       data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}">
+      ${coverImg(coverUrl(g, `games/${g.slug}/cover.jpg`), 'cover')}
       <h3>${esc(g.meta.title)}</h3>
       <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
       ${g.meta['added-by'] ? chip('+ ' + g.meta['added-by'], 'author') : ''}
@@ -188,7 +202,8 @@ for (const g of games) {
      <iframe src="prototypes/${p}" loading="lazy"></iframe></div>`).join('') : '';
   const body = g.body.replace(/<!--[\s\S]*?-->/g, '').trim();
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
-    `<h1>${esc(g.meta.title)}</h1>
+    `${coverImg(coverUrl(g, 'cover.jpg'), 'cover-page')}
+     <h1>${esc(g.meta.title)}</h1>
      <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
      ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>

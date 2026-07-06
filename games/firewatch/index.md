@@ -2,6 +2,7 @@
 title: Firewatch
 status: to-play
 added-by: jachym
+steam: 383870
 recommended-by:
 ---
 

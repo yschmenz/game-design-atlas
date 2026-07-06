@@ -2,6 +2,7 @@
 title: Everything
 status: to-play
 added-by: jachym
+steam: 582270
 recommended-by:
 ---
 

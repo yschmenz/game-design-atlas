@@ -2,6 +2,7 @@
 title: Alan Wake
 status: to-play
 added-by: jachym
+steam: 108710
 recommended-by:
 ---
 

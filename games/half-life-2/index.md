@@ -2,6 +2,7 @@
 title: Half-Life 2
 status: to-play
 added-by: jachym
+steam: 220
 recommended-by:
 ---
 

@@ -2,6 +2,7 @@
 title: Easy Delivery
 status: to-play
 added-by: jachym
+steam: 3293010
 recommended-by:
 ---
 

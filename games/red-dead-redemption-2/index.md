@@ -2,6 +2,7 @@
 title: Red Dead Redemption 2
 status: to-play
 added-by: jachym
+steam: 1174180
 recommended-by:
 ---
 
