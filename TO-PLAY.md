@@ -27,6 +27,7 @@ the site generates the live version from the game folders).
 | Metro Series | to-play | | |
 | Mirror's Edge | to-play | | |
 | Myst | to-play | | |
+| The Norwood Suite | to-play | | |
 | Outer Wilds | to-play | | |
 | Pacific Drive | to-play | | |
 | Portal Series | to-play | | |
