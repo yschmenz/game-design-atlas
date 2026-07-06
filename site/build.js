@@ -125,6 +125,7 @@ const chip = (txt, cls = '') => `<span class="chip ${cls}">${esc(txt)}</span>`;
       data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}">
       <h3>${esc(g.meta.title)}</h3>
       <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
+      ${g.meta['added-by'] ? chip('+ ' + g.meta['added-by'], 'author') : ''}
       ${n ? chip(n + (n > 1 ? ' entries' : ' entry')) : ''}${np ? chip(np + ' proto', 'proto') : ''}
       ${g.meta['recommended-by'] ? chip('★ ' + g.meta['recommended-by'], 'rec') : ''}</div></a>`;
   }).join('\n');
