@@ -8,7 +8,7 @@ patterns: [PP-12, PP-24, PP-13, NP-02]
 prototypes: []
 author: jachym
 date: 2026-07-07 15:29
-status: draft
+status: done
 ---
 
 Session 2, picking up exactly where session 1 stopped (the mill). Source: audio
