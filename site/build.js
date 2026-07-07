@@ -145,10 +145,13 @@ const coverImg = (url, cls) => url
 (function buildHome() {
   const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort();
   const authors = [...new Set(allEntries.map(e => e.meta.author).filter(Boolean))].sort();
+  const gameTags = [...new Set(games.flatMap(g => g.meta.tags || []))].sort();
   const filters = `
   <div class="filters" id="filters">
     <div><b>Status</b> ${['all', 'to-play', 'playing', 'recorded'].map(s =>
       `<button data-f="status" data-v="${s}"${s === 'all' ? ' class="on"' : ''}>${s}</button>`).join('')}</div>
+    <div><b>Genre</b> <button data-f="tag" data-v="all" class="on">all</button>${gameTags.map(t =>
+      `<button data-f="tag" data-v="${t}">${t}</button>`).join('')}</div>
     <div><b>Topic</b> <button data-f="topic" data-v="all" class="on">all</button>${topicsInUse.map(t =>
       `<button data-f="topic" data-v="${t}">${title(t)}</button>`).join('')}</div>
     <div><b>Author</b> <button data-f="author" data-v="all" class="on">all</button>${authors.map(a =>
@@ -159,7 +162,7 @@ const coverImg = (url, cls) => url
     const auths = [...new Set(g.entries.map(e => e.meta.author).filter(Boolean))];
     const n = g.entries.length, np = g.prototypes.length;
     return `<a class="card" href="games/${g.slug}/index.html" data-status="${esc(g.meta.status || 'to-play')}"
-      data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}">
+      data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}">
       ${coverImg(coverUrl(g, `games/${g.slug}/cover.jpg`), 'cover')}
       <h3>${esc(g.meta.title)}</h3>
       <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
@@ -168,19 +171,31 @@ const coverImg = (url, cls) => url
       ${g.meta['recommended-by'] ? chip('★ ' + g.meta['recommended-by'], 'rec') : ''}</div></a>`;
   }).join('\n');
   const js = `<script>
-  document.getElementById('filters').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    [...b.parentElement.querySelectorAll('button')].forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
+  function applyFilters() {
     const f = {};
     document.querySelectorAll('#filters button.on').forEach(x => f[x.dataset.f] = x.dataset.v);
     document.querySelectorAll('.card').forEach(c => {
       const ok = (f.status === 'all' || c.dataset.status === f.status)
+        && (f.tag === 'all' || c.dataset.tags.split(' ').includes(f.tag))
         && (f.topic === 'all' || c.dataset.topics.split(' ').includes(f.topic))
         && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author));
       c.style.display = ok ? '' : 'none';
     });
-  });</script>`;
+  }
+  document.getElementById('filters').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [...b.parentElement.querySelectorAll('button')].forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    applyFilters();
+  });
+  /* deep link: index.html?tag=rpg (works for tag/topic/status/author) */
+  const params = new URLSearchParams(location.search);
+  for (const [k, v] of params) {
+    const b = document.querySelector('#filters button[data-f="' + k + '"][data-v="' + v + '"]');
+    if (b) { [...b.parentElement.querySelectorAll('button')].forEach(x => x.classList.remove('on')); b.classList.add('on'); }
+  }
+  if ([...params].length) { applyFilters(); document.getElementById('filters').scrollIntoView(); }
+  </script>`;
   const latest = allEntries.filter(e => e.meta.date)
     .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 5);
   const feed = latest.length ? `<h2>Latest entries</h2><ul class="entry-list">` + latest.map(e =>
@@ -219,7 +234,8 @@ for (const g of games) {
      ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>
      ${g.meta.summary ? `<p class="summary">${esc(g.meta.summary)}</p>` : ''}
-     ${(g.meta.tags || []).length ? `<div class="meta">${g.meta.tags.map(t => chip(t)).join('')}</div>` : ''}
+     ${(g.meta.tags || []).length ? `<div class="meta">${g.meta.tags.map(t =>
+       `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')}</div>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
      ${looseProtos}`, 2));
