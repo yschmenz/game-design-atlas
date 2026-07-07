@@ -1,5 +1,17 @@
 # How to add stuff (2-minute guide)
 
+## Add a game
+
+Copy any game folder in `games/`, rename it, edit `index.md`. **Only `title` and
+`added-by` matter — everything else is optional** and the site degrades gracefully
+(no cover, no summary line — never an error). The optional fields:
+
+- `steam: <appid>` → cover art. The ID is in every store URL: `store.steampowered.com/app/`**`1574240`**`/...`
+- `summary: "one sentence, own words"` + `tags: [rpg, open-world]` → shown on the game page, tags are clickable filters
+- Not on Steam? Drop a `cover.jpg` into the game folder instead of `steam:`
+
+Leave fields empty guilt-free — anyone can fill them in later.
+
 ## Add an entry about a game
 
 1. Find the game's folder in `games/` (e.g. `games/half-life-2/`). If it's missing, copy any existing game folder, edit `index.md`, and set `added-by:` to yourself.
