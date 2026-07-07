@@ -143,23 +143,34 @@ const coverImg = (url, cls) => url
 
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
-  const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort();
-  const authors = [...new Set(allEntries.map(e => e.meta.author).filter(Boolean))].sort();
-  const gameTags = [...new Set(games.flatMap(g => g.meta.tags || []))].sort();
+  /* filter values, sorted by how many games they match (ties: alphabetical) */
+  const tagCount = t => games.filter(g => (g.meta.tags || []).includes(t)).length;
+  const topicCount = t => games.filter(g => g.entries.some(e => (e.meta.topics || []).includes(t))).length;
+  const bySort = cnt => (a, b) => cnt(b) - cnt(a) || a.localeCompare(b);
+  const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort(bySort(topicCount));
+  const authors = [...new Set([...games.map(g => g.meta['added-by']),
+    ...allEntries.map(e => e.meta.author)].filter(Boolean))].sort();
+  const gameTags = [...new Set(games.flatMap(g => g.meta.tags || []))].sort(bySort(tagCount));
+  /* a filter row: "all" + top VISIBLE values; the rest hide behind a "+N more" toggle */
+  const VISIBLE = 8;
+  const filterRow = (label, f, vals, fmt = x => x) => {
+    const btn = v => `<button data-f="${f}" data-v="${v}">${esc(fmt(v))}</button>`;
+    const rest = vals.slice(VISIBLE);
+    const more = rest.length
+      ? `<span class="more-wrap">${rest.map(btn).join('')}</span><button class="more" data-more="+${rest.length} more" aria-expanded="false">+${rest.length} more</button>`
+      : '';
+    return `<div><b>${label}</b> <button data-f="${f}" data-v="all" class="on">all</button>${vals.slice(0, VISIBLE).map(btn).join('')}${more}</div>`;
+  };
   const filters = `
   <div class="filters" id="filters">
-    <div><b>Status</b> ${['all', 'to-play', 'playing', 'recorded'].map(s =>
-      `<button data-f="status" data-v="${s}"${s === 'all' ? ' class="on"' : ''}>${s}</button>`).join('')}</div>
-    <div><b>Genre</b> <button data-f="tag" data-v="all" class="on">all</button>${gameTags.map(t =>
-      `<button data-f="tag" data-v="${t}">${t}</button>`).join('')}</div>
-    <div><b>Topic</b> <button data-f="topic" data-v="all" class="on">all</button>${topicsInUse.map(t =>
-      `<button data-f="topic" data-v="${t}">${title(t)}</button>`).join('')}</div>
-    <div><b>Author</b> <button data-f="author" data-v="all" class="on">all</button>${authors.map(a =>
-      `<button data-f="author" data-v="${a}">${a}</button>`).join('')}</div>
+    ${filterRow('Status', 'status', ['to-play', 'playing', 'recorded'])}
+    ${filterRow('Genre', 'tag', gameTags)}
+    ${filterRow('Topic', 'topic', topicsInUse, title)}
+    ${filterRow('Author', 'author', authors)}
   </div>`;
   const cards = games.map(g => {
     const topics = [...new Set(g.entries.flatMap(e => e.meta.topics || []))];
-    const auths = [...new Set(g.entries.map(e => e.meta.author).filter(Boolean))];
+    const auths = [...new Set([g.meta['added-by'], ...g.entries.map(e => e.meta.author)].filter(Boolean))];
     const n = g.entries.length, np = g.prototypes.length;
     return `<a class="card" href="games/${g.slug}/index.html" data-status="${esc(g.meta.status || 'to-play')}"
       data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}">
@@ -184,7 +195,13 @@ const coverImg = (url, cls) => url
   }
   document.getElementById('filters').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    [...b.parentElement.querySelectorAll('button')].forEach(x => x.classList.remove('on'));
+    if (b.dataset.more !== undefined) {   /* "+N more" / "less" toggle */
+      const open = b.closest('div').classList.toggle('expanded');
+      b.textContent = open ? 'less' : b.dataset.more;
+      b.setAttribute('aria-expanded', open);
+      return;
+    }
+    [...b.closest('div').querySelectorAll('button:not(.more)')].forEach(x => x.classList.remove('on'));
     b.classList.add('on');
     applyFilters();
   });
@@ -192,7 +209,13 @@ const coverImg = (url, cls) => url
   const params = new URLSearchParams(location.search);
   for (const [k, v] of params) {
     const b = document.querySelector('#filters button[data-f="' + k + '"][data-v="' + v + '"]');
-    if (b) { [...b.parentElement.querySelectorAll('button')].forEach(x => x.classList.remove('on')); b.classList.add('on'); }
+    if (!b) continue;
+    [...b.closest('div').querySelectorAll('button:not(.more)')].forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    if (b.closest('.more-wrap')) {   /* selected value is hidden -> expand its row */
+      const row = b.closest('div'), t = row.querySelector('button.more');
+      row.classList.add('expanded'); t.textContent = 'less'; t.setAttribute('aria-expanded', true);
+    }
   }
   if ([...params].length) { applyFilters(); document.getElementById('filters').scrollIntoView(); }
   </script>`;
