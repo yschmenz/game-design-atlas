@@ -193,6 +193,12 @@ const coverImg = (url, cls) => url
       c.style.display = ok ? '' : 'none';
     });
   }
+  const ft = document.getElementById('filter-toggle'), fp = document.getElementById('filters');
+  const openFilters = open => {
+    fp.classList.toggle('open', open); ft.classList.toggle('open', open);
+    ft.textContent = open ? 'filter ▾' : 'filter ▸'; ft.setAttribute('aria-expanded', open);
+  };
+  ft.addEventListener('click', () => openFilters(!fp.classList.contains('open')));
   document.getElementById('filters').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     if (b.dataset.more !== undefined) {   /* "+N more" / "less" toggle */
@@ -217,15 +223,22 @@ const coverImg = (url, cls) => url
       row.classList.add('expanded'); t.textContent = 'less'; t.setAttribute('aria-expanded', true);
     }
   }
-  if ([...params].length) { applyFilters(); document.getElementById('filters').scrollIntoView(); }
+  if ([...params].length) { openFilters(true); applyFilters(); document.getElementById('filters').scrollIntoView(); }
   </script>`;
   const latest = allEntries.filter(e => e.meta.date)
-    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 5);
-  const feed = latest.length ? `<h2>Latest entries</h2><ul class="entry-list">` + latest.map(e =>
-    `<li><a href="games/${e.game.slug}/index.html#${e.slug}">${esc(e.meta.title)}</a>
-     <span class="dim">— ${esc(e.game.meta.title)}, ${esc(e.meta.author || '?')}, ${esc(e.meta.date)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></li>`).join('') + `</ul>` : '';
+    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 6);
+  const feed = latest.length ? `<h2>Latest entries</h2><div class="latest">` + latest.map(e => {
+    const cover = coverUrl(e.game, `games/${e.game.slug}/cover.jpg`);
+    return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}">
+     ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
+     <span><span class="lt">${esc(e.meta.title)}</span>
+     <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(e.meta.date).slice(0, 10)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></span></a>`;
+  }).join('') + `</div>` : '';
   write(path.join(OUT, 'index.html'), page('Games', 'games',
-    `<h1>The Games <span class="count">${games.length}</span></h1>${feed}<h2>All games</h2>${filters}<div class="grid">${cards}</div>${js}`));
+    `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
+     <div class="section-head"><h2>All games</h2>
+     <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button></div>
+     ${filters}<div class="grid">${cards}</div>${js}`));
 })();
 
 /* ---------- game pages ---------- */
