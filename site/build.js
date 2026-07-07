@@ -180,8 +180,12 @@ const coverImg = (url, cls) => url
     const topics = [...new Set(g.entries.flatMap(e => e.meta.topics || []))];
     const auths = [...new Set([g.meta['added-by'], ...g.entries.map(e => e.meta.author)].filter(Boolean))];
     const n = g.entries.length, np = g.prototypes.length;
+    /* everything the search box matches against, one lowercased haystack */
+    const searchText = [g.meta.title, g.meta.summary, ...(g.meta.tags || []),
+      ...topics.map(title), ...auths].filter(Boolean).join(' ').toLowerCase();
     return `<a class="card" href="games/${g.slug}/index.html" data-status="${esc(g.meta.status || 'to-play')}"
-      data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}">
+      data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}"
+      data-search="${esc(searchText)}">
       ${coverImg(coverUrl(g, `games/${g.slug}/cover.jpg`), 'cover')}
       <h3>${esc(g.meta.title)}</h3>
       <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
@@ -190,17 +194,32 @@ const coverImg = (url, cls) => url
       ${g.meta['recommended-by'] ? chip('★ ' + g.meta['recommended-by'], 'rec') : ''}</div></a>`;
   }).join('\n');
   const js = `<script>
+  const searchBox = document.getElementById('search'), shown = document.getElementById('shown');
   function applyFilters() {
     const f = {};
     document.querySelectorAll('#filters button.on').forEach(x => f[x.dataset.f] = x.dataset.v);
+    const q = (searchBox.value || '').trim().toLowerCase();
+    let count = 0;
     document.querySelectorAll('.card').forEach(c => {
       const ok = (f.status === 'all' || c.dataset.status === f.status)
         && (f.tag === 'all' || c.dataset.tags.split(' ').includes(f.tag))
         && (f.topic === 'all' || c.dataset.topics.split(' ').includes(f.topic))
-        && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author));
+        && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author))
+        && (!q || c.dataset.search.includes(q));
       c.style.display = ok ? '' : 'none';
+      if (ok) count++;
     });
+    shown.textContent = count;
   }
+  searchBox.addEventListener('input', applyFilters);
+  /* "/" jumps to search, Esc clears it */
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+      e.preventDefault(); searchBox.focus();
+    } else if (e.key === 'Escape' && document.activeElement === searchBox) {
+      searchBox.value = ''; applyFilters(); searchBox.blur();
+    }
+  });
   const ft = document.getElementById('filter-toggle'), fp = document.getElementById('filters');
   const openFilters = open => {
     fp.classList.toggle('open', open); ft.classList.toggle('open', open);
@@ -231,7 +250,9 @@ const coverImg = (url, cls) => url
       row.classList.add('expanded'); t.textContent = 'less'; t.setAttribute('aria-expanded', true);
     }
   }
-  if ([...params].length) { openFilters(true); applyFilters(); document.getElementById('filters').scrollIntoView(); }
+  if (params.get('q')) searchBox.value = params.get('q');
+  if ([...params].filter(([k]) => k !== 'q').length) { openFilters(true); document.getElementById('filters').scrollIntoView(); }
+  applyFilters();   /* always run once: sets the initial count and honours ?q= */
   </script>`;
   const latest = allEntries.filter(e => e.meta.date)
     .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 6);
@@ -244,7 +265,8 @@ const coverImg = (url, cls) => url
   }).join('') + `</div>` : '';
   write(path.join(OUT, 'index.html'), page('Games', 'games',
     `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
-     <div class="section-head"><h2>All games</h2>
+     <div class="section-head"><h2>All games <span class="count" id="shown">${games.length}</span></h2>
+     <input id="search" class="search" type="search" placeholder="search title, tag, topic…  ( / )" aria-label="Search games" autocomplete="off" spellcheck="false">
      <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button></div>
      ${filters}<div class="grid">${cards}</div>${js}`));
 })();

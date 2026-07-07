@@ -63,7 +63,16 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .lcard:hover .lt { text-decoration: underline; text-decoration-color: var(--faint); }
 
 /* summoned filters */
-.section-head { display: flex; align-items: baseline; gap: 1rem; }
+.section-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+
+/* quiet search: a hairline you type into, not a boxed widget */
+.search { flex: 1 1 12rem; min-width: 8rem; max-width: 22rem; font: 13px monospace;
+  color: var(--ink); background: none; border: none; border-bottom: 1px solid var(--line);
+  padding: 4px 2px; outline: none; transition: border-color .15s; }
+.search::placeholder { color: var(--faint); }
+.search:focus { border-color: var(--mut); }
+.search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.section-head .filter-toggle { margin-left: auto; }
 .filter-toggle { font: 12px monospace; color: var(--faint); background: none;
   border: none; cursor: pointer; padding: 0; }
 .filter-toggle:hover, .filter-toggle.open { color: var(--ink); }
