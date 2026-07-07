@@ -58,6 +58,14 @@ function embedYouTube(md) {
     });
 }
 const md2html = md => marked.parse(embedYouTube(md));
+
+/* entry dressing: sequence paragraph -> mono flow-line; "New threads" list -> takeaway cards */
+function dressEntry(html) {
+  html = html.replace(/(<h2[^>]*>\s*Sequence\s*<\/h2>\s*)<p>([\s\S]*?)<\/p>/i, (m, h, body) =>
+    h + '<p class="flow">' + body.replace(/→/g, '<span class="arr">→</span>') + '</p>');
+  html = html.replace(/(<h3[^>]*>\s*New threads[\s\S]{0,80}?<\/h3>\s*)<ul>/i, '$1<ul class="threads">');
+  return html;
+}
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const title = s => String(s || '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
@@ -92,7 +100,7 @@ const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
 }).sort((a, b) => (b.topics.length + b.patterns.length) - (a.topics.length + a.patterns.length));
 
 /* ---------- layout ---------- */
-function page(titleText, active, content, depth = 0) {
+function page(titleText, active, content, depth = 0, bodyClass = '') {
   const p = '../'.repeat(depth);
   const nav = [
     ['index.html', 'Games', 'games'],
@@ -105,7 +113,7 @@ function page(titleText, active, content, depth = 0) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(titleText)} — Game Design Atlas</title>
 <link rel="stylesheet" href="${p}style.css"></head>
-<body><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav></header>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav></header>
 <main>${content}</main>
 <footer>schmenz &amp; Jachym — play, record, prototype.</footer></body></html>`;
 }
@@ -250,12 +258,10 @@ for (const g of games) {
        <iframe src="prototypes/${p}" loading="lazy"></iframe></div>`).join('');
     return `<article class="entry" id="${e.slug}">
       <div class="entry-head"><h2>${esc(e.meta.title || e.slug)}</h2>
-      <div class="meta">${chip(typeLabel[e.meta.type] || e.meta.type, 'type')}
-      ${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
-      ${(e.meta.patterns || []).map(p => patternChip(p, '../../')).join('')}
-      ${e.meta.author ? chip(e.meta.author, 'author') : ''}${e.meta.date ? chip(e.meta.date) : ''}
-      ${e.meta.status === 'draft' ? chip('draft', 'draft') : ''}</div></div>
-      ${md2html(e.body)}${protos}</article>`;
+      <p class="entry-meta">${esc(typeLabel[e.meta.type] || e.meta.type)}${e.meta.author ? ' · ' + esc(e.meta.author) : ''}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}${e.meta.status === 'draft' ? ' · <span class="draft-flag">draft</span>' : ''}</p>
+      <div class="meta">${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
+      ${(e.meta.patterns || []).map(p => patternChip(p, '../../')).join('')}</div></div>
+      ${dressEntry(md2html(e.body))}${protos}</article>`;
   }).join('\n');
   const otherProtos = g.prototypes.filter(p => !g.entries.some(e => (e.meta.prototypes || []).includes(p)));
   const looseProtos = otherProtos.length ? `<h2>Prototypes</h2>` + otherProtos.map(p =>
@@ -274,7 +280,7 @@ for (const g of games) {
        `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')}</div>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
-     ${looseProtos}`, 2));
+     ${looseProtos}`, 2, 'reading'));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
   for (const s of g.sketches) copy(path.join(g.dir, 'sketches', s), path.join(OUT, 'games', g.slug, 'sketches', s));
 }
@@ -303,7 +309,7 @@ for (const w of wings) {
       : `<p class="dim">Nothing tagged <code>${t.slug}</code> yet.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'topics', t.slug + '.html'), page(t.meta.title, w.slug,
       `<p class="crumb"><a href="../index.html">${esc(w.meta.title || title(w.slug))}</a> / core topic</p>
-       <h1>${esc(t.meta.title)}</h1>${md2html(t.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3));
+       <h1>${esc(t.meta.title)}</h1>${md2html(t.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
   for (const p of w.patterns) {
     const related = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern));
@@ -313,7 +319,7 @@ for (const w of wings) {
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
       `<p class="crumb"><a href="../index.html">${esc(w.meta.title || title(w.slug))}</a> / ${esc(p.meta.group || 'pattern')}</p>
-       <h1>${esc(p.meta.title)}</h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3));
+       <h1>${esc(p.meta.title)}</h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
 }
 

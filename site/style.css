@@ -112,11 +112,50 @@ img.cover-page { float: right; width: 170px; aspect-ratio: 2/3; object-fit: cove
   border-radius: 6px; margin: 0 0 1rem 1.5rem; }
 @media (max-width: 640px) { img.cover-page { width: 110px; } }
 
+/* reading pages: the page IS the entry */
+body.reading main { max-width: 700px; }
+body.reading header { opacity: .45; transition: opacity .15s; }
+body.reading header:hover, body.reading header:focus-within { opacity: 1; }
+
 /* entries: hairline separators, no boxes */
 .entry { background: none; border: none; border-top: 1px solid var(--line);
   border-radius: 0; padding: 1.6rem 0 .4rem; margin: 1.6rem 0 0; }
-.entry h2 { margin: 0 0 .3rem; color: var(--ink); border: none; padding: 0; }
+.entry h2 { margin: 0 0 .2rem; font-size: 1.35rem; color: var(--ink); border: none; padding: 0; }
 .entry img { max-width: 100%; border-radius: 6px; }
+.entry-meta { font: 12px monospace; color: var(--faint); margin: 0 0 .5rem; }
+.entry-meta .draft-flag { color: var(--draft); }
+.entry strong { color: var(--ink); font-weight: 700; }
+
+/* observations: numbered rhythm, scannable by their bold leads */
+.entry ol { list-style: none; counter-reset: obs; padding-left: 0; }
+.entry ol > li { counter-increment: obs; position: relative; padding-left: 3rem;
+  margin: 1.4rem 0; }
+.entry ol > li::before { content: counter(obs, decimal-leading-zero); position: absolute;
+  left: 0; top: .25rem; font: 14px monospace; color: var(--faint); }
+
+/* sequence flow-line: a mono map of the session */
+.flow { font: 13px/2.1 monospace; color: var(--mut); }
+.flow .arr { color: var(--faint); padding: 0 .3rem; }
+
+/* takeaway cards: the only surfaces on the page */
+ul.threads { list-style: none; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .8rem; }
+ul.threads li { background: var(--panel); border-radius: 8px; padding: .9rem 1.1rem;
+  margin: 0; font-size: 14px; line-height: 1.55; color: var(--mut); }
+ul.threads li strong { color: var(--ink); }
+
+/* summoned detail (transcript etc.) */
+.entry details { margin: 1.4rem 0; }
+.entry summary { font: 12px monospace; color: var(--faint); cursor: pointer;
+  list-style: none; }
+.entry summary::-webkit-details-marker { display: none; }
+.entry summary:hover { color: var(--ink); }
+.entry summary strong { color: inherit; font-weight: 400; }
+.entry details[open] summary { color: var(--mut); margin-bottom: .6rem; }
+
+/* inline todos: quiet draft notes */
+.entry todo { display: block; border-left: 2px solid var(--draft); padding: .1rem 0 .1rem 1rem;
+  margin: 1rem 0; color: var(--mut); font-style: italic; }
 
 /* prototypes + video */
 .proto-embed { margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
