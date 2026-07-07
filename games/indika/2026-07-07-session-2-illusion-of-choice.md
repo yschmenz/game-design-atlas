@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=Z5FhfXMGJxk
 
 Mill interior → counterweight elevator → balancing plank → dog maze → the crane +
 2D puzzles → flashback platformer → arrival at Spasov → fish-tin puzzles → parting
-with Ilia → final flashback and the illusory-choice ending.
+with Ilya → final flashback and the illusory-choice ending.
 
 ## Observations
 
@@ -33,7 +33,7 @@ with Ilia → final flashback and the illusory-choice ending.
    things that matter**: an elevator, a raised platform reachable only via the movable
    tool, and a machine that needs a **non-broken wooden key**. The game's own logic
    ("find an unbroken key") is stated and re-signalled many times. Climb the strongly-lit
-   platform → key → machine → the elevator (with Ilia) starts everything moving, and you
+   platform → key → machine → the elevator (with Ilya) starts everything moving, and you
    understand the elevator was the last unchecked spot.
 3. **Counterweight elevator — realistic logic.** The elevator's real-world counterweight
    *is* the puzzle: he goes down so it lifts Indika up. Same counterweight logic returns
@@ -73,10 +73,10 @@ with Ilia → final flashback and the illusory-choice ending.
 12. **Fish-tin stacking — a puzzle that overstays.** Stacking giant fish tins to climb;
     simple, but it **takes longer than it needs** right before a story beat you're eager
     to reach.
-13. **Parting, then the illusory-choice ending.** After the last stretch with Ilia they
+13. **Parting, then the illusory-choice ending.** After the last stretch with Ilya they
     separate. A final Indika flashback platformer leads into the session's key idea: you're
     **given choices — which elevator, which path, which door — that all lead to the same
-    end**, mirroring her philosophical talks with Ilia about fate and destiny. Choice as
+    end**, mirroring her philosophical talks with Ilya about fate and destiny. Choice as
     theme, expressed through level design.
 
 <details>
@@ -92,7 +92,7 @@ the three most important spots: an elevator, a vertically elevated platform acce
 via a movable tool, and a machine you start with a wooden key. The game's logic tells you to
 search for a non-broken key and indicates it many times. Climb the strongly-lit platform,
 find the unbroken key, return to the machine, start it. The third place is the elevator where
-the side character Ilia is — now everything starts moving and you understand the elevator was
+the side character Ilya is — now everything starts moving and you understand the elevator was
 the last spot left.
 
 **Counterweight elevator (obs. 3).** Back at the up/down control: realistic game logic — the
@@ -109,7 +109,7 @@ lying around. You run because the dog from previous levels is chasing; not many 
 guided by light, hide at the end. The seeming slow-down doesn't work: the dog gets into the
 room, you solve a small verticality puzzle and pass. Back in the room you know the layout,
 still escaping the dog; the level is designed on purpose so there aren't many ways to fail.
-Follow Ilia as the goal, then it's finished. ("It loses its brain with its memories.")
+Follow Ilya as the goal, then it's finished. ("It loses its brain with its memories.")
 
 **The crane + 2D puzzles (obs. 6).** After the fast sequence, a slow outdoor sequence — the
 game's pattern by now: realistically free-to-roam, read the environment, then the way is shut.
@@ -119,14 +119,14 @@ monotone. Reminiscent of *It Takes Two* — a very primitive Tetris puzzle while
 characters talk. Very simple, even exaggeratedly unrealistic level design: a courtyard filled
 with wagons. A longer cutscene progresses the narrative.
 
-**Flashback platformer (obs. 7).** Arriving to pass through the city with Ilia, beautifully
+**Flashback platformer (obs. 7).** Arriving to pass through the city with Ilya, beautifully
 interlaced with the flashback — always a pixelated retro platformer. Very primitive mechanics
 but difficulty slowly rising after each section; fun, and you always learn something about
 Indika's past and how she got to the monastery. The visual style is beautiful and balances the
 gritty industrial rest of the game — a cute, warm, touching environment from her past village,
 even though the themes there are very dark.
 
-**Spasov, present day (obs. 8).** Back in Spasov, arriving at the soldier Ilia. Worth
+**Spasov, present day (obs. 8).** Back in Spasov, arriving at the soldier Ilya. Worth
 stressing how beautifully and densely the environments are built — often "unnecessarily," since
 you spend seconds there, yet every metre is filled with believable pseudo-18/19th-century
 Russia. Entering the new city you're literally in a corridor level (like driving the motorbike
@@ -157,13 +157,13 @@ world is.
 up. Nothing sophisticated, but it takes a longer while than it needed — right before the end of
 the narrative section, so he was eager to move on.
 
-**Parting & the ending (obs. 13).** The last section with Ilia; you learn more about him and the
+**Parting & the ending (obs. 13).** The last section with Ilya; you learn more about him and the
 relationship strengthens (unspoiled), after which they're separated. Then another Indika
 flashback — a funny platforming part, thematically tied to the flashback and her memories; the
 sound design carries you through it (wonderful design). Indika walks alone in a seemingly
 corridor level, contemplating, and here's a very interesting theme: you're given choices — which
 elevator to take, which path, which door to open — and they all lead to the same end, related to
-the philosophical talks with Ilia about fate and destiny. That was the end of this playthrough.
+the philosophical talks with Ilya about fate and destiny. That was the end of this playthrough.
 
 </details>
 
