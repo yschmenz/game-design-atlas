@@ -166,9 +166,14 @@ ul.threads li strong { color: var(--ink); }
 .video { position: relative; padding-top: 56.25%; margin: 1rem 0; }
 .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 6px; }
 
-/* lists + tables */
+/* lists + tables — lit spots: what has entries glows, the rest recedes */
 .topic-list { columns: 2; font-size: 1.05rem; }
 .topic-list li, .pattern-list li, .entry-list li { margin: .35rem 0; }
+.topic-list a, .pattern-list a { color: var(--faint); text-decoration: none; }
+.topic-list a:hover, .pattern-list a:hover { color: var(--ink); }
+.topic-list li.lit a, .pattern-list li.lit a { color: var(--ink); }
+.topic-list li.lit .count, .pattern-list li.lit .count { font-size: 12px; }
+.topic-list li::marker, .pattern-list li::marker { color: var(--faint); }
 .entry-list a { text-decoration: none; }
 .entry-list a:hover { text-decoration: underline; text-decoration-color: var(--faint); }
 table { width: 100%; border-collapse: collapse; }

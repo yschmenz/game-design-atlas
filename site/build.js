@@ -286,20 +286,33 @@ for (const g of games) {
 }
 
 /* ---------- wings, topics, patterns ---------- */
+const entryWing = e => e.meta.wing || (e.meta.topics || []).map(t => topicWing[t]).find(Boolean);
+const countLabel = n => `<span class="count" aria-label="${n} ${n > 1 ? 'entries' : 'entry'}">· ${n} ${n > 1 ? 'entries' : 'entry'}</span>`;
 for (const w of wings) {
+  /* the living front door: latest entries in this wing */
+  const wingLatest = allEntries.filter(e => entryWing(e) === w.slug && e.meta.date)
+    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 3);
+  const feed = wingLatest.length ? `<h2>Latest entries</h2><div class="latest">` + wingLatest.map(e => {
+    const cover = coverUrl(e.game, `../../games/${e.game.slug}/cover.jpg`);
+    return `<a class="lcard" href="../../games/${e.game.slug}/index.html#${e.slug}">
+     ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
+     <span><span class="lt">${esc(e.meta.title)}</span>
+     <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}</span></span></a>`;
+  }).join('') + `</div>` : '';
+  /* lit spots: topics/patterns with entries glow, empty ones recede */
   const topicList = w.topics.length ? `<h2>Core Topics</h2><ol class="topic-list">` + w.topics.map(t => {
     const n = allEntries.filter(e => (e.meta.topics || []).includes(t.slug)).length;
-    return `<li><a href="topics/${t.slug}.html">${esc(t.meta.title)}</a>${n ? ` <span class="count">${n}</span>` : ''}</li>`;
+    return `<li${n ? ' class="lit"' : ''}><a href="topics/${t.slug}.html">${esc(t.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
   }).join('') + `</ol>` : '';
   const groups = {};
   for (const p of w.patterns) (groups[p.meta.group] ??= []).push(p);
   const patternList = w.patterns.length ? `<h2>Pattern Library</h2>` + Object.entries(groups).map(([grp, ps]) =>
     `<h3>${esc(grp)}</h3><ul class="pattern-list">` + ps.map(p => {
       const n = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern)).length;
-      return `<li><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ` <span class="count">${n}</span>` : ''}</li>`;
+      return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
   write(path.join(OUT, 'atlas', w.slug, 'index.html'), page(w.meta.title || title(w.slug), w.slug,
-    `<h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${topicList}${patternList}`, 2));
+    `<h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${feed}${topicList}${patternList}`, 2));
 
   for (const t of w.topics) {
     const related = allEntries.filter(e => (e.meta.topics || []).includes(t.slug));
