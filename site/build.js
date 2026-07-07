@@ -218,6 +218,8 @@ for (const g of games) {
      <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
      ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>
+     ${g.meta.summary ? `<p class="summary">${esc(g.meta.summary)}</p>` : ''}
+     ${(g.meta.tags || []).length ? `<div class="meta">${g.meta.tags.map(t => chip(t)).join('')}</div>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
      ${looseProtos}`, 2));

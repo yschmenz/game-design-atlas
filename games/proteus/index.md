@@ -4,6 +4,8 @@ status: to-play
 added-by: schmenz
 steam: 219680
 cover: https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/219680/header.jpg
+summary: "A procedural island where walking is composing — pure musical presence."
+tags: [meditative, exploration, music]
 recommended-by:
 ---
 

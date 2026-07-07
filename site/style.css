@@ -23,6 +23,7 @@ h2 { margin-top: 2.2rem; border-bottom: 1px solid var(--line); padding-bottom: .
 a { color: var(--accent2); }
 code { font: 14px monospace; background: var(--panel); padding: 1px 5px; border-radius: 4px; }
 .dim { color: var(--dim); }
+.summary { font-style: italic; color: var(--dim); font-size: 1.05rem; margin: .6rem 0 .4rem; }
 .crumb { font: 13px monospace; color: var(--dim); margin-bottom: -0.5rem; }
 
 /* chips */
