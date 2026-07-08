@@ -12,12 +12,15 @@ status: done
 ---
 
 Session 2, picking up exactly where session 1 stopped (the mill). Source: audio
-commentary, structured from the recording transcript — no scribble this time.
+commentary and handwritten sketches.
 
 recording:
 https://www.youtube.com/watch?v=Z5FhfXMGJxk
 
 ## Sequence
+
+![Scribbles 1](sketches/2026-07-08-session-2-scribble-1.jpg)
+![Scribbles 2](sketches/2026-07-08-session-2-scribble-2.jpg)
 
 Mill interior → counterweight elevator → balancing plank → dog maze → the crane +
 2D puzzles → flashback platformer → arrival at Spasov → fish-tin puzzles → parting
@@ -193,4 +196,4 @@ with session 1's fork. Strong candidate for a dedicated NP-02 write-up or a smal
 a room offering three doors that provably lead to one place. Also flag the counterweight as a
 reusable "teach-once" mechanic.>
 
-<!-- Session 2 is audio-only; no handwritten scribble. Jachym — correct anything I mis-heard. -->
+<!-- Session 2 notes updated with scribbles from the session. -->
