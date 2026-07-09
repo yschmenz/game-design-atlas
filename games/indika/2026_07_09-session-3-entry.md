@@ -20,6 +20,8 @@ https://www.youtube.com/watch?v=ixXxfDy_7TM
 
 ## Sequence
 
+to do: add scribbles
+
 Vertical elevator/box combo → dense 19th-century living quarters → guard tableau →
 scaffolding + steam machine → corridor → the gravity room (reunion with Ilya) → corridor
 to Spasov cathedral quarter → bell courtyard → scaffolding follow-section → crane + Lego-brick
