@@ -242,4 +242,4 @@ with session 1's fork. Strong candidate for a dedicated NP-02 write-up or a smal
 a room offering three doors that provably lead to one place. Also flag the counterweight as a
 reusable "teach-once" mechanic.>
 
-<!-- Session 2 notes updated with the scribbles from the session. -->
+<!-- Session 2 notes updated with scribbles from the session. -->
