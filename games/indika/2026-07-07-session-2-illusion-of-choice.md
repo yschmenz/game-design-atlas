@@ -12,16 +12,65 @@ status: done
 ---
 
 Session 2, picking up exactly where session 1 stopped (the mill). Source: audio
-commentary, structured from the recording transcript — no scribble this time.
+commentary and handwritten sketches.
 
 recording:
 https://www.youtube.com/watch?v=Z5FhfXMGJxk
 
 ## Sequence
 
+![Scribbles 1](sketches/2026-07-08-session-2-scribble-1.jpg)
+![Scribbles 2](sketches/2026-07-08-session-2-scribble-2.jpg)
+
 Mill interior → counterweight elevator → balancing plank → dog maze → the crane +
 2D puzzles → flashback platformer → arrival at Spasov → fish-tin puzzles → parting
 with Ilya → final flashback and the illusory-choice ending.
+
+## From the scribbles
+
+Jachym's two sketch pages are a numbered storyboard of the whole run — one small
+panel per beat, each with a Czech caption. Read against the observations below
+(panel → matching observation):
+
+**Sheet 1 — mill to flashback**
+
+1. **Boards corridor** — *"cesta jasně vedená"*: the path laid out in wooden boards,
+   funnelled by industrial structure. → obs 1
+2. **Mill machine** — the big cog drawn with three marked spots; light picks out the
+   three things that matter (elevator, raised platform, key-machine). → obs 2
+3. **Counterweight elevator** — a car drawn against its weight (up/down arrows); the
+   real counterweight *is* the puzzle. → obs 3
+4. **Balancing plank** — captioned *"balancování v minihře"*: new left/right balance
+   control, and the first death. → obs 4
+5. **Dog maze** — light-guided wooden maze, hide at the end, built with few ways to
+   fail. → obs 5
+6. **Crane + 2D minigame** — a *"minihra"* noted with a **narrower FOV** and a
+   different control scheme (*"tetris"*) running while the characters talk. → obs 6
+7. **Flashback platformer** — the warm village/church vignette; Indika steps into her
+   past. → obs 7
+8. **Corridor-for-talk** — an arch framing the two characters: a corridor "level" that
+   keeps you inside the conversation. → obs 8
+9. **Fan / windmill verticality** — rotating blades used as a vertical climb
+   (*"větrný"*). → verticality beat, cf. obs 9
+
+**Sheet 2 — Spasov to the ending**
+
+10. **Twin elevators** — two coupled cars drawn as linked loops: the counterweight idea
+    again, across several vertical levels. → obs 10
+11. **Benches** — *"cinematic pauses, lavičky"*: sitting **changes the FOV** and slows
+    the pace. → obs 11
+12. **Fish-tin stacking** — the stacked-tins climb, flagged as running longer than it
+    needs. → obs 12
+13. **Parting + illusory choice** — the two heads separating, then a room whose several
+    paths/doors all funnel to one exit — choice as fate/destiny. → obs 13
+
+What the sketches add beyond the audio: the explicit **FOV shifts** (tighter in the
+crane/2D minigame, and again when you sit on a bench), and the **twin elevators drawn
+as two coupled counterweights**, which makes the "teach-once, reuse-later" link back to
+the mill visually explicit.
+
+<!-- Panel numbering and a few Czech captions are my best read of the handwriting —
+Jachym, correct anything I've mis-parsed. -->
 
 ## Observations
 
@@ -193,4 +242,4 @@ with session 1's fork. Strong candidate for a dedicated NP-02 write-up or a smal
 a room offering three doors that provably lead to one place. Also flag the counterweight as a
 reusable "teach-once" mechanic.>
 
-<!-- Session 2 is audio-only; no handwritten scribble. Jachym — correct anything I mis-heard. -->
+<!-- Session 2 notes updated with the scribbles from the session. -->
