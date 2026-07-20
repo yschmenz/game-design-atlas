@@ -17,19 +17,6 @@ recording:
 
 https://youtu.be/L2N9TktN1lU
 
-screenshots:
-
-![001.jpg](../../../../01_recordings/01_screenshots/001.jpg)
-![002.jpg](../../../../01_recordings/01_screenshots/002.jpg)
-![003.jpg](../../../../01_recordings/01_screenshots/003.jpg)
-![004.jpg](../../../../01_recordings/01_screenshots/004.jpg)
-![005.jpg](../../../../01_recordings/01_screenshots/005.jpg)
-![006.jpg](../../../../01_recordings/01_screenshots/006.jpg)
-![007.jpg](../../../../01_recordings/01_screenshots/007.jpg)
-![008.jpg](../../../../01_recordings/01_screenshots/008.jpg)
-![009.jpg](../../../../01_recordings/01_screenshots/009.jpg)
-![010.jpg](../../../../01_recordings/01_screenshots/010.jpg)
-
 ## Sequence
 
 Childhood neighborhood, free-roam intro → "invisible wall-less" blocking by
@@ -45,17 +32,20 @@ party (free interaction) → arcade football interlude → 2D top-down wandering
    mechanical depth) with strong narrative in dialogues is what carries culture, relationships, and how growing up
    in Quito actually felt. Called out explicitly as the design's major goal: transfer
    feeling with almost nothing in the verb list.
+![002.jpg](sketches/002.jpg)
 2. **Textures as photographs, interactible NPCs and object as outlined graphics.** The world's surfaces are
    near-photographic, noisy, drawn straight from real-world photo reference, laid over
    very simplified, almost billboard-flat geometry. The contrast is deliberate — meant
    to feel like walking around inside old photographs, and it doubles as a soft
    navigation cue (what's "real" enough to matter reads differently from what isn't).
+![005.jpg](sketches/005.jpg)
 3. **Soft blocking instead of walls.** Levels open with near-total freedom to explore;
    invisible walls are rare. Blocking is done almost entirely through environmental
    design — buildings, terrain, and layout physically closing routes rather than
    artificial barriers. First-instinct read: this alone is the "honest architecture"
    move (**PP-13**) — the world looks unrestricted because the restriction is baked
    into the space itself.
+![003.jpg](sketches/003.jpg)
 4. **A time limit that doesn't actually limit you.** The only real constraint most
    chapters offer is diegetic: the mother tells the boy to be back in two hours. Being
    late or on time doesn't appear to matter mechanically — but the *knowledge* of the
@@ -82,6 +72,7 @@ party (free interaction) → arcade football interlude → 2D top-down wandering
    "clunky" and not narratively load-bearing on its own — its job is to simulate
    tuning out the real world the way a kid does when locked onto a game, while people
    and events keep happening, unattended to, around them.
+![006.jpg](sketches/006.jpg)
 10. **Walking as "the footballer," without a match.** Later, that same football
     identity is repurposed: a top-down sequence has you walking the neighborhood *as*
     the footballer character, with no goal to score and no match to play — just
@@ -102,11 +93,14 @@ party (free interaction) → arcade football interlude → 2D top-down wandering
     is used specifically to sell the game's documentary/autobiographical register, not
     just as a visual trick — a chance to compare the world you've gotten used to
     against how the real place actually measures up.
+![008.jpg](sketches/008.jpg)
+![009.jpg](sketches/009.jpg)
 13. **Losing all control, becoming the ball.** In the closing sequence, a kicked ball
     becomes the literal camera/player object: no control is given back, the player is
     passively carried through the environment and past most of the characters met
     over the course of the game — a full inversion of the earlier free-roam,
     CCTV-like traversal, used purely as a cinematic wrap-up.
+![010.jpg](sketches/010.jpg)
 
 **▸ Full walkthrough from the recording (structured transcript)**
 
