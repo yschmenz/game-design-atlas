@@ -154,6 +154,9 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
   border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; outline: none; min-width: 140px; }
 .facet-search::placeholder { color: var(--faint); }
 .facet-search:focus { border-color: var(--mut); }
+.filters .facet-more { border: none; background: none; color: var(--faint); cursor: pointer;
+  font: 12px monospace; padding: 3px 4px; text-decoration: underline; text-decoration-color: var(--line); }
+.filters .facet-more:hover { color: var(--ink); }
 
 /* active-filters summary bar: what's on, one-click removable */
 .active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem;

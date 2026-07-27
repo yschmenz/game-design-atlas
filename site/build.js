@@ -224,7 +224,7 @@ const wingIcon = {
     const inline = vals.map(v => btn(v)).join('');
     if (searchable && vals.length > VISIBLE) {
       const btns = vals.map((v, i) => btn(v, i >= VISIBLE)).join('');
-      return `<div class="frow"><b>${label}</b><div class="fvals">${all}<input class="facet-search" placeholder="filter ${vals.length}…" aria-label="Filter ${label}" autocomplete="off">${btns}</div></div>`;
+      return `<div class="frow"><b>${label}</b><div class="fvals">${all}<input class="facet-search" placeholder="filter ${vals.length}…" aria-label="Filter ${label}" autocomplete="off">${btns}<button class="facet-more" type="button" data-n="${vals.length}">show all ${vals.length}</button></div></div>`;
     }
     return `<div class="frow"><b>${label}</b><div class="fvals">${all}${inline}</div></div>`;
   };
@@ -289,10 +289,20 @@ const wingIcon = {
     const b = e.target.closest('button'); if (!b || b.dataset.f === undefined) return;
     pick(b); applyFilters();
   });
-  filters.querySelectorAll('.facet-search').forEach(inp => inp.addEventListener('input', () => {
-    const qq = inp.value.trim().toLowerCase();
-    const btns = inp.parentNode.querySelectorAll('button[data-f]:not([data-v="all"])');
-    btns.forEach((b, i) => b.classList.toggle('hid', qq ? b.dataset.v.toLowerCase().indexOf(qq) < 0 : i >= ${VISIBLE}));
+  function applyFacet(fvals) {
+    const inp = fvals.querySelector('.facet-search'), more = fvals.querySelector('.facet-more');
+    const qq = (inp.value || '').trim().toLowerCase(), exp = fvals.classList.contains('exp');
+    fvals.querySelectorAll('button[data-f]:not([data-v="all"])').forEach((b, i) => {
+      const show = qq ? b.dataset.v.toLowerCase().indexOf(qq) >= 0 : (exp || i < ${VISIBLE});
+      b.classList.toggle('hid', !show);
+    });
+    if (more) more.style.display = qq ? 'none' : '';
+  }
+  filters.querySelectorAll('.facet-search').forEach(inp => inp.addEventListener('input', () => applyFacet(inp.parentNode)));
+  filters.querySelectorAll('.facet-more').forEach(mb => mb.addEventListener('click', () => {
+    const fvals = mb.parentNode, exp = fvals.classList.toggle('exp');
+    mb.textContent = exp ? 'show less' : 'show all ' + mb.dataset.n;
+    applyFacet(fvals);
   }));
   activeBar.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
