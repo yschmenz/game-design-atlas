@@ -267,35 +267,41 @@ const wingIcon = {
   const js = `<script>
   const searchBox = document.getElementById('search'), shown = document.getElementById('shown');
   const activeBar = document.getElementById('active-filters'), filters = document.getElementById('filters');
+  /* how to read each facet's values off a card (multi-value facets return arrays) */
+  const fieldOf = {
+    status: c => [c.dataset.status], pace: c => [c.dataset.pace],
+    tag: c => c.dataset.tags.split(' '), mood: c => c.dataset.moods.split(' '),
+    topic: c => c.dataset.topics.split(' '), author: c => c.dataset.authors.split(' ')
+  };
   function applyFilters() {
-    const f = {};
-    filters.querySelectorAll('button.on').forEach(x => f[x.dataset.f] = x.dataset.v);
+    /* selected values per facet; multi-select = OR within a facet, AND across facets */
+    const sel = {};
+    filters.querySelectorAll('button.on').forEach(x => { if (x.dataset.v !== 'all') (sel[x.dataset.f] = sel[x.dataset.f] || []).push(x.dataset.v); });
     const q = (searchBox.value || '').trim().toLowerCase();
     let count = 0;
     document.querySelectorAll('.card').forEach(c => {
-      const ok = (f.status === 'all' || c.dataset.status === f.status)
-        && (f.tag === 'all' || c.dataset.tags.split(' ').includes(f.tag))
-        && (f.mood === 'all' || c.dataset.moods.split(' ').includes(f.mood))
-        && (f.pace === 'all' || c.dataset.pace === f.pace)
-        && (f.topic === 'all' || c.dataset.topics.split(' ').includes(f.topic))
-        && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author))
-        && (!q || c.dataset.search.includes(q));
+      let ok = !q || c.dataset.search.includes(q);
+      for (const f in sel) { if (!ok) break; const vals = fieldOf[f](c); ok = sel[f].some(v => vals.indexOf(v) >= 0); }
       c.style.display = ok ? '' : 'none'; if (ok) count++;
     });
     shown.textContent = count;
     let h = '';
-    Object.keys(f).forEach(k => { if (f[k] !== 'all') h += '<button class="af-chip" data-clear="' + k + '">' + f[k] + ' ✕</button>'; });
+    for (const f in sel) sel[f].forEach(v => h += '<button class="af-chip" data-clear="' + f + '|' + v + '">' + v + ' ✕</button>');
     if (q) h += '<button class="af-chip" data-clear="__q">“' + q + '” ✕</button>';
     if (h) h = '<span class="af-label">active</span>' + h + '<button class="af-clear" data-clear="__all">clear all</button>';
     activeBar.innerHTML = h; activeBar.hidden = !h;
   }
-  function pick(b) {
-    filters.querySelectorAll('button[data-f="' + b.dataset.f + '"]').forEach(x => x.classList.remove('on'));
-    b.classList.add('on'); b.classList.remove('hid');
+  /* the "all" chip in a facet is on iff no value in that facet is selected */
+  function syncAll(f) {
+    const anyOn = [...filters.querySelectorAll('button[data-f="' + f + '"]')].some(x => x.dataset.v !== 'all' && x.classList.contains('on'));
+    filters.querySelector('button[data-f="' + f + '"][data-v="all"]').classList.toggle('on', !anyOn);
   }
   filters.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || b.dataset.f === undefined) return;
-    pick(b); applyFilters();
+    const f = b.dataset.f;
+    if (b.dataset.v === 'all') filters.querySelectorAll('button[data-f="' + f + '"]').forEach(x => x.classList.toggle('on', x.dataset.v === 'all'));
+    else { b.classList.toggle('on'); b.classList.remove('hid'); syncAll(f); }
+    applyFilters();
   });
   function applyFacet(fvals) {
     const inp = fvals.querySelector('.facet-search'), more = fvals.querySelector('.facet-more');
@@ -315,9 +321,16 @@ const wingIcon = {
   activeBar.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     const c = b.dataset.clear;
-    if (c === '__all') { filters.querySelectorAll('button[data-v="all"]').forEach(pick); searchBox.value = ''; }
-    else if (c === '__q') { searchBox.value = ''; }
-    else { const a = filters.querySelector('button[data-f="' + c + '"][data-v="all"]'); if (a) pick(a); }
+    if (c === '__all') {
+      filters.querySelectorAll('button.on').forEach(x => x.classList.remove('on'));
+      filters.querySelectorAll('button[data-v="all"]').forEach(x => x.classList.add('on'));
+      searchBox.value = '';
+    } else if (c === '__q') { searchBox.value = ''; }
+    else {
+      const i = c.indexOf('|'), f = c.slice(0, i), v = c.slice(i + 1);
+      const btn = filters.querySelector('button[data-f="' + f + '"][data-v="' + v + '"]');
+      if (btn) { btn.classList.remove('on'); syncAll(f); }
+    }
     applyFilters();
   });
   searchBox.addEventListener('input', applyFilters);
@@ -332,11 +345,13 @@ const wingIcon = {
   ft.addEventListener('click', () => openFilters(!filters.classList.contains('open')));
   /* deep link: index.html?tag=rpg&mood=eerie (works for any facet) */
   const params = new URLSearchParams(location.search);
+  const touched = new Set();
   for (const [k, v] of params) {
     if (k === 'q') continue;
     const b = filters.querySelector('button[data-f="' + k + '"][data-v="' + v + '"]');
-    if (b) pick(b);
+    if (b) { b.classList.add('on'); b.classList.remove('hid'); touched.add(k); }
   }
+  touched.forEach(syncAll);
   if (params.get('q')) searchBox.value = params.get('q');
   if ([...params].filter(([k]) => k !== 'q').length) { openFilters(true); filters.scrollIntoView(); }
   applyFilters();
