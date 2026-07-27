@@ -199,6 +199,15 @@ function coverUrl(g, localPath) {
 const coverImg = (url, cls) => url
   ? `<img class="${cls}${url.includes('header') ? ' wide' : ''}" loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header');this.classList.add('wide')}else{this.remove()}">` : '';
 
+/* grid tile: a uniform 2:3 frame. Any art is cropped to fit; when there's no cover,
+   the title shows as a typographic fallback so no tile is ever blank or mis-shaped. */
+const coverTile = (url, titleText) => {
+  const img = url
+    ? `<img loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header')}else{this.remove()}">`
+    : '';
+  return `<span class="cover-frame"><span class="ph">${esc(titleText)}</span>${img}</span>`;
+};
+
 /* quiet monochrome line icons for wings (inline, no icon font) — used by hub + wing pages */
 const _svgIcon = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const wingIcon = {
@@ -257,7 +266,7 @@ const wingIcon = {
       data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}"
       data-moods="${(g.meta.mood || []).join(' ')}" data-pace="${esc(g.meta.pace || '')}"
       data-search="${esc(searchText)}">
-      ${coverImg(coverUrl(g, `games/${g.slug}/cover.jpg`), 'cover')}
+      ${coverTile(coverUrl(g, `games/${g.slug}/cover.jpg`), g.meta.title)}
       <h3>${esc(g.meta.title)}</h3>
       <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
       ${g.meta['added-by'] ? chip('+ ' + g.meta['added-by'], 'author') : ''}
@@ -650,7 +659,7 @@ for (const w of wings) {
   for (const l of lists) {
     const grid = gamesOf(l).map(g => {
       const c = coverUrl(g, `../games/${g.slug}/cover.jpg`);
-      return `<a class="card" href="../games/${g.slug}/index.html">${coverImg(c, 'cover')}<h3>${esc(g.meta.title)}</h3></a>`;
+      return `<a class="card" href="../games/${g.slug}/index.html">${coverTile(c, g.meta.title)}<h3>${esc(g.meta.title)}</h3></a>`;
     }).join('');
     write(path.join(OUT, 'lists', l.slug + '.html'), page(l.meta.title || l.slug, 'lists',
       `<p class="crumb"><a href="../lists.html">Lists</a></p>
