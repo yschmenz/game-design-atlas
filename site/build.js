@@ -253,6 +253,12 @@ const coverImg = (url, cls) => url
   if (params.get('q')) searchBox.value = params.get('q');
   if ([...params].filter(([k]) => k !== 'q').length) { openFilters(true); document.getElementById('filters').scrollIntoView(); }
   applyFilters();   /* always run once: sets the initial count and honours ?q= */
+  /* wander: jump to a random game */
+  const wanderUrls = [${games.map(g => `"games/${g.slug}/index.html"`).join(',')}];
+  document.getElementById('wander').addEventListener('click', e => {
+    e.preventDefault();
+    location.href = wanderUrls[Math.floor(Math.random() * wanderUrls.length)];
+  });
   </script>`;
   const latest = allEntries.filter(e => e.meta.date)
     .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 6);
@@ -267,7 +273,8 @@ const coverImg = (url, cls) => url
     `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
      <div class="section-head"><h2>All games <span class="count" id="shown">${games.length}</span></h2>
      <input id="search" class="search" type="search" placeholder="search title, tag, topic…  ( / )" aria-label="Search games" autocomplete="off" spellcheck="false">
-     <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button></div>
+     <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button>
+     <a class="wander" id="wander" href="#" title="jump to a random game">wander →</a></div>
      ${filters}<div class="grid">${cards}</div>${js}`));
 })();
 

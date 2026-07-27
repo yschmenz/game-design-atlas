@@ -76,6 +76,8 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .filter-toggle { font: 12px monospace; color: var(--faint); background: none;
   border: none; cursor: pointer; padding: 0; }
 .filter-toggle:hover, .filter-toggle.open { color: var(--ink); }
+.wander { font: 12px monospace; color: var(--faint); text-decoration: none; margin-left: 1.1rem; }
+.wander:hover { color: var(--ink); }
 .filters { display: none; flex-direction: column; gap: .4rem; margin: 1rem 0 1.5rem;
   font: 13px monospace; color: var(--faint);
   background: var(--panel); border-radius: 8px; padding: 1rem 1.2rem; }
