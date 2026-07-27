@@ -417,15 +417,14 @@ for (const g of games) {
      ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>
      ${g.meta.summary ? `<p class="summary">${esc(g.meta.summary)}</p>` : ''}
-     ${(g.meta.tags || []).length ? `<div class="meta">${g.meta.tags.map(t =>
-       `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')}</div>` : ''}
-     ${(g.meta.mood || []).length || g.meta.pace ? `<div class="meta">${(g.meta.mood || []).map(m =>
-       `<a class="chip mood" href="../../index.html?mood=${encodeURIComponent(m)}">${esc(m)}</a>`).join('')}${g.meta.pace ?
-       `<a class="chip pace" href="../../index.html?pace=${encodeURIComponent(g.meta.pace)}">${esc(g.meta.pace)}</a>` : ''}</div>` : ''}
+     ${(g.meta.tags || []).length || (g.meta.mood || []).length || g.meta.pace ? `<div class="meta facets">${
+       (g.meta.tags || []).map(t => `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')
+       }${(g.meta.mood || []).map(m => `<a class="chip mood" href="../../index.html?mood=${encodeURIComponent(m)}">${esc(m)}</a>`).join('')
+       }${g.meta.pace ? `<a class="chip pace" href="../../index.html?pace=${encodeURIComponent(g.meta.pace)}">${esc(g.meta.pace)}</a>` : ''}</div>` : ''}
      ${(listsForGame[g.slug] || []).length ? `<p class="in-lists">In: ${listsForGame[g.slug].map(l =>
        `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
      ${body ? md2html(body) : ''}
-     ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
+     ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
      ${looseProtos}`, 2, 'reading'));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
   for (const s of g.sketches) copy(path.join(g.dir, 'sketches', s), path.join(OUT, 'games', g.slug, 'sketches', s));

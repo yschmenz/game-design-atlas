@@ -58,6 +58,7 @@ input:focus-visible, [tabindex]:focus-visible {
 code { font: 14px monospace; background: var(--panel); padding: 1px 5px; border-radius: 4px; }
 .dim { color: var(--faint); }
 .summary { font-style: italic; color: var(--mut); font-size: 1.05rem; margin: .6rem 0 .4rem; }
+.facets { margin-top: .5rem; }
 .crumb { font: 13px monospace; margin-bottom: -0.5rem; }
 .crumb, .crumb a { color: var(--faint); text-decoration: none; }
 .crumb a:hover { color: var(--ink); }
