@@ -148,6 +148,19 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .filters div.expanded .more-wrap { display: inline; }
 .filters button.more { border-style: dashed; }
 
+/* lists / collections */
+.list-index { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.9rem 1.6rem; margin: 1.2rem 0; }
+.list-card { display: block; text-decoration: none; color: var(--faint); }
+.list-covers { display: flex; gap: 4px; margin-bottom: .55rem; }
+.list-covers img { width: 42px; aspect-ratio: 2/3; object-fit: cover; border-radius: 4px; background: var(--panel); }
+.list-card h3 { margin: 0; font: 400 1.15rem Georgia, serif; color: var(--ink); }
+.list-card:hover h3 { text-decoration: underline; text-decoration-color: var(--faint); }
+.list-meta { margin: .15rem 0 .3rem; font: 12px monospace; color: var(--faint); }
+.list-sum { margin: 0; font: 14px/1.5 Georgia, serif; color: var(--mut); }
+.in-lists { font: 12px monospace; color: var(--faint); margin: .4rem 0 0; }
+.in-lists a { color: var(--mut); text-decoration: none; }
+.in-lists a:hover { color: var(--ink); }
+
 /* the grid: covers speak, captions whisper */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.4rem 1rem; }
 .card { background: none; border: none; border-radius: 0; padding: 0;

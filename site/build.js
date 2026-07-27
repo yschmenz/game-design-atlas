@@ -104,6 +104,14 @@ const allEntries = games.flatMap(g => g.entries.map(e => ({ ...e, game: g })));
   if (warns.length) console.warn('⚠ feel vocabulary:\n  ' + warns.join('\n  '));
 })();
 
+const gameBySlug = Object.fromEntries(games.map(g => [g.slug, g]));
+const lists = listFiles(path.join(ROOT, 'lists'), '.md').map(f => {
+  const l = parseFrontmatter(read(path.join(ROOT, 'lists', f)));
+  return { slug: f.replace(/\.md$/, ''), meta: l.meta, body: l.body };
+}).sort((a, b) => String(a.meta.title || '').localeCompare(String(b.meta.title || '')));
+const listsForGame = {};
+for (const l of lists) for (const s of (l.meta.games || [])) (listsForGame[s] ??= []).push(l);
+
 const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
   const dir = path.join(ROOT, 'atlas', w);
   const idx = parseFrontmatter(read(path.join(dir, 'index.md')));
@@ -124,6 +132,7 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
   const wingKeys = wings.map(w => w.slug);
   const nav = [
     ['index.html', 'Games', 'games'],
+    ['lists.html', 'Lists', 'lists'],
     ['atlas/index.html', 'Knowledge', 'atlas'],
     ['diary.html', 'Log', 'diary'],
     ['to-play.html', 'To Play', 'to-play'],
@@ -358,6 +367,8 @@ for (const g of games) {
      ${(g.meta.mood || []).length || g.meta.pace ? `<div class="meta">${(g.meta.mood || []).map(m =>
        `<a class="chip mood" href="../../index.html?mood=${encodeURIComponent(m)}">${esc(m)}</a>`).join('')}${g.meta.pace ?
        `<a class="chip pace" href="../../index.html?pace=${encodeURIComponent(g.meta.pace)}">${esc(g.meta.pace)}</a>` : ''}</div>` : ''}
+     ${(listsForGame[g.slug] || []).length ? `<p class="in-lists">In: ${listsForGame[g.slug].map(l =>
+       `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
      ${looseProtos}`, 2, 'reading'));
@@ -571,6 +582,40 @@ for (const w of wings) {
   write(path.join(OUT, 'diary.html'), page('Log', 'diary', content));
 })();
 
+/* ---------- lists / collections ---------- */
+(function buildLists() {
+  if (!lists.length) return;
+  const gamesOf = l => (l.meta.games || []).map(s => gameBySlug[s]).filter(Boolean);
+
+  const cards = lists.map(l => {
+    const gs = gamesOf(l);
+    const thumbs = gs.slice(0, 5).map(g => {
+      const c = coverUrl(g, `games/${g.slug}/cover.jpg`);
+      return c ? `<img loading="lazy" src="${c}" alt="" onerror="this.remove()">` : '';
+    }).join('');
+    return `<a class="list-card" href="lists/${l.slug}.html">
+      <div class="list-covers">${thumbs}</div>
+      <h3>${esc(l.meta.title || l.slug)}</h3>
+      <p class="list-meta">${l.meta.by ? 'by ' + esc(l.meta.by) + ' · ' : ''}${gs.length} game${gs.length !== 1 ? 's' : ''}</p>
+      ${l.meta.summary ? `<p class="list-sum">${esc(l.meta.summary)}</p>` : ''}</a>`;
+  }).join('\n');
+  write(path.join(OUT, 'lists.html'), page('Lists', 'lists',
+    `<h1>Lists <span class="count">${lists.length}</span></h1><div class="list-index">${cards}</div>`, 0));
+
+  for (const l of lists) {
+    const grid = gamesOf(l).map(g => {
+      const c = coverUrl(g, `../games/${g.slug}/cover.jpg`);
+      return `<a class="card" href="../games/${g.slug}/index.html">${coverImg(c, 'cover')}<h3>${esc(g.meta.title)}</h3></a>`;
+    }).join('');
+    write(path.join(OUT, 'lists', l.slug + '.html'), page(l.meta.title || l.slug, 'lists',
+      `<p class="crumb"><a href="../lists.html">Lists</a></p>
+       <h1>${esc(l.meta.title || l.slug)}</h1>
+       ${l.meta.summary || l.meta.by ? `<p class="summary">${l.meta.summary ? esc(l.meta.summary) : ''}${l.meta.by ? ` <span class="dim">— ${esc(l.meta.by)}</span>` : ''}</p>` : ''}
+       <div class="grid">${grid}</div>
+       ${l.body.trim() ? md2html(l.body) : ''}`, 1));
+  }
+})();
+
 /* ---------- global search index ---------- */
 (function buildSearch() {
   const plain = s => String(s || '').replace(/<!--[\s\S]*?-->/g, ' ').replace(/<[^>]+>/g, ' ')
@@ -596,6 +641,11 @@ for (const w of wings) {
       const x = [patName(p), p.meta.pattern, plain(p.body)].filter(Boolean).join(' ').toLowerCase();
       rec.push({ t: patName(p), k: 'pattern', c: wt, u: `atlas/${w.slug}/patterns/${p.slug}.html`, x });
     }
+  }
+  for (const l of lists) {
+    const gs = (l.meta.games || []).map(s => gameBySlug[s] && gameBySlug[s].meta.title).filter(Boolean);
+    const x = [l.meta.title, l.meta.summary, l.meta.by, ...gs, plain(l.body)].filter(Boolean).join(' ').toLowerCase();
+    rec.push({ t: l.meta.title || l.slug, k: 'list', c: l.meta.by ? 'by ' + l.meta.by : '', u: `lists/${l.slug}.html`, x });
   }
   write(path.join(OUT, 'search-index.js'), 'window.SEARCH_INDEX=' + JSON.stringify(rec) + ';');
   copy(path.join(__dirname, 'search.js'), path.join(OUT, 'search.js'));
