@@ -64,7 +64,9 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 
 /* diary: the full activity timeline — single column, reads top to bottom */
 .diary-stats { font: 12px/1.6 monospace; color: var(--faint); margin: .1rem 0 1.3rem; }
-.diary-filter { display: flex; gap: .5rem; margin: 0 0 1.7rem; }
+.diary-filters { margin: 0 0 1.7rem; }
+.diary-filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0 0 .5rem; }
+.dfl { font: 12px monospace; color: var(--faint); margin-right: .3rem; }
 .diary-filter button { font: 12px monospace; background: none; color: var(--faint);
   border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px; cursor: pointer;
   transition: color .15s, border-color .15s; }

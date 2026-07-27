@@ -402,6 +402,18 @@ for (const w of wings) {
   const authorBtns = ['all', ...Object.keys(byAuthor).sort()].map(a =>
     `<button data-a="${esc(a)}"${a === 'all' ? ' class="on"' : ''}>${a === 'all' ? 'all' : esc(a) + ' ' + byAuthor[a]}</button>`).join('');
 
+  /* wing filter: an entry can touch several wings (via its topics + patterns) */
+  const entryWings = e => [...new Set([
+    ...(e.meta.wing ? [e.meta.wing] : []),
+    ...(e.meta.topics || []).map(t => topicWing[t]).filter(Boolean),
+    ...(e.meta.patterns || []).map(p => patternRef[p] && patternRef[p].wing).filter(Boolean),
+  ])];
+  const wingTitle = {}; for (const w of wings) wingTitle[w.slug] = w.meta.title || title(w.slug);
+  const byWing = {};
+  for (const e of dated) for (const wg of entryWings(e)) byWing[wg] = (byWing[wg] || 0) + 1;
+  const wingBtns = ['all', ...Object.keys(byWing).sort((a, b) => byWing[b] - byWing[a] || a.localeCompare(b))].map(wg =>
+    `<button data-w="${esc(wg)}"${wg === 'all' ? ' class="on"' : ''}>${wg === 'all' ? 'all' : esc(wingTitle[wg] || wg) + ' ' + byWing[wg]}</button>`).join('');
+
   /* month sections so a filtered-empty month can hide its whole header */
   const groups = {};
   for (const e of dated) (groups[String(e.meta.date).slice(0, 7)] ??= []).push(e);
@@ -410,7 +422,7 @@ for (const w of wings) {
       const cover = coverUrl(e.game, `games/${e.game.slug}/cover.jpg`);
       const type = typeLabel[e.meta.type] || e.meta.type || '';
       const draft = e.meta.status === 'draft' ? ' · draft' : '';
-      return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}" data-author="${esc(e.meta.author || '?')}">
+      return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}" data-author="${esc(e.meta.author || '?')}" data-wings="${entryWings(e).join(' ')}">
        ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
        <span><span class="lt">${esc(e.meta.title)}</span>
        <span class="lm">${esc(e.game.meta.title)}${type ? ' · ' + esc(type) : ''} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}${draft}</span></span></a>`;
@@ -420,29 +432,39 @@ for (const w of wings) {
 
   const js = `<script>
   const dshown = document.getElementById('dshown');
-  function applyDiary(a) {
+  let fAuthor = 'all', fWing = 'all';
+  function applyDiary() {
     let total = 0;
     document.querySelectorAll('.dmonth').forEach(sec => {
       let vis = 0;
       sec.querySelectorAll('.lcard').forEach(c => {
-        const ok = a === 'all' || c.dataset.author === a;
+        const okA = fAuthor === 'all' || c.dataset.author === fAuthor;
+        const okW = fWing === 'all' || (c.dataset.wings || '').split(' ').includes(fWing);
+        const ok = okA && okW;
         c.style.display = ok ? '' : 'none'; if (ok) vis++;
       });
       sec.style.display = vis ? '' : 'none'; total += vis;
     });
     if (dshown) dshown.textContent = total;
   }
-  document.querySelector('.diary-filter').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    b.parentNode.querySelectorAll('button').forEach(x => x.classList.remove('on'));
-    b.classList.add('on'); applyDiary(b.dataset.a);
+  document.querySelectorAll('.diary-filter').forEach(row => {
+    row.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      row.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      if (row.dataset.kind === 'author') fAuthor = b.dataset.a; else fWing = b.dataset.w;
+      applyDiary();
+    });
   });
   </script>`;
 
   const content = dated.length
     ? `<h1>Diary <span class="count" id="dshown">${dated.length}</span></h1>
        <p class="diary-stats">${statsLine}</p>
-       <div class="diary-filter">${authorBtns}</div>
+       <div class="diary-filters">
+         <div class="diary-filter" data-kind="author"><span class="dfl">who</span>${authorBtns}</div>
+         <div class="diary-filter" data-kind="wing"><span class="dfl">wing</span>${wingBtns}</div>
+       </div>
        ${sections}${js}`
     : `<h1>Diary</h1><p class="dim">No dated entries yet.</p>`;
   write(path.join(OUT, 'diary.html'), page('Diary', 'diary', content));
