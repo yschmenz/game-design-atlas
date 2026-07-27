@@ -20,7 +20,9 @@ Use only these words so the filter stays coherent (and so it lines up with film/
 - **mood:** `tense` · `eerie` · `oppressive` · `melancholic` · `lonely` · `contemplative` · `wondrous` · `dreamlike` · `cozy` · `playful` · `hopeful` · `tender`
 - **pace:** `slow` · `medium` · `fast`
 
-If a word is genuinely missing, we add it here first, then use it — never invent one-off moods in a single file.
+If a word is genuinely missing, we add it here first, then use it — never invent one-off moods in a single file. The build **warns** (never fails) if a game has no mood/pace or uses a word off this list, so drift and typos get caught before they ship.
+
+Not sure which moods fit? Add the game with just `title`/`steam`, then ask Claude to draft moods from the summary — eyeball and commit. Never start from a blank field.
 
 ## Add an entry about a game
 

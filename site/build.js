@@ -16,6 +16,12 @@ function gitTime(file) {
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, '_site');
 
+/* canonical feel vocabulary — the source of truth (mirrored in CONTRIBUTING.md).
+   Add a word here first, then use it; the build warns on anything off-list or missing. */
+const MOODS = ['tense', 'eerie', 'oppressive', 'melancholic', 'lonely', 'contemplative',
+  'wondrous', 'dreamlike', 'cozy', 'playful', 'hopeful', 'tender'];
+const PACES = ['slow', 'medium', 'fast'];
+
 /* ---------- helpers ---------- */
 const read = f => fs.readFileSync(f, 'utf8');
 const exists = f => fs.existsSync(f);
@@ -84,6 +90,19 @@ const games = listDirs(path.join(ROOT, 'games')).map(slug => {
 }).sort((a, b) => a.meta.title.localeCompare(b.meta.title));
 
 const allEntries = games.flatMap(g => g.entries.map(e => ({ ...e, game: g })));
+
+/* feel-vocabulary guardrail: warn (never fail) on missing or off-list mood/pace */
+(function checkFeel() {
+  const warns = [];
+  for (const g of games) {
+    const moods = g.meta.mood || [];
+    if (!moods.length) warns.push(`${g.slug}: no mood`);
+    for (const m of moods) if (!MOODS.includes(m)) warns.push(`${g.slug}: unknown mood "${m}" (see CONTRIBUTING.md)`);
+    if (!g.meta.pace) warns.push(`${g.slug}: no pace`);
+    else if (!PACES.includes(g.meta.pace)) warns.push(`${g.slug}: unknown pace "${g.meta.pace}"`);
+  }
+  if (warns.length) console.warn('⚠ feel vocabulary:\n  ' + warns.join('\n  '));
+})();
 
 const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
   const dir = path.join(ROOT, 'atlas', w);
