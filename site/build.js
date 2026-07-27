@@ -106,7 +106,7 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
   const nav = [
     ['index.html', 'Games', 'games'],
     ['atlas/index.html', 'Knowledge', 'atlas'],
-    ['diary.html', 'Diary', 'diary'],
+    ['diary.html', 'Log', 'diary'],
     ['to-play.html', 'To Play', 'to-play'],
   ].map(([href, label, key]) => {
     const on = key === active || (key === 'atlas' && wingKeys.includes(active));
@@ -495,15 +495,15 @@ for (const w of wings) {
   </script>`;
 
   const content = dated.length
-    ? `<h1>Diary <span class="count" id="dshown">${dated.length}</span></h1>
+    ? `<h1>Log <span class="count" id="dshown">${dated.length}</span></h1>
        <p class="diary-stats">${statsLine}</p>
        <div class="diary-filters">
          <div class="diary-filter" data-kind="author"><span class="dfl">who</span>${authorBtns}</div>
          <div class="diary-filter" data-kind="wing"><span class="dfl">wing</span>${wingBtns}</div>
        </div>
        ${sections}${js}`
-    : `<h1>Diary</h1><p class="dim">No dated entries yet.</p>`;
-  write(path.join(OUT, 'diary.html'), page('Diary', 'diary', content));
+    : `<h1>Log</h1><p class="dim">No dated entries yet.</p>`;
+  write(path.join(OUT, 'diary.html'), page('Log', 'diary', content));
 })();
 
 /* ---------- css ---------- */
