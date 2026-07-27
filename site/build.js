@@ -361,8 +361,10 @@ for (const w of wings) {
   }
   const groups = {};
   for (const p of w.patterns) (groups[p.meta.group] ??= []).push(p);
-  const patternList = w.patterns.length ? `<h2>Pattern Library</h2>` + Object.entries(groups).map(([grp, ps]) =>
-    `<h3>${esc(grp)}</h3><ul class="pattern-list">` + ps.map(p => {
+  /* keep the "A. / B." prefix for ordering, drop it for display (matches the plain cluster labels) */
+  const patternList = w.patterns.length ? `<h2>Pattern Library</h2>` + Object.entries(groups)
+    .sort((a, b) => String(a[0]).localeCompare(String(b[0]))).map(([grp, ps]) =>
+    `<h3>${esc(grp.replace(/^[A-Z]\.\s*/, ''))}</h3><ul class="pattern-list">` + ps.map(p => {
       const n = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern)).length;
       return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
