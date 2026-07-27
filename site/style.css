@@ -51,6 +51,10 @@ h2 { font-size: 1.2rem; font-weight: 400; color: var(--mut); margin-top: 2.4rem;
   border: none; padding-bottom: 0; }
 a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--faint); }
 a:hover { text-decoration-color: var(--ink); }
+/* visible keyboard focus — the site was hover-only before */
+a:focus-visible, button:focus-visible, summary:focus-visible,
+input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--ember); outline-offset: 2px; border-radius: 2px; }
 code { font: 14px monospace; background: var(--panel); padding: 1px 5px; border-radius: 4px; }
 .dim { color: var(--faint); }
 .summary { font-style: italic; color: var(--mut); font-size: 1.05rem; margin: .6rem 0 .4rem; }
@@ -198,8 +202,8 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
   transition: color .15s; }
 .card:hover h3 { color: var(--ink); }
 .card:hover .cover-frame { outline-color: var(--line); }
-.card .meta { margin-top: .1rem; font: 11px monospace; color: var(--faint); }
-.card .meta .chip { border: none; padding: 0; margin: 0 .55rem 0 0; font: 11px monospace;
+.card .meta { margin-top: .1rem; font: 12px monospace; color: var(--faint); }
+.card .meta .chip { border: none; padding: 0; margin: 0 .55rem 0 0; font: 12px monospace;
   color: var(--faint); background: none; }
 .card .meta .chip.st-to-play::before, .card .meta .chip.st-playing::before,
 .card .meta .chip.st-recorded::before { content: ''; display: inline-block;
@@ -289,4 +293,14 @@ th { font: 12px monospace; color: var(--faint); text-transform: uppercase; font-
   main { padding: 1.2rem; }
   .topic-list { columns: 1; }
   .filters button { padding: 6px 12px; }
+  /* roomier tap targets on touch */
+  nav { gap: .9rem 1.1rem; }
+  nav a { padding: 3px 0; }
+  .chip { padding: 4px 10px; }
+  .diary-filter button { padding: 6px 12px; }
+}
+
+/* respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }

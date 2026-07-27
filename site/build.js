@@ -379,7 +379,8 @@ const wingIcon = {
      <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(e.meta.date).slice(0, 10)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></span></a>`;
   }).join('') + `</div>` : '';
   write(path.join(OUT, 'index.html'), page('Games', 'games',
-    `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
+    `<h1>The Games <span class="count">${games.length}</span></h1>
+     <p class="summary">A shared games-pedia — we play games, record what we learn about their design, and prototype the ideas worth keeping.</p>${feed}
      <div class="section-head"><h2>All games <span class="count" id="shown">${games.length}</span></h2>
      <input id="search" class="search" type="search" placeholder="filter games — mood, tag, topic, author" aria-label="Filter games" autocomplete="off" spellcheck="false">
      <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button>
