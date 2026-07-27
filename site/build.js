@@ -102,13 +102,16 @@ const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
 /* ---------- layout ---------- */
 function page(titleText, active, content, depth = 0, bodyClass = '') {
   const p = '../'.repeat(depth);
+  const wingKeys = wings.map(w => w.slug);
   const nav = [
     ['index.html', 'Games', 'games'],
-    ...wings.map(w => [`atlas/${w.slug}/index.html`, w.meta.title || title(w.slug), w.slug]),
-    ['to-play.html', 'To Play', 'to-play'],
+    ['atlas/index.html', 'Atlas', 'atlas'],
     ['diary.html', 'Diary', 'diary'],
-  ].map(([href, label, key]) =>
-    `<a href="${p}${href}"${key === active ? ' class="active"' : ''}>${label}</a>`).join('');
+    ['to-play.html', 'To Play', 'to-play'],
+  ].map(([href, label, key]) => {
+    const on = key === active || (key === 'atlas' && wingKeys.includes(active));
+    return `<a href="${p}${href}"${on ? ' class="active"' : ''}>${label}</a>`;
+  }).join('');
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -342,7 +345,8 @@ for (const w of wings) {
       return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
   write(path.join(OUT, 'atlas', w.slug, 'index.html'), page(w.meta.title || title(w.slug), w.slug,
-    `<h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${feed}${topicList}${patternList}`, 2));
+    `<p class="crumb"><a href="../index.html">Atlas</a> / wing</p>
+     <h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${feed}${topicList}${patternList}`, 2));
 
   for (const t of w.topics) {
     const related = allEntries.filter(e => (e.meta.topics || []).includes(t.slug));
@@ -365,6 +369,38 @@ for (const w of wings) {
        <h1>${esc(p.meta.title)}</h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
 }
+
+/* ---------- atlas hub: the four wings, one calm directory ---------- */
+(function buildAtlasHub() {
+  /* short blurb: first sentence of the wing's intro, capped */
+  const wingBlurb = w => {
+    const txt = (w.body || '').replace(/<!--[\s\S]*?-->/g, '').trim();
+    const para = (txt.split(/\n\s*\n/)[0] || '').replace(/\n/g, ' ').replace(/\*\*/g, '').replace(/\*/g, '').trim();
+    let s = para;
+    const m = para.match(/^(.*?\.)\s/);
+    if (m && m[1].length >= 25) s = m[1];
+    if (s.length > 140) s = s.slice(0, 139).replace(/\s+\S*$/, '') + '…';
+    return s;
+  };
+  const wingEntryCount = w => allEntries.filter(e =>
+    (e.meta.topics || []).some(t => topicWing[t] === w.slug) ||
+    (e.meta.patterns || []).some(pp => patternRef[pp] && patternRef[pp].wing === w.slug)).length;
+
+  const cards = wings.map(w => {
+    const nt = w.topics.length, np = w.patterns.length, ne = wingEntryCount(w);
+    const meta = [nt ? `${nt} topics` : '', np ? `${np} patterns` : '', ne ? `${ne} ${ne > 1 ? 'entries' : 'entry'}` : '']
+      .filter(Boolean).join(' · ');
+    return `<a class="wing" href="${w.slug}/index.html">
+      <h2>${esc(w.meta.title || title(w.slug))}</h2>
+      <p class="wing-blurb">${esc(wingBlurb(w))}</p>
+      <p class="wing-meta">${meta}</p></a>`;
+  }).join('\n');
+
+  write(path.join(OUT, 'atlas', 'index.html'), page('Atlas', 'atlas',
+    `<h1>Atlas</h1>
+     <p class="summary">The knowledge, by wing — reverse-engineer, rebuild, case-study, prototype.</p>
+     <div class="wings">${cards}</div>`, 1));
+})();
 
 /* ---------- to-play queue ---------- */
 (function buildQueue() {
