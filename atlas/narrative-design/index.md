@@ -1,6 +1,8 @@
 ---
 title: Narrative Design
 wing: narrative-design
+summary: Story, character, and how a player moves through it.
+icon: book
 ---
 
 The story wing — opened July 2026, built on the territory of *The Game Narrative Toolbox*

@@ -1,6 +1,8 @@
 ---
 title: Sound Design
 wing: sound-design
+summary: Music, space, and feedback — how a game sounds and reacts.
+icon: wave
 ---
 
 The second wing of the atlas — opened by schmenz, July 2026. 20 core topics in five clusters:

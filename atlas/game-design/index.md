@@ -1,6 +1,8 @@
 ---
 title: Game Design
 wing: game-design
+summary: Systems and mechanics — what makes play feel good.
+icon: adjustments
 ---
 
 The systems & mechanics wing — opened by schmenz, July 2026, built on the conceptual

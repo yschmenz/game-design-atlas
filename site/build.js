@@ -372,7 +372,15 @@ for (const w of wings) {
 
 /* ---------- atlas hub: the four wings, one calm directory ---------- */
 (function buildAtlasHub() {
-  /* short blurb: first sentence of the wing's intro, capped */
+  /* quiet monochrome line icons (inline, no icon font) */
+  const svg = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+  const wingIcon = {
+    map: svg(`<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/>`),
+    adjustments: svg(`<path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h10"/><path d="M18 18h2"/><circle cx="16" cy="18" r="2"/>`),
+    wave: svg(`<path d="M3 9v6"/><path d="M7 5v14"/><path d="M11 8v8"/><path d="M15 4v16"/><path d="M19 7v10"/>`),
+    book: svg(`<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M19 17H6a2 2 0 0 0-2 2"/>`),
+  };
+  /* short blurb: first sentence of the wing's intro, capped (fallback when no summary) */
   const wingBlurb = w => {
     const txt = (w.body || '').replace(/<!--[\s\S]*?-->/g, '').trim();
     const para = (txt.split(/\n\s*\n/)[0] || '').replace(/\n/g, ' ').replace(/\*\*/g, '').replace(/\*/g, '').trim();
@@ -391,8 +399,8 @@ for (const w of wings) {
     const meta = [nt ? `${nt} topics` : '', np ? `${np} patterns` : '', ne ? `${ne} ${ne > 1 ? 'entries' : 'entry'}` : '']
       .filter(Boolean).join(' · ');
     return `<a class="wing" href="${w.slug}/index.html">
-      <h2>${esc(w.meta.title || title(w.slug))}</h2>
-      <p class="wing-blurb">${esc(wingBlurb(w))}</p>
+      <div class="wing-head">${wingIcon[w.meta.icon] || ''}<h2>${esc(w.meta.title || title(w.slug))}</h2></div>
+      <p class="wing-blurb">${esc(w.meta.summary || wingBlurb(w))}</p>
       <p class="wing-meta">${meta}</p></a>`;
   }).join('\n');
 

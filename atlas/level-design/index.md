@@ -1,6 +1,8 @@
 ---
 title: Level Design
 wing: level-design
+summary: How space guides, paces, and teaches the player.
+icon: map
 ---
 
 The first wing of the atlas. Four ways in:
