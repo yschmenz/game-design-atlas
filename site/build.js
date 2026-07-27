@@ -136,9 +136,13 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(titleText)} — Game Design Atlas</title>
 <link rel="stylesheet" href="${p}style.css"></head>
-<body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav></header>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav><button class="nav-search" data-open-search aria-label="Search the atlas">search ( / )</button></header>
 <main>${content}</main>
-<footer>schmenz &amp; Jachym — play, record, prototype.</footer></body></html>`;
+<footer>schmenz &amp; Jachym — play, record, prototype.</footer>
+<script>window.SEARCH_BASE=${JSON.stringify(p)}</script>
+<script src="${p}search-index.js" defer></script>
+<script src="${p}search.js" defer></script>
+</body></html>`;
 }
 
 const typeLabel = { 'reverse-engineering': 'Reverse Engineering', 'rebuild-fragment': 'Rebuild Fragment', 'topic-case-study': 'Case Study' };
@@ -258,11 +262,9 @@ const wingIcon = {
     shown.textContent = count;
   }
   searchBox.addEventListener('input', applyFilters);
-  /* "/" jumps to search, Esc clears it */
+  /* Esc clears the grid filter ("/" now opens the global search overlay) */
   document.addEventListener('keydown', e => {
-    if (e.key === '/' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
-      e.preventDefault(); searchBox.focus();
-    } else if (e.key === 'Escape' && document.activeElement === searchBox) {
+    if (e.key === 'Escape' && document.activeElement === searchBox) {
       searchBox.value = ''; applyFilters(); searchBox.blur();
     }
   });
@@ -318,7 +320,7 @@ const wingIcon = {
   write(path.join(OUT, 'index.html'), page('Games', 'games',
     `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
      <div class="section-head"><h2>All games <span class="count" id="shown">${games.length}</span></h2>
-     <input id="search" class="search" type="search" placeholder="search title, tag, topic…  ( / )" aria-label="Search games" autocomplete="off" spellcheck="false">
+     <input id="search" class="search" type="search" placeholder="filter games — mood, tag, topic, author" aria-label="Filter games" autocomplete="off" spellcheck="false">
      <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button>
      <a class="wander" id="wander" href="#" title="jump to a random game">wander →</a></div>
      ${filters}<div class="grid">${cards}</div>${js}`));
@@ -567,6 +569,36 @@ for (const w of wings) {
        ${sections}${js}`
     : `<h1>Log</h1><p class="dim">No dated entries yet.</p>`;
   write(path.join(OUT, 'diary.html'), page('Log', 'diary', content));
+})();
+
+/* ---------- global search index ---------- */
+(function buildSearch() {
+  const plain = s => String(s || '').replace(/<!--[\s\S]*?-->/g, ' ').replace(/<[^>]+>/g, ' ')
+    .replace(/[#*_`>\[\]()~|]/g, ' ').replace(/\s+/g, ' ').trim();
+  const rec = [];
+  for (const g of games) {
+    const x = [g.meta.title, g.meta.summary, ...(g.meta.tags || []), ...(g.meta.mood || []),
+      g.meta.pace, plain(g.body)].filter(Boolean).join(' ').toLowerCase();
+    rec.push({ t: g.meta.title, k: 'game', c: '', u: `games/${g.slug}/index.html`, x });
+  }
+  for (const e of allEntries) {
+    const x = [e.meta.title, typeLabel[e.meta.type] || e.meta.type, e.meta.author,
+      ...(e.meta.topics || []), ...(e.meta.patterns || []), plain(e.body)].filter(Boolean).join(' ').toLowerCase();
+    rec.push({ t: e.meta.title || e.slug, k: 'entry', c: e.game.meta.title, u: `games/${e.game.slug}/index.html#${e.slug}`, x });
+  }
+  for (const w of wings) {
+    const wt = w.meta.title || title(w.slug);
+    for (const t of w.topics) {
+      const x = [t.meta.title, plain(t.body)].filter(Boolean).join(' ').toLowerCase();
+      rec.push({ t: t.meta.title, k: 'topic', c: wt, u: `atlas/${w.slug}/topics/${t.slug}.html`, x });
+    }
+    for (const p of w.patterns) {
+      const x = [patName(p), p.meta.pattern, plain(p.body)].filter(Boolean).join(' ').toLowerCase();
+      rec.push({ t: patName(p), k: 'pattern', c: wt, u: `atlas/${w.slug}/patterns/${p.slug}.html`, x });
+    }
+  }
+  write(path.join(OUT, 'search-index.js'), 'window.SEARCH_INDEX=' + JSON.stringify(rec) + ';');
+  copy(path.join(__dirname, 'search.js'), path.join(OUT, 'search.js'));
 })();
 
 /* ---------- css ---------- */
