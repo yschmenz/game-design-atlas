@@ -202,35 +202,41 @@ const wingIcon = {
 
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
-  /* filter values, sorted by how many games they match (ties: alphabetical) */
+  /* per-value counts (how many games match), used for filter scent + sorting */
   const tagCount = t => games.filter(g => (g.meta.tags || []).includes(t)).length;
   const topicCount = t => games.filter(g => g.entries.some(e => (e.meta.topics || []).includes(t))).length;
+  const moodCount = m => games.filter(g => (g.meta.mood || []).includes(m)).length;
+  const statusCount = s => games.filter(g => (g.meta.status || 'to-play') === s).length;
+  const paceCount = p => games.filter(g => g.meta.pace === p).length;
+  const authorCount = a => games.filter(g => g.meta['added-by'] === a || g.entries.some(e => e.meta.author === a)).length;
   const bySort = cnt => (a, b) => cnt(b) - cnt(a) || a.localeCompare(b);
   const topicsInUse = [...new Set(allEntries.flatMap(e => e.meta.topics || []))].sort(bySort(topicCount));
   const authors = [...new Set([...games.map(g => g.meta['added-by']),
     ...allEntries.map(e => e.meta.author)].filter(Boolean))].sort();
   const gameTags = [...new Set(games.flatMap(g => g.meta.tags || []))].sort(bySort(tagCount));
-  const moodCount = m => games.filter(g => (g.meta.mood || []).includes(m)).length;
   const gameMoods = [...new Set(games.flatMap(g => g.meta.mood || []))].sort(bySort(moodCount));
   const paces = ['slow', 'medium', 'fast'].filter(p => games.some(g => g.meta.pace === p));
-  /* a filter row: "all" + top VISIBLE values; the rest hide behind a "+N more" toggle */
+  /* one filter row. long (searchable) facets get a type-to-filter box + top values; short ones show inline. */
   const VISIBLE = 8;
-  const filterRow = (label, f, vals, fmt = x => x) => {
-    const btn = v => `<button data-f="${f}" data-v="${v}">${esc(fmt(v))}</button>`;
-    const rest = vals.slice(VISIBLE);
-    const more = rest.length
-      ? `<span class="more-wrap">${rest.map(btn).join('')}</span><button class="more" data-more="+${rest.length} more" aria-expanded="false">+${rest.length} more</button>`
-      : '';
-    return `<div><b>${label}</b> <button data-f="${f}" data-v="all" class="on">all</button>${vals.slice(0, VISIBLE).map(btn).join('')}${more}</div>`;
+  const filterRow = (label, f, vals, cnt, { fmt = x => x, searchable = false } = {}) => {
+    const btn = (v, hidden) => `<button data-f="${f}" data-v="${esc(v)}"${hidden ? ' class="hid"' : ''}>${esc(fmt(v))} <span class="fcount">${cnt(v)}</span></button>`;
+    const all = `<button data-f="${f}" data-v="all" class="on">all</button>`;
+    const inline = vals.map(v => btn(v)).join('');
+    if (searchable && vals.length > VISIBLE) {
+      const btns = vals.map((v, i) => btn(v, i >= VISIBLE)).join('');
+      return `<div class="frow"><b>${label}</b><div class="fvals">${all}<input class="facet-search" placeholder="filter ${vals.length}…" aria-label="Filter ${label}" autocomplete="off">${btns}</div></div>`;
+    }
+    return `<div class="frow"><b>${label}</b><div class="fvals">${all}${inline}</div></div>`;
   };
   const filters = `
   <div class="filters" id="filters">
-    ${filterRow('Status', 'status', ['to-play', 'playing', 'recorded'])}
-    ${filterRow('Genre', 'tag', gameTags)}
-    ${filterRow('Mood', 'mood', gameMoods)}
-    ${filterRow('Pace', 'pace', paces)}
-    ${filterRow('Topic', 'topic', topicsInUse, title)}
-    ${filterRow('Author', 'author', authors)}
+    ${filterRow('Status', 'status', ['to-play', 'playing', 'recorded'], statusCount)}
+    ${filterRow('Mood', 'mood', gameMoods, moodCount)}
+    ${filterRow('Pace', 'pace', paces, paceCount)}
+    ${filterRow('Author', 'author', authors, authorCount)}
+    <div class="fdiv"></div>
+    ${filterRow('Genre', 'tag', gameTags, tagCount, { searchable: true })}
+    ${filterRow('Topic', 'topic', topicsInUse, topicCount, { fmt: title, searchable: true })}
   </div>`;
   const cards = games.map(g => {
     const topics = [...new Set(g.entries.flatMap(e => e.meta.topics || []))];
@@ -252,9 +258,10 @@ const wingIcon = {
   }).join('\n');
   const js = `<script>
   const searchBox = document.getElementById('search'), shown = document.getElementById('shown');
+  const activeBar = document.getElementById('active-filters'), filters = document.getElementById('filters');
   function applyFilters() {
     const f = {};
-    document.querySelectorAll('#filters button.on').forEach(x => f[x.dataset.f] = x.dataset.v);
+    filters.querySelectorAll('button.on').forEach(x => f[x.dataset.f] = x.dataset.v);
     const q = (searchBox.value || '').trim().toLowerCase();
     let count = 0;
     document.querySelectorAll('.card').forEach(c => {
@@ -265,56 +272,59 @@ const wingIcon = {
         && (f.topic === 'all' || c.dataset.topics.split(' ').includes(f.topic))
         && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author))
         && (!q || c.dataset.search.includes(q));
-      c.style.display = ok ? '' : 'none';
-      if (ok) count++;
+      c.style.display = ok ? '' : 'none'; if (ok) count++;
     });
     shown.textContent = count;
+    let h = '';
+    Object.keys(f).forEach(k => { if (f[k] !== 'all') h += '<button class="af-chip" data-clear="' + k + '">' + f[k] + ' ✕</button>'; });
+    if (q) h += '<button class="af-chip" data-clear="__q">“' + q + '” ✕</button>';
+    if (h) h = '<span class="af-label">active</span>' + h + '<button class="af-clear" data-clear="__all">clear all</button>';
+    activeBar.innerHTML = h; activeBar.hidden = !h;
   }
-  searchBox.addEventListener('input', applyFilters);
-  /* Esc clears the grid filter ("/" now opens the global search overlay) */
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.activeElement === searchBox) {
-      searchBox.value = ''; applyFilters(); searchBox.blur();
-    }
+  function pick(b) {
+    filters.querySelectorAll('button[data-f="' + b.dataset.f + '"]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); b.classList.remove('hid');
+  }
+  filters.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || b.dataset.f === undefined) return;
+    pick(b); applyFilters();
   });
-  const ft = document.getElementById('filter-toggle'), fp = document.getElementById('filters');
-  const openFilters = open => {
-    fp.classList.toggle('open', open); ft.classList.toggle('open', open);
-    ft.textContent = open ? 'filter ▾' : 'filter ▸'; ft.setAttribute('aria-expanded', open);
-  };
-  ft.addEventListener('click', () => openFilters(!fp.classList.contains('open')));
-  document.getElementById('filters').addEventListener('click', e => {
+  filters.querySelectorAll('.facet-search').forEach(inp => inp.addEventListener('input', () => {
+    const qq = inp.value.trim().toLowerCase();
+    const btns = inp.parentNode.querySelectorAll('button[data-f]:not([data-v="all"])');
+    btns.forEach((b, i) => b.classList.toggle('hid', qq ? b.dataset.v.toLowerCase().indexOf(qq) < 0 : i >= ${VISIBLE}));
+  }));
+  activeBar.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.more !== undefined) {   /* "+N more" / "less" toggle */
-      const open = b.closest('div').classList.toggle('expanded');
-      b.textContent = open ? 'less' : b.dataset.more;
-      b.setAttribute('aria-expanded', open);
-      return;
-    }
-    [...b.closest('div').querySelectorAll('button:not(.more)')].forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
+    const c = b.dataset.clear;
+    if (c === '__all') { filters.querySelectorAll('button[data-v="all"]').forEach(pick); searchBox.value = ''; }
+    else if (c === '__q') { searchBox.value = ''; }
+    else { const a = filters.querySelector('button[data-f="' + c + '"][data-v="all"]'); if (a) pick(a); }
     applyFilters();
   });
-  /* deep link: index.html?tag=rpg (works for tag/topic/status/author) */
+  searchBox.addEventListener('input', applyFilters);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.activeElement === searchBox) { searchBox.value = ''; applyFilters(); searchBox.blur(); }
+  });
+  const ft = document.getElementById('filter-toggle');
+  const openFilters = open => {
+    filters.classList.toggle('open', open); ft.classList.toggle('open', open);
+    ft.textContent = open ? 'filter ▾' : 'filter ▸'; ft.setAttribute('aria-expanded', open);
+  };
+  ft.addEventListener('click', () => openFilters(!filters.classList.contains('open')));
+  /* deep link: index.html?tag=rpg&mood=eerie (works for any facet) */
   const params = new URLSearchParams(location.search);
   for (const [k, v] of params) {
-    const b = document.querySelector('#filters button[data-f="' + k + '"][data-v="' + v + '"]');
-    if (!b) continue;
-    [...b.closest('div').querySelectorAll('button:not(.more)')].forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-    if (b.closest('.more-wrap')) {   /* selected value is hidden -> expand its row */
-      const row = b.closest('div'), t = row.querySelector('button.more');
-      row.classList.add('expanded'); t.textContent = 'less'; t.setAttribute('aria-expanded', true);
-    }
+    if (k === 'q') continue;
+    const b = filters.querySelector('button[data-f="' + k + '"][data-v="' + v + '"]');
+    if (b) pick(b);
   }
   if (params.get('q')) searchBox.value = params.get('q');
-  if ([...params].filter(([k]) => k !== 'q').length) { openFilters(true); document.getElementById('filters').scrollIntoView(); }
-  applyFilters();   /* always run once: sets the initial count and honours ?q= */
-  /* wander: jump to a random game */
+  if ([...params].filter(([k]) => k !== 'q').length) { openFilters(true); filters.scrollIntoView(); }
+  applyFilters();
   const wanderUrls = [${games.map(g => `"games/${g.slug}/index.html"`).join(',')}];
   document.getElementById('wander').addEventListener('click', e => {
-    e.preventDefault();
-    location.href = wanderUrls[Math.floor(Math.random() * wanderUrls.length)];
+    e.preventDefault(); location.href = wanderUrls[Math.floor(Math.random() * wanderUrls.length)];
   });
   </script>`;
   const latest = allEntries.filter(e => e.meta.date)
@@ -332,7 +342,9 @@ const wingIcon = {
      <input id="search" class="search" type="search" placeholder="filter games — mood, tag, topic, author" aria-label="Filter games" autocomplete="off" spellcheck="false">
      <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button>
      <a class="wander" id="wander" href="#" title="jump to a random game">wander →</a></div>
-     ${filters}<div class="grid">${cards}</div>${js}`));
+     ${filters}
+     <div class="active-filters" id="active-filters" hidden></div>
+     <div class="grid">${cards}</div>${js}`));
 })();
 
 /* ---------- game pages ---------- */
