@@ -137,6 +137,12 @@ const topicChip = (t, p) => topicWing[t]
 const patternChip = (id, p) => patternRef[id]
   ? `<a class="chip pp" href="${p}atlas/${patternRef[id].wing}/patterns/${patternRef[id].slug}.html">${esc(id)}</a>`
   : chip(id, 'pp');
+/* pattern title with its code stripped, so the human-readable name can lead (code shown separately) */
+const patName = p => {
+  const code = p.meta.pattern || '';
+  const re = new RegExp('^' + code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*[—–-]\\s*');
+  return (p.meta.title || '').replace(re, '').trim() || p.meta.title || code;
+};
 
 /* cover art: local cover.jpg wins, else Steam CDN, else none.
    localPath = how to reach games/<slug>/cover.jpg from the page being rendered */
@@ -366,7 +372,7 @@ for (const w of wings) {
     .sort((a, b) => String(a[0]).localeCompare(String(b[0]))).map(([grp, ps]) =>
     `<h3>${esc(grp.replace(/^[A-Z]\.\s*/, ''))}</h3><ul class="pattern-list">` + ps.map(p => {
       const n = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern)).length;
-      return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
+      return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(patName(p))}</a> <span class="pcode">${esc(p.meta.pattern)}</span>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
   const provenance = w.body.replace(/<!--[\s\S]*?-->/g, '').trim();
   write(path.join(OUT, 'atlas', w.slug, 'index.html'), page(w.meta.title || title(w.slug), w.slug,
@@ -394,7 +400,7 @@ for (const w of wings) {
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
       `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
-       <h1>${esc(p.meta.title)}</h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
+       <h1 class="pattern-title">${esc(patName(p))} <span class="pcode">${esc(p.meta.pattern)}</span></h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
 }
 

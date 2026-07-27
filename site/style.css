@@ -76,6 +76,9 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .wing-title .wicon { width: 22px; height: 22px; color: var(--mut); flex: none; }
 .provenance { margin-top: 2.4rem; color: var(--faint); font-size: .9rem; }
 .provenance p { margin: 0; }
+/* pattern code: a quiet index marker beside the readable name */
+.pcode { font: 12px monospace; color: var(--faint); }
+.pattern-title .pcode { vertical-align: middle; margin-left: .1rem; }
 .wing-blurb { margin: 0 0 .4rem; font: 14px/1.5 Georgia, serif; color: var(--mut); }
 .wing-meta { margin: 0; font: 12px monospace; color: var(--faint); }
 
