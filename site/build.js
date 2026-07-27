@@ -406,7 +406,6 @@ for (const w of wings) {
 
   write(path.join(OUT, 'atlas', 'index.html'), page('Knowledge', 'atlas',
     `<h1>Knowledge</h1>
-     <p class="summary">Game design, by wing — reverse-engineer, rebuild, case-study, prototype.</p>
      <div class="wings">${cards}</div>`, 1));
 })();
 
