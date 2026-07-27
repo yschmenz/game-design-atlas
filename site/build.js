@@ -106,6 +106,7 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
     ['index.html', 'Games', 'games'],
     ...wings.map(w => [`atlas/${w.slug}/index.html`, w.meta.title || title(w.slug), w.slug]),
     ['to-play.html', 'To Play', 'to-play'],
+    ['diary.html', 'Diary', 'diary'],
   ].map(([href, label, key]) =>
     `<a href="${p}${href}"${key === active ? ' class="active"' : ''}>${label}</a>`).join('');
   return `<!DOCTYPE html>
@@ -378,6 +379,73 @@ for (const w of wings) {
      <p class="dim">Live view generated from each game's <code>index.md</code>. ★ = recommended to the other one.</p>
      <table><thead><tr><th>Game</th><th>Status</th><th>Added by</th><th>Recommended by</th><th>Entries</th></tr></thead>
      <tbody>${rows}</tbody></table>`));
+})();
+
+/* ---------- diary: the full activity timeline ---------- */
+(function buildDiary() {
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthLabel = ym => `${MONTHS[+ym.slice(5) - 1]} ${ym.slice(0, 4)}`;
+  const dated = allEntries.filter(e => e.meta.date)
+    .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added);
+
+  /* quiet patterns line: totals, per-author split (doubles as filter legend), span */
+  const byAuthor = {};
+  for (const e of dated) { const a = e.meta.author || '?'; byAuthor[a] = (byAuthor[a] || 0) + 1; }
+  const gamesTouched = new Set(dated.map(e => e.game.slug)).size;
+  const firstYm = dated.length ? String(dated[dated.length - 1].meta.date).slice(0, 7) : '';
+  const span = firstYm ? ` · since ${MONTHS[+firstYm.slice(5) - 1].slice(0, 3)} ${firstYm.slice(0, 4)}` : '';
+  const statsLine = `${dated.length} ${dated.length === 1 ? 'entry' : 'entries'} · ${gamesTouched} games`
+    + Object.entries(byAuthor).sort().map(([a, n]) => ` · ${esc(a)} ${n}`).join('') + span;
+
+  /* author filter: summoned toggle, mirrors the games-grid filter styling */
+  const authorBtns = ['all', ...Object.keys(byAuthor).sort()].map(a =>
+    `<button data-a="${esc(a)}"${a === 'all' ? ' class="on"' : ''}>${a === 'all' ? 'all' : esc(a) + ' ' + byAuthor[a]}</button>`).join('');
+
+  /* month sections so a filtered-empty month can hide its whole header */
+  const groups = {};
+  for (const e of dated) (groups[String(e.meta.date).slice(0, 7)] ??= []).push(e);
+  const sections = Object.entries(groups).map(([ym, list]) => {
+    const rows = list.map(e => {
+      const cover = coverUrl(e.game, `games/${e.game.slug}/cover.jpg`);
+      const type = typeLabel[e.meta.type] || e.meta.type || '';
+      const draft = e.meta.status === 'draft' ? ' · draft' : '';
+      return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}" data-author="${esc(e.meta.author || '?')}">
+       ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
+       <span><span class="lt">${esc(e.meta.title)}</span>
+       <span class="lm">${esc(e.game.meta.title)}${type ? ' · ' + esc(type) : ''} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}${draft}</span></span></a>`;
+    }).join('');
+    return `<section class="dmonth"><h2>${monthLabel(ym)} <span class="count">· ${list.length}</span></h2><div class="diary">${rows}</div></section>`;
+  }).join('');
+
+  const js = `<script>
+  const dshown = document.getElementById('dshown');
+  function applyDiary(a) {
+    let total = 0;
+    document.querySelectorAll('.dmonth').forEach(sec => {
+      let vis = 0;
+      sec.querySelectorAll('.lcard').forEach(c => {
+        const ok = a === 'all' || c.dataset.author === a;
+        c.style.display = ok ? '' : 'none'; if (ok) vis++;
+      });
+      sec.style.display = vis ? '' : 'none'; total += vis;
+    });
+    if (dshown) dshown.textContent = total;
+  }
+  document.querySelector('.diary-filter').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    b.parentNode.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); applyDiary(b.dataset.a);
+  });
+  </script>`;
+
+  const content = dated.length
+    ? `<h1>Diary <span class="count" id="dshown">${dated.length}</span></h1>
+       <p class="diary-stats">${statsLine}</p>
+       <div class="diary-filter">${authorBtns}</div>
+       ${sections}${js}`
+    : `<h1>Diary</h1><p class="dim">No dated entries yet.</p>`;
+  write(path.join(OUT, 'diary.html'), page('Diary', 'diary', content));
 })();
 
 /* ---------- css ---------- */
