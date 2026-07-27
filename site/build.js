@@ -21,6 +21,13 @@ const OUT = path.join(ROOT, '_site');
 const MOODS = ['tense', 'eerie', 'oppressive', 'melancholic', 'lonely', 'contemplative',
   'wondrous', 'dreamlike', 'cozy', 'playful', 'hopeful', 'tender'];
 const PACES = ['slow', 'medium', 'fast'];
+/* genre = the FORM of the game, anchored to standard Steam/IGDB terms (not moods/themes-as-vibes).
+   Add here first, then use it; the build warns on off-list genres. */
+const GENRES = ['action', 'adventure', 'co-op', 'comedy', 'detective', 'driving', 'experimental',
+  'exploration', 'first-person', 'fishing', 'fps', 'historical', 'horror', 'immersive-sim',
+  'management', 'metroidvania', 'multiplayer', 'music', 'narrative', 'open-world', 'physics',
+  'platformer', 'point-and-click', 'post-apocalyptic', 'procedural', 'puzzle', 'roguelike', 'rpg',
+  'sci-fi', 'slice-of-life', 'survival', 'thriller', 'walking-sim'];
 
 /* ---------- helpers ---------- */
 const read = f => fs.readFileSync(f, 'utf8');
@@ -100,6 +107,7 @@ const allEntries = games.flatMap(g => g.entries.map(e => ({ ...e, game: g })));
     for (const m of moods) if (!MOODS.includes(m)) warns.push(`${g.slug}: unknown mood "${m}" (see CONTRIBUTING.md)`);
     if (!g.meta.pace) warns.push(`${g.slug}: no pace`);
     else if (!PACES.includes(g.meta.pace)) warns.push(`${g.slug}: unknown pace "${g.meta.pace}"`);
+    for (const t of g.meta.tags || []) if (!GENRES.includes(t)) warns.push(`${g.slug}: unknown genre "${t}" (see CONTRIBUTING.md)`);
   }
   if (warns.length) console.warn('⚠ feel vocabulary:\n  ' + warns.join('\n  '));
 })();

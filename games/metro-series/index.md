@@ -4,7 +4,7 @@ status: to-play
 added-by: jachym
 steam: 286690
 summary: "Post-nuclear Moscow, mostly underground — atmosphere-first shooters about scarcity and dark."
-tags: [fps, atmosphere, horror]
+tags: [fps, horror]
 mood: [oppressive, tense]
 pace: medium
 recommended-by:

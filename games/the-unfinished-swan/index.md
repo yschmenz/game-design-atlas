@@ -4,7 +4,7 @@ status: to-play
 added-by: jachym
 steam: 1206430
 summary: "First-person storybook that starts as white void — you paint to see."
-tags: [puzzle, art, first-person]
+tags: [puzzle, first-person]
 mood: [wondrous, tender]
 pace: slow
 recommended-by:

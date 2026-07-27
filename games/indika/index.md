@@ -4,7 +4,7 @@ status: playing
 added-by: jachym
 steam: 1373960
 summary: "A nun with the devil in her head walks an alt-historical Russia; reality splits when she prays."
-tags: [narrative, adventure, surreal]
+tags: [narrative, adventure]
 mood: [eerie, dreamlike]
 pace: medium
 recommended-by:

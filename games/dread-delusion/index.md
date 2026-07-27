@@ -4,7 +4,7 @@ status: to-play
 added-by: schmenz
 steam: 1574240
 summary: "Retro open-world RPG across shattered sky-islands — Morrowind-flavored strangeness at PS1 fidelity."
-tags: [rpg, open-world, retro]
+tags: [rpg, open-world]
 mood: [dreamlike, eerie]
 pace: medium
 recommended-by:

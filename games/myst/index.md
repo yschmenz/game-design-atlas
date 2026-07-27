@@ -4,7 +4,7 @@ status: to-play
 added-by: jachym
 steam: 1255560
 summary: "The puzzle island that defined exploration-by-attention; worlds linked through books."
-tags: [puzzle, exploration, classic]
+tags: [puzzle, exploration]
 mood: [lonely, wondrous]
 pace: slow
 recommended-by:

@@ -22,6 +22,14 @@ Use only these words so the filter stays coherent (and so it lines up with film/
 
 If a word is genuinely missing, we add it here first, then use it — never invent one-off moods in a single file. The build **warns** (never fails) if a game has no mood/pace or uses a word off this list, so drift and typos get caught before they ship.
 
+### Genre — standard terms only
+
+`tags:` is the game's **genre** (its form), drawn from a controlled list of recognised Steam/IGDB terms — not moods (use `mood:`), not vibes. Same rule as moods: add a term to the list below first, then use it; the build warns on anything off-list.
+
+> action · adventure · co-op · comedy · detective · driving · experimental · exploration · first-person · fishing · fps · historical · horror · immersive-sim · management · metroidvania · multiplayer · music · narrative · open-world · physics · platformer · point-and-click · post-apocalyptic · procedural · puzzle · roguelike · rpg · sci-fi · slice-of-life · survival · thriller · walking-sim
+
+Feels like a game's vibe (cozy, atmospheric, surreal)? That's a **mood**, not a genre — it goes in `mood:`.
+
 Not sure which moods fit? Add the game with just `title`/`steam`, then ask Claude to draft moods from the summary — eyeball and commit. Never start from a blank field.
 
 ## Add an entry about a game

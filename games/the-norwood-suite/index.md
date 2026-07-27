@@ -4,7 +4,7 @@ status: playing
 added-by: schmenz
 steam: 696480
 summary: "A musical hotel where architecture, dialogue and score are one instrument — Cosmo D."
-tags: [narrative, music, surreal, adventure]
+tags: [narrative, music, adventure]
 mood: [dreamlike, playful]
 pace: medium
 recommended-by:

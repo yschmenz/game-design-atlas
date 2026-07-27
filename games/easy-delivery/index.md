@@ -4,7 +4,7 @@ status: to-play
 added-by: jachym
 steam: 3293010
 summary: "Lo-fi truck deliveries through foggy mountains; radio on, nowhere to hurry."
-tags: [driving, cozy, atmosphere]
+tags: [driving]
 mood: [cozy, contemplative]
 pace: slow
 recommended-by:
