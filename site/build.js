@@ -135,7 +135,7 @@ const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
 }).sort((a, b) => (b.topics.length + b.patterns.length) - (a.topics.length + a.patterns.length));
 
 /* ---------- layout ---------- */
-function page(titleText, active, content, depth = 0, bodyClass = '') {
+function page(titleText, active, content, depth = 0, bodyClass = '', desc = '', image = '') {
   const p = '../'.repeat(depth);
   const wingKeys = wings.map(w => w.slug);
   const nav = [
@@ -152,6 +152,16 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(titleText)} — Game Design Atlas</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Game Design Atlas">
+<meta property="og:title" content="${esc(titleText)}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${esc(titleText)}">
+${desc ? `<meta name="description" content="${esc(desc)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta name="twitter:description" content="${esc(desc)}">` : ''}
+${image ? `<meta property="og:image" content="${esc(image)}">
+<meta name="twitter:image" content="${esc(image)}">` : ''}
 <link rel="stylesheet" href="${p}style.css"></head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav><button class="nav-search" data-open-search aria-label="Search the atlas">search ( / )</button></header>
 <main>${content}</main>
@@ -206,6 +216,15 @@ const coverTile = (url, titleText) => {
     ? `<img loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header')}else{this.remove()}">`
     : '';
   return `<span class="cover-frame"><span class="ph">${esc(titleText)}</span>${img}</span>`;
+};
+
+/* absolute cover URL for link-preview (og:image) meta — must be absolute, not page-relative */
+const SITE = 'https://yschmenz.github.io/game-design-atlas';
+const ogImage = g => {
+  if (exists(path.join(g.dir, 'cover.jpg'))) return `${SITE}/games/${g.slug}/cover.jpg`;
+  if (g.meta.cover) return g.meta.cover;
+  if (g.meta.steam) return `https://cdn.cloudflare.steamstatic.com/steam/apps/${g.meta.steam}/library_600x900.jpg`;
+  return '';
 };
 
 /* quiet monochrome line icons for wings (inline, no icon font) — used by hub + wing pages */
@@ -379,8 +398,7 @@ const wingIcon = {
      <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(e.meta.date).slice(0, 10)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></span></a>`;
   }).join('') + `</div>` : '';
   write(path.join(OUT, 'index.html'), page('Games', 'games',
-    `<h1>The Games <span class="count">${games.length}</span></h1>
-     <p class="summary">A shared games-pedia — we play games, record what we learn about their design, and prototype the ideas worth keeping.</p>${feed}
+    `<h1>The Games <span class="count">${games.length}</span></h1>${feed}
      <div class="section-head"><h2>All games <span class="count" id="shown">${games.length}</span></h2>
      <input id="search" class="search" type="search" placeholder="filter games — mood, tag, topic, author" aria-label="Filter games" autocomplete="off" spellcheck="false">
      <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters">filter ▸</button>
@@ -425,7 +443,7 @@ for (const g of games) {
        `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
-     ${looseProtos}`, 2, 'reading'));
+     ${looseProtos}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
   for (const s of g.sketches) copy(path.join(g.dir, 'sketches', s), path.join(OUT, 'games', g.slug, 'sketches', s));
 }
@@ -657,7 +675,8 @@ for (const w of wings) {
     `<h1>Lists <span class="count">${lists.length}</span></h1><div class="list-index">${cards}</div>`, 0));
 
   for (const l of lists) {
-    const grid = gamesOf(l).map(g => {
+    const gs = gamesOf(l);
+    const grid = gs.map(g => {
       const c = coverUrl(g, `../games/${g.slug}/cover.jpg`);
       return `<a class="card" href="../games/${g.slug}/index.html">${coverTile(c, g.meta.title)}<h3>${esc(g.meta.title)}</h3></a>`;
     }).join('');
@@ -666,7 +685,7 @@ for (const w of wings) {
        <h1>${esc(l.meta.title || l.slug)}</h1>
        ${l.meta.summary || l.meta.by ? `<p class="summary">${l.meta.summary ? esc(l.meta.summary) : ''}${l.meta.by ? ` <span class="dim">— ${esc(l.meta.by)}</span>` : ''}</p>` : ''}
        <div class="grid">${grid}</div>
-       ${l.body.trim() ? md2html(l.body) : ''}`, 1));
+       ${l.body.trim() ? md2html(l.body) : ''}`, 1, '', l.meta.summary || '', gs[0] ? ogImage(gs[0]) : ''));
   }
 })();
 
