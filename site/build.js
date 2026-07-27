@@ -105,7 +105,7 @@ function page(titleText, active, content, depth = 0, bodyClass = '') {
   const wingKeys = wings.map(w => w.slug);
   const nav = [
     ['index.html', 'Games', 'games'],
-    ['atlas/index.html', 'Atlas', 'atlas'],
+    ['atlas/index.html', 'Knowledge', 'atlas'],
     ['diary.html', 'Diary', 'diary'],
     ['to-play.html', 'To Play', 'to-play'],
   ].map(([href, label, key]) => {
@@ -345,7 +345,7 @@ for (const w of wings) {
       return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
   write(path.join(OUT, 'atlas', w.slug, 'index.html'), page(w.meta.title || title(w.slug), w.slug,
-    `<p class="crumb"><a href="../index.html">Atlas</a> / wing</p>
+    `<p class="crumb"><a href="../index.html">Knowledge</a> / wing</p>
      <h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${feed}${topicList}${patternList}`, 2));
 
   for (const t of w.topics) {
@@ -396,9 +396,9 @@ for (const w of wings) {
       <p class="wing-meta">${meta}</p></a>`;
   }).join('\n');
 
-  write(path.join(OUT, 'atlas', 'index.html'), page('Atlas', 'atlas',
-    `<h1>Atlas</h1>
-     <p class="summary">The knowledge, by wing — reverse-engineer, rebuild, case-study, prototype.</p>
+  write(path.join(OUT, 'atlas', 'index.html'), page('Knowledge', 'atlas',
+    `<h1>Knowledge</h1>
+     <p class="summary">Game design, by wing — reverse-engineer, rebuild, case-study, prototype.</p>
      <div class="wings">${cards}</div>`, 1));
 })();
 
