@@ -5,6 +5,8 @@ added-by: schmenz
 steam: 436500
 summary: "Anti-adventure about picking up trash in an alien bazaar while the economy ignores you."
 tags: [exploration, experimental, cozy]
+mood: [melancholic, lonely]
+pace: slow
 recommended-by:
 ---
 

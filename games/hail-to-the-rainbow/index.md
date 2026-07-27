@@ -5,6 +5,8 @@ added-by: jachym
 steam: 1699230
 summary: "Melancholy post-apocalyptic adventure through rusting Soviet-flavored landscapes."
 tags: [adventure, atmosphere, post-apocalyptic]
+mood: [melancholic, lonely]
+pace: slow
 recommended-by:
 ---
 

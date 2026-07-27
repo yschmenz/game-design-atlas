@@ -5,6 +5,8 @@ added-by: jachym
 steam: 501300
 summary: "Anthology of family deaths, each told through its own mechanic."
 tags: [narrative, walking-sim, anthology]
+mood: [melancholic, tender]
+pace: slow
 recommended-by:
 ---
 

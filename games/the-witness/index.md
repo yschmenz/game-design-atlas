@@ -5,6 +5,8 @@ added-by: jachym
 steam: 210970
 summary: "An island of line puzzles that quietly teaches you a language of seeing."
 tags: [puzzle, open-world]
+mood: [contemplative, lonely]
+pace: slow
 recommended-by:
 ---
 

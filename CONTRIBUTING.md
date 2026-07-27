@@ -8,9 +8,19 @@ Copy any game folder in `games/`, rename it, edit `index.md`. **Only `title` and
 
 - `steam: <appid>` → cover art. The ID is in every store URL: `store.steampowered.com/app/`**`1574240`**`/...`
 - `summary: "one sentence, own words"` + `tags: [rpg, open-world]` → shown on the game page, tags are clickable filters
+- `mood: [tense, lonely]` + `pace: slow` → the *feel* axis, filterable on the homepage (see the fixed list below)
 - Not on Steam? Drop a `cover.jpg` into the game folder instead of `steam:`
 
 Leave fields empty guilt-free — anyone can fill them in later.
+
+### Mood & pace — the fixed vocabulary
+
+Use only these words so the filter stays coherent (and so it lines up with film/books later). Pick 1–3 moods that describe how the thing *feels*, plus one pace.
+
+- **mood:** `tense` · `eerie` · `oppressive` · `melancholic` · `lonely` · `contemplative` · `wondrous` · `dreamlike` · `cozy` · `playful` · `hopeful` · `tender`
+- **pace:** `slow` · `medium` · `fast`
+
+If a word is genuinely missing, we add it here first, then use it — never invent one-off moods in a single file.
 
 ## Add an entry about a game
 

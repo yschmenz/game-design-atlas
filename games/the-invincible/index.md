@@ -5,6 +5,8 @@ added-by: jachym
 steam: 731040
 summary: "Atompunk walking mystery on planet Regis III, from Stanisław Lem's novel."
 tags: [narrative, sci-fi, walking-sim]
+mood: [lonely, contemplative]
+pace: slow
 recommended-by:
 ---
 

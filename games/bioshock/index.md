@@ -5,6 +5,8 @@ added-by: jachym
 steam: 7670
 summary: "Shooter in the drowned utopia Rapture — systems, scarcity, and one famous question about choice."
 tags: [fps, immersive-sim, narrative]
+mood: [eerie, oppressive]
+pace: medium
 recommended-by:
 ---
 

@@ -5,6 +5,8 @@ added-by: jachym
 steam: 108710
 summary: "Third-person action thriller about a writer whose horror manuscript is coming true — light is the weapon."
 tags: [action, thriller, narrative]
+mood: [eerie, tense]
+pace: medium
 recommended-by:
 ---
 

@@ -5,6 +5,8 @@ added-by: jachym
 steam: 683320
 summary: "Wordless platformer about grief, told through color returning to the world."
 tags: [platformer, art, meditative]
+mood: [melancholic, hopeful]
+pace: slow
 recommended-by:
 ---
 

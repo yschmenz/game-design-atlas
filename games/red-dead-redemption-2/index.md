@@ -5,6 +5,8 @@ added-by: jachym
 steam: 1174180
 summary: "Slow, dense open-world western that simulates routine as storytelling."
 tags: [open-world, narrative, action]
+mood: [melancholic, contemplative]
+pace: slow
 recommended-by:
 ---
 

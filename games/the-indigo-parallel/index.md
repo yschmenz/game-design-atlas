@@ -5,6 +5,8 @@ added-by: jachym
 steam: 1550870
 summary: "Experimental surreal exploration piece — dream logic over destinations."
 tags: [experimental, exploration]
+mood: [dreamlike, eerie]
+pace: slow
 recommended-by:
 ---
 

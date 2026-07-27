@@ -5,6 +5,8 @@ added-by: schmenz
 steam: 22380
 summary: "Open-world RPG in the Mojave where factions, not maps, structure the journey."
 tags: [rpg, open-world]
+mood: [melancholic, tense]
+pace: medium
 recommended-by:
 ---
 

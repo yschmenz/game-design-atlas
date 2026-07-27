@@ -5,6 +5,8 @@ added-by: jachym
 steam: 638230
 summary: "Wordless pilgrimage shared with anonymous strangers; communication by chirp and motion."
 tags: [meditative, multiplayer, art]
+mood: [wondrous, hopeful]
+pace: medium
 recommended-by:
 ---
 

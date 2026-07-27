@@ -44,6 +44,8 @@ code { font: 14px monospace; background: var(--panel); padding: 1px 5px; border-
 .chip.pp { color: var(--mut); }
 .chip.author { color: var(--mut); }
 .chip.rec { color: var(--mut); }
+.chip.mood { color: var(--mut); }
+.chip.pace { color: var(--faint); }
 .chip.proto { color: var(--sage); border-color: var(--sage); background: none; }
 .chip.st-to-play { color: var(--mut); border-color: var(--st-to-play); background: none; }
 .chip.st-playing { color: var(--sage); border-color: var(--sage); background: none; }

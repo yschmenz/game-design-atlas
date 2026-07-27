@@ -5,6 +5,8 @@ added-by: jachym
 steam: 1382070
 summary: "Photos become geometry: perspective as the core mechanic."
 tags: [puzzle, first-person, perspective]
+mood: [playful, wondrous]
+pace: medium
 recommended-by:
 ---
 

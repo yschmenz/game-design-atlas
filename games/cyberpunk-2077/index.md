@@ -5,6 +5,8 @@ added-by: jachym
 steam: 1091500
 summary: "Open-world action RPG in dense, vertical Night City."
 tags: [open-world, rpg, fps]
+mood: [tense, melancholic]
+pace: medium
 recommended-by:
 ---
 

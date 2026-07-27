@@ -5,6 +5,8 @@ added-by: jachym
 steam: 292030
 summary: "The quest-design benchmark: an open world structured by stories, not icons."
 tags: [rpg, open-world, narrative]
+mood: [melancholic, tense]
+pace: medium
 recommended-by:
 ---
 

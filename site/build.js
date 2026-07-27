@@ -178,6 +178,9 @@ const wingIcon = {
   const authors = [...new Set([...games.map(g => g.meta['added-by']),
     ...allEntries.map(e => e.meta.author)].filter(Boolean))].sort();
   const gameTags = [...new Set(games.flatMap(g => g.meta.tags || []))].sort(bySort(tagCount));
+  const moodCount = m => games.filter(g => (g.meta.mood || []).includes(m)).length;
+  const gameMoods = [...new Set(games.flatMap(g => g.meta.mood || []))].sort(bySort(moodCount));
+  const paces = ['slow', 'medium', 'fast'].filter(p => games.some(g => g.meta.pace === p));
   /* a filter row: "all" + top VISIBLE values; the rest hide behind a "+N more" toggle */
   const VISIBLE = 8;
   const filterRow = (label, f, vals, fmt = x => x) => {
@@ -192,6 +195,8 @@ const wingIcon = {
   <div class="filters" id="filters">
     ${filterRow('Status', 'status', ['to-play', 'playing', 'recorded'])}
     ${filterRow('Genre', 'tag', gameTags)}
+    ${filterRow('Mood', 'mood', gameMoods)}
+    ${filterRow('Pace', 'pace', paces)}
     ${filterRow('Topic', 'topic', topicsInUse, title)}
     ${filterRow('Author', 'author', authors)}
   </div>`;
@@ -201,9 +206,10 @@ const wingIcon = {
     const n = g.entries.length, np = g.prototypes.length;
     /* everything the search box matches against, one lowercased haystack */
     const searchText = [g.meta.title, g.meta.summary, ...(g.meta.tags || []),
-      ...topics.map(title), ...auths].filter(Boolean).join(' ').toLowerCase();
+      ...(g.meta.mood || []), g.meta.pace, ...topics.map(title), ...auths].filter(Boolean).join(' ').toLowerCase();
     return `<a class="card" href="games/${g.slug}/index.html" data-status="${esc(g.meta.status || 'to-play')}"
       data-topics="${topics.join(' ')}" data-authors="${auths.join(' ')}" data-tags="${(g.meta.tags || []).join(' ')}"
+      data-moods="${(g.meta.mood || []).join(' ')}" data-pace="${esc(g.meta.pace || '')}"
       data-search="${esc(searchText)}">
       ${coverImg(coverUrl(g, `games/${g.slug}/cover.jpg`), 'cover')}
       <h3>${esc(g.meta.title)}</h3>
@@ -222,6 +228,8 @@ const wingIcon = {
     document.querySelectorAll('.card').forEach(c => {
       const ok = (f.status === 'all' || c.dataset.status === f.status)
         && (f.tag === 'all' || c.dataset.tags.split(' ').includes(f.tag))
+        && (f.mood === 'all' || c.dataset.moods.split(' ').includes(f.mood))
+        && (f.pace === 'all' || c.dataset.pace === f.pace)
         && (f.topic === 'all' || c.dataset.topics.split(' ').includes(f.topic))
         && (f.author === 'all' || c.dataset.authors.split(' ').includes(f.author))
         && (!q || c.dataset.search.includes(q));
@@ -326,6 +334,9 @@ for (const g of games) {
      ${g.meta.summary ? `<p class="summary">${esc(g.meta.summary)}</p>` : ''}
      ${(g.meta.tags || []).length ? `<div class="meta">${g.meta.tags.map(t =>
        `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')}</div>` : ''}
+     ${(g.meta.mood || []).length || g.meta.pace ? `<div class="meta">${(g.meta.mood || []).map(m =>
+       `<a class="chip mood" href="../../index.html?mood=${encodeURIComponent(m)}">${esc(m)}</a>`).join('')}${g.meta.pace ?
+       `<a class="chip pace" href="../../index.html?pace=${encodeURIComponent(g.meta.pace)}">${esc(g.meta.pace)}</a>` : ''}</div>` : ''}
      ${body ? md2html(body) : ''}
      ${entriesHtml || '<p class="dim">No entries yet — copy a template from <code>templates/</code> into this game’s folder.</p>'}
      ${looseProtos}`, 2, 'reading'));

@@ -5,6 +5,8 @@ added-by: jachym
 steam: 2240530
 summary: "Free, short first-person wander through a bleak brutalist city; each found tool changes how you move."
 tags: [exploration, first-person, short]
+mood: [lonely, melancholic]
+pace: medium
 recommended-by:
 ---
 

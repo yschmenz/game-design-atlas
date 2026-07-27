@@ -5,6 +5,8 @@ added-by: jachym
 steam: 220
 summary: "The FPS as a guided journey — a masterclass in invisible player direction."
 tags: [fps, narrative]
+mood: [tense, oppressive]
+pace: medium
 recommended-by:
 ---
 
