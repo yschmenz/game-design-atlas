@@ -153,6 +153,15 @@ function coverUrl(g, localPath) {
 const coverImg = (url, cls) => url
   ? `<img class="${cls}${url.includes('header') ? ' wide' : ''}" loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header');this.classList.add('wide')}else{this.remove()}">` : '';
 
+/* quiet monochrome line icons for wings (inline, no icon font) — used by hub + wing pages */
+const _svgIcon = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+const wingIcon = {
+  map: _svgIcon(`<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/>`),
+  adjustments: _svgIcon(`<path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h10"/><path d="M18 18h2"/><circle cx="16" cy="18" r="2"/>`),
+  wave: _svgIcon(`<path d="M3 9v6"/><path d="M7 5v14"/><path d="M11 8v8"/><path d="M15 4v16"/><path d="M19 7v10"/>`),
+  book: _svgIcon(`<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M19 17H6a2 2 0 0 0-2 2"/>`),
+};
+
 /* ---------- home: games grid with filters ---------- */
 (function buildHome() {
   /* filter values, sorted by how many games they match (ties: alphabetical) */
@@ -333,10 +342,23 @@ for (const w of wings) {
      <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}</span></span></a>`;
   }).join('') + `</div>` : '';
   /* lit spots: topics/patterns with entries glow, empty ones recede */
-  const topicList = w.topics.length ? `<h2>Core Topics</h2><ol class="topic-list">` + w.topics.map(t => {
+  const topicLi = t => {
     const n = allEntries.filter(e => (e.meta.topics || []).includes(t.slug)).length;
     return `<li${n ? ' class="lit"' : ''}><a href="topics/${t.slug}.html">${esc(t.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
-  }).join('') + `</ol>` : '';
+  };
+  /* group core topics by cluster when the wing declares them (contiguous `order` ranges); else flat */
+  const clusters = (w.meta.clusters || []).map(c => {
+    const i = c.indexOf(':'); const [s, e] = c.slice(i + 1).split('-').map(Number);
+    return { name: c.slice(0, i), s, e };
+  });
+  let topicList = '';
+  if (w.topics.length && clusters.length) {
+    topicList = `<h2>Core Topics</h2>` + clusters.map(c =>
+      `<h3>${esc(c.name)}</h3><ol class="topic-list" start="${c.s}">` +
+      w.topics.filter(t => +t.meta.order >= c.s && +t.meta.order <= c.e).map(topicLi).join('') + `</ol>`).join('');
+  } else if (w.topics.length) {
+    topicList = `<h2>Core Topics</h2><ol class="topic-list">` + w.topics.map(topicLi).join('') + `</ol>`;
+  }
   const groups = {};
   for (const p of w.patterns) (groups[p.meta.group] ??= []).push(p);
   const patternList = w.patterns.length ? `<h2>Pattern Library</h2>` + Object.entries(groups).map(([grp, ps]) =>
@@ -344,9 +366,13 @@ for (const w of wings) {
       const n = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern)).length;
       return `<li${n ? ' class="lit"' : ''}><a href="patterns/${p.slug}.html">${esc(p.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
     }).join('') + `</ul>`).join('') : '';
+  const provenance = w.body.replace(/<!--[\s\S]*?-->/g, '').trim();
   write(path.join(OUT, 'atlas', w.slug, 'index.html'), page(w.meta.title || title(w.slug), w.slug,
-    `<p class="crumb"><a href="../index.html">Knowledge</a> / wing</p>
-     <h1>${esc(w.meta.title || title(w.slug))}</h1>${md2html(w.body.replace(/<!--[\s\S]*?-->/g, ''))}${feed}${topicList}${patternList}`, 2));
+    `<p class="crumb"><a href="../index.html">Knowledge</a></p>
+     <h1 class="wing-title">${wingIcon[w.meta.icon] || ''}${esc(w.meta.title || title(w.slug))}</h1>
+     ${w.meta.summary ? `<p class="summary">${esc(w.meta.summary)}</p>` : ''}
+     ${feed}${topicList}${patternList}
+     ${provenance ? `<div class="provenance">${md2html(provenance)}</div>` : ''}`, 2));
 
   for (const t of w.topics) {
     const related = allEntries.filter(e => (e.meta.topics || []).includes(t.slug));
@@ -355,7 +381,7 @@ for (const w of wings) {
        <span class="dim">— ${esc(e.game.meta.title)}, ${esc(typeLabel[e.meta.type] || '')} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Nothing tagged <code>${t.slug}</code> yet.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'topics', t.slug + '.html'), page(t.meta.title, w.slug,
-      `<p class="crumb"><a href="../index.html">${esc(w.meta.title || title(w.slug))}</a> / core topic</p>
+      `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
        <h1>${esc(t.meta.title)}</h1>${md2html(t.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
   for (const p of w.patterns) {
@@ -365,21 +391,13 @@ for (const w of wings) {
        <span class="dim">— ${esc(e.game.meta.title)} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
-      `<p class="crumb"><a href="../index.html">${esc(w.meta.title || title(w.slug))}</a> / ${esc(p.meta.group || 'pattern')}</p>
+      `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
        <h1>${esc(p.meta.title)}</h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
   }
 }
 
 /* ---------- atlas hub: the four wings, one calm directory ---------- */
 (function buildAtlasHub() {
-  /* quiet monochrome line icons (inline, no icon font) */
-  const svg = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
-  const wingIcon = {
-    map: svg(`<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/>`),
-    adjustments: svg(`<path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h10"/><path d="M18 18h2"/><circle cx="16" cy="18" r="2"/>`),
-    wave: svg(`<path d="M3 9v6"/><path d="M7 5v14"/><path d="M11 8v8"/><path d="M15 4v16"/><path d="M19 7v10"/>`),
-    book: svg(`<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M19 17H6a2 2 0 0 0-2 2"/>`),
-  };
   /* short blurb: first sentence of the wing's intro, capped (fallback when no summary) */
   const wingBlurb = w => {
     const txt = (w.body || '').replace(/<!--[\s\S]*?-->/g, '').trim();
