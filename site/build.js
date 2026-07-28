@@ -135,7 +135,7 @@ const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
 }).sort((a, b) => (b.topics.length + b.patterns.length) - (a.topics.length + a.patterns.length));
 
 /* ---------- layout ---------- */
-function page(titleText, active, content, depth = 0, bodyClass = '', desc = '', image = '') {
+function page(titleText, active, content, depth = 0, bodyClass = '', desc = '', image = '', ogTitle = '') {
   const p = '../'.repeat(depth);
   const wingKeys = wings.map(w => w.slug);
   const nav = [
@@ -152,18 +152,19 @@ function page(titleText, active, content, depth = 0, bodyClass = '', desc = '', 
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(titleText)} — Game Design Atlas</title>
+<link rel="icon" href="${p}favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Game Design Atlas">
-<meta property="og:title" content="${esc(titleText)}">
+<meta property="og:title" content="${esc(ogTitle || titleText)}">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="${esc(titleText)}">
+<meta name="twitter:title" content="${esc(ogTitle || titleText)}">
 ${desc ? `<meta name="description" content="${esc(desc)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta name="twitter:description" content="${esc(desc)}">` : ''}
 ${image ? `<meta property="og:image" content="${esc(image)}">
 <meta name="twitter:image" content="${esc(image)}">` : ''}
 <link rel="stylesheet" href="${p}style.css"></head>
-<body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html">GAME DESIGN ATLAS</a><nav>${nav}</nav><button class="nav-search" data-open-search aria-label="Search the atlas">search ( / )</button></header>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html"><img class="brand-mark" src="${p}mark.svg" alt="" width="20" height="20">GAME DESIGN ATLAS</a><nav>${nav}</nav><button class="nav-search" data-open-search aria-label="Search the atlas">search ( / )</button></header>
 <main>${content}</main>
 <footer>schmenz &amp; Jachym — play, record, prototype.</footer>
 <script>window.SEARCH_BASE=${JSON.stringify(p)}</script>
@@ -405,7 +406,7 @@ const wingIcon = {
      <a class="wander" id="wander" href="#" title="jump to a random game">wander →</a></div>
      ${filters}
      <div class="active-filters" id="active-filters" hidden></div>
-     <div class="grid">${cards}</div>${js}`));
+     <div class="grid">${cards}</div>${js}`, 0, '', 'Field notes on play.', SITE + '/og-card.png', 'Game Design Atlas'));
 })();
 
 /* ---------- game pages ---------- */
@@ -724,8 +725,11 @@ for (const w of wings) {
   copy(path.join(__dirname, 'search.js'), path.join(OUT, 'search.js'));
 })();
 
-/* ---------- css ---------- */
+/* ---------- css + logo assets ---------- */
 copy(path.join(__dirname, 'style.css'), path.join(OUT, 'style.css'));
+copy(path.join(__dirname, 'favicon.svg'), path.join(OUT, 'favicon.svg'));
+copy(path.join(__dirname, 'mark.svg'), path.join(OUT, 'mark.svg'));
+if (exists(path.join(__dirname, 'og-card.png'))) copy(path.join(__dirname, 'og-card.png'), path.join(OUT, 'og-card.png'));
 write(path.join(OUT, '.nojekyll'), '');
 
 console.log(`Built: ${games.length} games, ${allEntries.length} entries, ` +
