@@ -569,7 +569,7 @@ for (const w of wings) {
   write(path.join(OUT, 'to-play.html'), page('To Play', 'to-play',
     `<h1>To Play</h1>
      <p class="dim">The shared queue — ★ marks a recommendation to the other one. Status moves to-play → playing → recorded.</p>
-     ${shelf('to-play')}${shelf('playing')}${shelf('recorded')}`));
+     ${shelf('playing')}${shelf('recorded')}${shelf('to-play')}`));
 })();
 
 /* ---------- diary: the full activity timeline ---------- */
