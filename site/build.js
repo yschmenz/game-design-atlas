@@ -551,19 +551,25 @@ for (const w of wings) {
      <div class="wings">${cards}</div>`, 1));
 })();
 
-/* ---------- to-play queue ---------- */
+/* ---------- to-play: a cover-led status board (not a spreadsheet) ---------- */
 (function buildQueue() {
-  const rows = games.map(g => `<tr>
-    <td><a href="games/${g.slug}/index.html">${esc(g.meta.title)}</a></td>
-    <td>${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}</td>
-    <td>${esc(g.meta['added-by'] || '')}</td>
-    <td>${esc(g.meta['recommended-by'] || '')}</td>
-    <td>${g.entries.length || ''}</td></tr>`).join('\n');
+  const label = { 'to-play': 'To play', playing: 'Playing', recorded: 'Recorded' };
+  const byStatus = { 'to-play': [], playing: [], recorded: [] };
+  for (const g of games) (byStatus[g.meta.status] || byStatus['to-play']).push(g);
+  const shelf = st => {
+    const gs = byStatus[st]; if (!gs.length) return '';
+    const cards = gs.map(g => {
+      const meta = [g.meta['added-by'] ? chip('+ ' + g.meta['added-by'], 'author') : '',
+        g.meta['recommended-by'] ? chip('★ ' + g.meta['recommended-by'], 'rec') : ''].join('');
+      return `<a class="card" href="games/${g.slug}/index.html">${coverTile(coverUrl(g, `games/${g.slug}/cover.jpg`), g.meta.title)}
+        <h3>${esc(g.meta.title)}</h3>${meta ? `<div class="meta">${meta}</div>` : ''}</a>`;
+    }).join('');
+    return `<h2>${label[st]} <span class="count">${gs.length}</span></h2><div class="grid">${cards}</div>`;
+  };
   write(path.join(OUT, 'to-play.html'), page('To Play', 'to-play',
-    `<h1>To Play — the shared queue</h1>
-     <p class="dim">Live view generated from each game's <code>index.md</code>. ★ = recommended to the other one.</p>
-     <table><thead><tr><th>Game</th><th>Status</th><th>Added by</th><th>Recommended by</th><th>Entries</th></tr></thead>
-     <tbody>${rows}</tbody></table>`));
+    `<h1>To Play</h1>
+     <p class="dim">The shared queue — ★ marks a recommendation to the other one. Status moves to-play → playing → recorded.</p>
+     ${shelf('to-play')}${shelf('playing')}${shelf('recorded')}`));
 })();
 
 /* ---------- diary: the full activity timeline ---------- */
