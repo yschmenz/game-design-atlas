@@ -216,7 +216,7 @@ const coverTile = (url, titleText) => {
   const img = url
     ? `<img loading="lazy" src="${url}" alt="" onerror="if(this.src.includes('library_600x900')){this.src=this.src.replace('library_600x900','header')}else{this.remove()}">`
     : '';
-  return `<span class="cover-frame"><span class="ph">${esc(titleText)}</span>${img}</span>`;
+  return `<span class="cover-frame"><span class="ph" aria-hidden="true">${esc(titleText)}</span>${img}</span>`;
 };
 
 /* absolute cover URL for link-preview (og:image) meta — must be absolute, not page-relative */
