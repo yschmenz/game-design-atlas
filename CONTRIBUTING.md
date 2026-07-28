@@ -62,7 +62,12 @@ Drop the image/photo into the game's `sketches/` folder, reference it from the e
 
 ## Recommend a game
 
-In the game's `index.md`, set `recommended-by:` and add a line why. It shows up in the TO-PLAY queue on the site. Update `status:` as you go: `to-play` → `playing` → `recorded`.
+In the game's `index.md`, set `recommended-by:` (you) and `recommend-note:` (one line on *why* the other one should play it). It leads the **To Play** page as a recommendation card. Update `status:` as you go: `to-play` → `playing` → `recorded`.
+
+```yaml
+recommended-by: schmenz
+recommend-note: "Every track has a diegetic source — study how score and architecture fuse."
+```
 
 ## Update a topic or pattern page
 

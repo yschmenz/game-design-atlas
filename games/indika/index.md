@@ -7,7 +7,8 @@ summary: "A nun with the devil in her head walks an alt-historical Russia; reali
 tags: [narrative, adventure]
 mood: [eerie, dreamlike]
 pace: medium
-recommended-by:
+recommended-by: jachym
+recommend-note: "The most formally daring narrative game I've played — reality literally splits when she prays, and the split becomes a mechanic. Play it before we talk."
 ---
 
 <!-- Why this game is on the list, first impressions, anything. Entries live next to this file. -->

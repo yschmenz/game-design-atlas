@@ -189,6 +189,16 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .in-lists a { color: var(--mut); text-decoration: none; }
 .in-lists a:hover { color: var(--ink); }
 
+/* to-play recommendations — "play this next, because…" */
+.recs { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1.3rem 1.6rem; margin: 1rem 0 .5rem; }
+.rec { display: flex; gap: 1rem; align-items: flex-start; text-decoration: none; }
+.rec img { width: 64px; aspect-ratio: 2/3; object-fit: cover; border-radius: 4px; background: var(--panel); flex: none; }
+.rec-body { min-width: 0; }
+.rec-t { display: block; font: 15px/1.4 Georgia, serif; color: var(--ink); }
+.rec-note { display: block; margin: .3rem 0; font: italic 14px/1.5 Georgia, serif; color: var(--mut); }
+.rec-by { display: block; font: 12px monospace; color: var(--ember); }
+.rec:hover .rec-t { text-decoration: underline; text-decoration-color: var(--faint); }
+
 /* the grid: covers speak, captions whisper */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.4rem 1rem; }
 .card { background: none; border: none; border-radius: 0; padding: 0;

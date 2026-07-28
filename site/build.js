@@ -566,9 +566,23 @@ for (const w of wings) {
     }).join('');
     return `<h2>${label[st]} <span class="count">${gs.length}</span></h2><div class="grid">${cards}</div>`;
   };
+  /* recommendations lead the page — "here's what you should play next", with the why */
+  const recs = games.filter(g => g.meta['recommended-by']);
+  const recBlock = recs.length
+    ? `<div class="recs">` + recs.map(g => {
+        const cover = coverUrl(g, `games/${g.slug}/cover.jpg`);
+        return `<a class="rec" href="games/${g.slug}/index.html">
+          ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
+          <span class="rec-body"><span class="rec-t">${esc(g.meta.title)}</span>
+          ${g.meta['recommend-note'] ? `<span class="rec-note">${esc(g.meta['recommend-note'])}</span>` : ''}
+          <span class="rec-by">★ recommended by ${esc(g.meta['recommended-by'])}</span></span></a>`;
+      }).join('') + `</div>`
+    : `<p class="dim">No recommendations yet. To flag a game for the other one, set <code>recommended-by:</code> (and a <code>recommend-note:</code> saying why) in its <code>index.md</code>.</p>`;
   write(path.join(OUT, 'to-play.html'), page('To Play', 'to-play',
     `<h1>To Play</h1>
-     <p class="dim">The shared queue — ★ marks a recommendation to the other one. Status moves to-play → playing → recorded.</p>
+     <p class="dim">What we're flagging for each other, then the shared queue.</p>
+     <h2>Recommended${recs.length ? ` <span class="count">${recs.length}</span>` : ''}</h2>
+     ${recBlock}
      ${shelf('playing')}${shelf('recorded')}${shelf('to-play')}`));
 })();
 
