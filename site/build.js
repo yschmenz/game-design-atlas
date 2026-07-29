@@ -228,6 +228,20 @@ const ogImage = g => {
   return '';
 };
 
+/* related games: rank the rest of the library by shared genre / mood / topic (+ same pace) */
+const relatedGames = (g, n = 6) => {
+  const gt = new Set(g.meta.tags || []), gm = new Set(g.meta.mood || []);
+  const gtop = new Set(g.entries.flatMap(e => e.meta.topics || []));
+  return games.filter(x => x.slug !== g.slug).map(x => {
+    let s = 0;
+    for (const t of (x.meta.tags || [])) if (gt.has(t)) s += 2;
+    for (const m of (x.meta.mood || [])) if (gm.has(m)) s += 2;
+    for (const t of new Set(x.entries.flatMap(e => e.meta.topics || []))) if (gtop.has(t)) s += 1;
+    if (g.meta.pace && x.meta.pace === g.meta.pace) s += 1;
+    return { x, s };
+  }).filter(o => o.s > 0).sort((a, b) => b.s - a.s || a.x.meta.title.localeCompare(b.x.meta.title)).slice(0, n).map(o => o.x);
+};
+
 /* quiet monochrome line icons for wings (inline, no icon font) — used by hub + wing pages */
 const _svgIcon = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const wingIcon = {
@@ -429,6 +443,9 @@ for (const g of games) {
      <a href="prototypes/${p}" target="_blank">open fullscreen ↗</a></div>
      <iframe src="prototypes/${p}" loading="lazy"></iframe></div>`).join('') : '';
   const body = g.body.replace(/<!--[\s\S]*?-->/g, '').trim();
+  const related = relatedGames(g);
+  const relatedBlock = related.length ? `<h2>Related games</h2><div class="grid grid-related">` + related.map(x =>
+    `<a class="card" href="../${x.slug}/index.html">${coverTile(coverUrl(x, `../${x.slug}/cover.jpg`), x.meta.title)}<h3>${esc(x.meta.title)}</h3></a>`).join('') + `</div>` : '';
   /* in-page wayfinding: a jump-to-entry index when a game has more than one entry */
   const entryIndex = g.entries.length >= 2 ? `<nav class="entry-index" aria-label="Entries on this page">
     <h2>Entries <span class="count">${g.entries.length}</span></h2>
@@ -450,7 +467,8 @@ for (const g of games) {
      ${body ? md2html(body) : ''}
      ${entryIndex}
      ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
-     ${looseProtos}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
+     ${looseProtos}
+     ${relatedBlock}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
   for (const s of g.sketches) copy(path.join(g.dir, 'sketches', s), path.join(OUT, 'games', g.slug, 'sketches', s));
 }

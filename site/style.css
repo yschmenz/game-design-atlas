@@ -202,6 +202,8 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 
 /* the grid: covers speak, captions whisper */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.4rem 1rem; }
+.grid-related { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 1.1rem .9rem; }
+.grid-related .card h3 { font-size: 13px; }
 .card { background: none; border: none; border-radius: 0; padding: 0;
   text-decoration: none; color: var(--faint); }
 /* uniform 2:3 tile: art is cropped to fill; a cover-less game shows its title instead */
