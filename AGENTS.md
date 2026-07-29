@@ -113,6 +113,7 @@ Below the frontmatter you have freedom, **but specific markdown triggers special
 - **YouTube:** a bare video URL on its own line auto-embeds (timestamps via `?t=` work).
 - **Playable prototype:** put a single self-contained `.html` in the game's `prototypes/` folder and list it in the entry's `prototypes:` frontmatter — it embeds playable in the page.
 - **`**bold**`** inside prose renders in the brighter ink colour — use it for the key term, not whole sentences.
+- **Link to other pages with `[[…]]`.** `[[navigation]]` links to that topic, `[[portal-series]]` to that game, `[[PP-01]]` to that pattern; add an alias with a pipe: `[[navigation|wayfinding]]`. Use the **slug** (a game/topic) or **code** (a pattern) — an unresolved link is left as plain `[[text]]` so you notice and fix it. Every target page automatically grows a **"Linked references"** section listing what points to it — this reverse-linking is what makes the atlas a connected web, so link generously.
 
 ## The three entry types
 

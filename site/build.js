@@ -195,6 +195,52 @@ const patName = p => {
   return (p.meta.title || '').replace(re, '').trim() || p.meta.title || code;
 };
 
+/* ---------- wiki-links + backlinks ----------
+   [[target]] in any body resolves to a game / topic / pattern page.
+   Forms: [[navigation]] (auto), [[game:portal-series]] (explicit), [[PP-01]], [[navigation|see wayfinding]] (alias). */
+const wikiMap = {};
+for (const g of games) wikiMap['game:' + g.slug] = { url: `games/${g.slug}/index.html`, title: g.meta.title };
+const WIKI_RE = /\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]/g;
+const wikiKey = raw => {
+  const id = raw.trim();
+  if (id.includes(':')) return wikiMap[id] ? id : null;
+  if (wikiMap['pattern:' + id.toUpperCase()]) return 'pattern:' + id.toUpperCase();
+  if (wikiMap['topic:' + id]) return 'topic:' + id;
+  if (wikiMap['game:' + id]) return 'game:' + id;
+  return null;
+};
+/* inline: turn [[x]] into a link relative to the page (p = depth prefix); leave unresolved as-is */
+const linkWiki = (html, p) => html.replace(WIKI_RE, (full, id, alias) => {
+  const k = wikiKey(id);
+  return k ? `<a class="wikilink" href="${p}${wikiMap[k].url}">${esc((alias || wikiMap[k].title).trim())}</a>` : full;
+});
+/* reverse index: which pages [[link]] to each target */
+const backlinks = {};
+const scanLinks = (text, src) => {
+  let m; WIKI_RE.lastIndex = 0;
+  while ((m = WIKI_RE.exec(text || ''))) { const k = wikiKey(m[1]); if (k) (backlinks[k] = backlinks[k] || []).push(src); }
+};
+const backlinkBlock = (key, p) => {
+  const bl = backlinks[key]; if (!bl || !bl.length) return '';
+  const seen = new Set();
+  const items = bl.filter(s => !seen.has(s.url) && seen.add(s.url))
+    .map(s => `<li><a href="${p}${s.url}">${esc(s.title)}</a></li>`).join('');
+  return `<h2>Linked references</h2><ul class="entry-list">${items}</ul>`;
+};
+for (const w of wings) {
+  for (const t of w.topics) wikiMap['topic:' + t.slug] = { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title };
+  for (const p of w.patterns) wikiMap['pattern:' + p.meta.pattern] = { url: `atlas/${w.slug}/patterns/${p.slug}.html`, title: patName(p) };
+}
+/* pre-pass: index every [[link]] across all writing surfaces (must run before pages render) */
+for (const g of games) {
+  scanLinks(g.body, { url: `games/${g.slug}/index.html`, title: g.meta.title });
+  for (const e of g.entries) scanLinks(e.body, { url: `games/${g.slug}/index.html#e-${e.slug}`, title: `${e.meta.title || e.slug} — ${g.meta.title}` });
+}
+for (const w of wings) {
+  for (const t of w.topics) scanLinks(t.body, { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title });
+  for (const p of w.patterns) scanLinks(p.body, { url: `atlas/${w.slug}/patterns/${p.slug}.html`, title: patName(p) });
+}
+
 /* cover art: local cover.jpg wins, else Steam CDN, else none.
    localPath = how to reach games/<slug>/cover.jpg from the page being rendered */
 function coverUrl(g, localPath) {
@@ -435,7 +481,7 @@ for (const g of games) {
       <p class="entry-meta">${esc(typeLabel[e.meta.type] || e.meta.type)}${e.meta.author ? ' · ' + esc(e.meta.author) : ''}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}${e.meta.status === 'draft' ? ' · <span class="draft-flag">draft</span>' : ''}</p>
       <div class="meta">${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
       ${(e.meta.patterns || []).map(p => patternChip(p, '../../')).join('')}</div></div>
-      ${dressEntry(md2html(e.body))}${protos}</article>`;
+      ${dressEntry(linkWiki(md2html(e.body), '../../'))}${protos}</article>`;
   }).join('\n');
   const otherProtos = g.prototypes.filter(p => !g.entries.some(e => (e.meta.prototypes || []).includes(p)));
   const looseProtos = otherProtos.length ? `<h2>Prototypes</h2>` + otherProtos.map(p =>
@@ -464,10 +510,11 @@ for (const g of games) {
        }${g.meta.pace ? `<a class="chip pace" href="../../index.html?pace=${encodeURIComponent(g.meta.pace)}">${esc(g.meta.pace)}</a>` : ''}</div>` : ''}
      ${(listsForGame[g.slug] || []).length ? `<p class="in-lists">In: ${listsForGame[g.slug].map(l =>
        `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
-     ${body ? md2html(body) : ''}
+     ${body ? linkWiki(md2html(body), '../../') : ''}
      ${entryIndex}
      ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
      ${looseProtos}
+     ${backlinkBlock('game:' + g.slug, '../../')}
      ${relatedBlock}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
   for (const s of g.sketches) copy(path.join(g.dir, 'sketches', s), path.join(OUT, 'games', g.slug, 'sketches', s));
@@ -530,7 +577,7 @@ for (const w of wings) {
       : `<p class="dim">Nothing tagged <code>${t.slug}</code> yet.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'topics', t.slug + '.html'), page(t.meta.title, w.slug,
       `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
-       <h1>${esc(t.meta.title)}</h1>${md2html(t.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
+       <h1>${esc(t.meta.title)}</h1>${linkWiki(md2html(t.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../')}${rel}${backlinkBlock('topic:' + t.slug, '../../../')}`, 3, 'reading'));
   }
   for (const p of w.patterns) {
     const related = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern));
@@ -540,7 +587,7 @@ for (const w of wings) {
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
       `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
-       <h1 class="pattern-title">${esc(patName(p))} <span class="pcode">${esc(p.meta.pattern)}</span></h1>${md2html(p.body.replace(/<!--[\s\S]*?-->/g, ''))}${rel}`, 3, 'reading'));
+       <h1 class="pattern-title">${esc(patName(p))} <span class="pcode">${esc(p.meta.pattern)}</span></h1>${linkWiki(md2html(p.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../')}${rel}${backlinkBlock('pattern:' + p.meta.pattern, '../../../')}`, 3, 'reading'));
   }
 }
 

@@ -31,4 +31,6 @@ Remove lighting (mentally / replay ignoring light). Would it still work?
 
 **Water was actually the main guide.** The canal itself is the path — light and sound only reinforce a direction the water already gives. The poles are rhythm, not navigation.
 
+It's the same [[navigation]]-by-environment instinct [[sable]] leans on in the open desert — let the terrain lead, and treat light and sound as reinforcement.
+
 <!-- Next: run PP-02 (Navigation by Sound) as a prototype to isolate the sound layer. -->

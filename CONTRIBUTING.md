@@ -43,7 +43,7 @@ Not sure which moods fit? Add the game with just `title`/`steam`, then ask Claud
    - `patterns`: related prototyping principles (e.g. `[PP-02]`)
    - `author`: `schmenz` or `jachym`
    - `date`: `YYYY-MM-DD`, optionally with time (`2026-07-06 23:00`) — time decides the order in "Latest entries" when several land on one day
-4. Below the frontmatter: total freedom. Text, images, YouTube links (they auto-embed, timestamps work).
+4. Below the frontmatter: total freedom. Text, images, YouTube links (they auto-embed, timestamps work). Link to another game/topic/pattern inline with `[[slug]]` (e.g. `[[navigation]]`, `[[portal-series]]`, `[[PP-01]]`) — the target page auto-lists everything that links to it under "Linked references".
    Long reference material (full transcripts, walkthroughs) goes in a collapsible block so the entry stays scannable:
    `<details><summary><strong>▸ title</strong></summary>` … `</details>`
 5. Commit + push.
