@@ -429,6 +429,11 @@ for (const g of games) {
      <a href="prototypes/${p}" target="_blank">open fullscreen ↗</a></div>
      <iframe src="prototypes/${p}" loading="lazy"></iframe></div>`).join('') : '';
   const body = g.body.replace(/<!--[\s\S]*?-->/g, '').trim();
+  /* in-page wayfinding: a jump-to-entry index when a game has more than one entry */
+  const entryIndex = g.entries.length >= 2 ? `<nav class="entry-index" aria-label="Entries on this page">
+    <h2>Entries <span class="count">${g.entries.length}</span></h2>
+    <ol class="entry-index-list">${g.entries.map(e =>
+      `<li><a href="#${e.slug}"><span class="ei-t">${esc(e.meta.title || e.slug)}</span><span class="ei-m">${esc(typeLabel[e.meta.type] || e.meta.type || '')}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}</span></a></li>`).join('')}</ol></nav>` : '';
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
     `${coverImg(coverUrl(g, 'cover.jpg'), 'cover-page')}
      <h1>${esc(g.meta.title)}</h1>
@@ -443,6 +448,7 @@ for (const g of games) {
      ${(listsForGame[g.slug] || []).length ? `<p class="in-lists">In: ${listsForGame[g.slug].map(l =>
        `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
      ${body ? md2html(body) : ''}
+     ${entryIndex}
      ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
      ${looseProtos}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
   for (const p of g.prototypes) copy(path.join(g.dir, 'prototypes', p), path.join(OUT, 'games', g.slug, 'prototypes', p));
