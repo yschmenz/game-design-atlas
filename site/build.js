@@ -393,7 +393,7 @@ const wingIcon = {
     .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 6);
   const feed = latest.length ? `<h2>Latest entries</h2><div class="latest">` + latest.map(e => {
     const cover = coverUrl(e.game, `games/${e.game.slug}/cover.jpg`);
-    return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}">
+    return `<a class="lcard" href="games/${e.game.slug}/index.html#e-${e.slug}">
      ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
      <span><span class="lt">${esc(e.meta.title)}</span>
      <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(e.meta.date).slice(0, 10)}${e.meta.status === 'draft' ? ' · draft' : ''}</span></span></a>`;
@@ -416,7 +416,7 @@ for (const g of games) {
       `<div class="proto-embed"><div class="proto-bar"><span>▶ ${esc(p)}</span>
        <a href="prototypes/${p}" target="_blank">open fullscreen ↗</a></div>
        <iframe src="prototypes/${p}" loading="lazy"></iframe></div>`).join('');
-    return `<article class="entry" id="${e.slug}">
+    return `<article class="entry" id="e-${e.slug}">
       <div class="entry-head"><h2>${esc(e.meta.title || e.slug)}</h2>
       <p class="entry-meta">${esc(typeLabel[e.meta.type] || e.meta.type)}${e.meta.author ? ' · ' + esc(e.meta.author) : ''}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}${e.meta.status === 'draft' ? ' · <span class="draft-flag">draft</span>' : ''}</p>
       <div class="meta">${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
@@ -433,7 +433,7 @@ for (const g of games) {
   const entryIndex = g.entries.length >= 2 ? `<nav class="entry-index" aria-label="Entries on this page">
     <h2>Entries <span class="count">${g.entries.length}</span></h2>
     <ol class="entry-index-list">${g.entries.map(e =>
-      `<li><a href="#${e.slug}"><span class="ei-t">${esc(e.meta.title || e.slug)}</span><span class="ei-m">${esc(typeLabel[e.meta.type] || e.meta.type || '')}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}</span></a></li>`).join('')}</ol></nav>` : '';
+      `<li><a href="#e-${e.slug}"><span class="ei-t">${esc(e.meta.title || e.slug)}</span><span class="ei-m">${esc(typeLabel[e.meta.type] || e.meta.type || '')}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}</span></a></li>`).join('')}</ol></nav>` : '';
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
     `${coverImg(coverUrl(g, 'cover.jpg'), 'cover-page')}
      <h1>${esc(g.meta.title)}</h1>
@@ -464,7 +464,7 @@ for (const w of wings) {
     .sort((a, b) => String(b.meta.date).localeCompare(String(a.meta.date)) || b.added - a.added).slice(0, 3);
   const feed = wingLatest.length ? `<h2>Latest entries</h2><div class="latest">` + wingLatest.map(e => {
     const cover = coverUrl(e.game, `../../games/${e.game.slug}/cover.jpg`);
-    return `<a class="lcard" href="../../games/${e.game.slug}/index.html#${e.slug}">
+    return `<a class="lcard" href="../../games/${e.game.slug}/index.html#e-${e.slug}">
      ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
      <span><span class="lt">${esc(e.meta.title)}</span>
      <span class="lm">${esc(e.game.meta.title)} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}</span></span></a>`;
@@ -507,7 +507,7 @@ for (const w of wings) {
   for (const t of w.topics) {
     const related = allEntries.filter(e => (e.meta.topics || []).includes(t.slug));
     const rel = related.length ? `<h2>Entries</h2><ul class="entry-list">` + related.map(e =>
-      `<li><a href="../../../games/${e.game.slug}/index.html#${e.slug}">${esc(e.meta.title)}</a>
+      `<li><a href="../../../games/${e.game.slug}/index.html#e-${e.slug}">${esc(e.meta.title)}</a>
        <span class="dim">— ${esc(e.game.meta.title)}, ${esc(typeLabel[e.meta.type] || '')} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Nothing tagged <code>${t.slug}</code> yet.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'topics', t.slug + '.html'), page(t.meta.title, w.slug,
@@ -517,7 +517,7 @@ for (const w of wings) {
   for (const p of w.patterns) {
     const related = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern));
     const rel = related.length ? `<h2>Entries & prototypes</h2><ul class="entry-list">` + related.map(e =>
-      `<li><a href="../../../games/${e.game.slug}/index.html#${e.slug}">${esc(e.meta.title)}</a>
+      `<li><a href="../../../games/${e.game.slug}/index.html#e-${e.slug}">${esc(e.meta.title)}</a>
        <span class="dim">— ${esc(e.game.meta.title)} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
@@ -633,7 +633,7 @@ for (const w of wings) {
       const cover = coverUrl(e.game, `games/${e.game.slug}/cover.jpg`);
       const type = typeLabel[e.meta.type] || e.meta.type || '';
       const draft = e.meta.status === 'draft' ? ' · draft' : '';
-      return `<a class="lcard" href="games/${e.game.slug}/index.html#${e.slug}" data-author="${esc(e.meta.author || '?')}" data-wings="${entryWings(e).join(' ')}">
+      return `<a class="lcard" href="games/${e.game.slug}/index.html#e-${e.slug}" data-author="${esc(e.meta.author || '?')}" data-wings="${entryWings(e).join(' ')}">
        ${cover ? `<img loading="lazy" src="${cover}" alt="" onerror="this.remove()">` : ''}
        <span><span class="lt">${esc(e.meta.title)}</span>
        <span class="lm">${esc(e.game.meta.title)}${type ? ' · ' + esc(type) : ''} · ${esc(e.meta.author || '?')} · ${esc(String(e.meta.date)).slice(0, 10)}${draft}</span></span></a>`;
@@ -729,7 +729,7 @@ for (const w of wings) {
   for (const e of allEntries) {
     const x = [e.meta.title, typeLabel[e.meta.type] || e.meta.type, e.meta.author,
       ...(e.meta.topics || []), ...(e.meta.patterns || []), plain(e.body)].filter(Boolean).join(' ').toLowerCase();
-    rec.push({ t: e.meta.title || e.slug, k: 'entry', c: e.game.meta.title, u: `games/${e.game.slug}/index.html#${e.slug}`, x });
+    rec.push({ t: e.meta.title || e.slug, k: 'entry', c: e.game.meta.title, u: `games/${e.game.slug}/index.html#e-${e.slug}`, x });
   }
   for (const w of wings) {
     const wt = w.meta.title || title(w.slug);
