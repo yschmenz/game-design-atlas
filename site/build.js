@@ -288,6 +288,17 @@ const relatedGames = (g, n = 6) => {
   }).filter(o => o.s > 0).sort((a, b) => b.s - a.s || a.x.meta.title.localeCompare(b.x.meta.title)).slice(0, n).map(o => o.x);
 };
 
+/* compact date range for the game-page "shape" cue */
+const MONTHS_S = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dateSpan = (a, b) => {
+  const [ay, am, ad] = a.slice(0, 10).split('-'), [by, bm, bd] = b.slice(0, 10).split('-');
+  const one = (y, m, d) => `${MONTHS_S[+m - 1]} ${+d}, ${y}`;
+  if (a.slice(0, 10) === b.slice(0, 10)) return one(ay, am, ad);
+  if (ay === by && am === bm) return `${MONTHS_S[+am - 1]} ${+ad}–${+bd}, ${ay}`;
+  if (ay === by) return `${MONTHS_S[+am - 1]} ${+ad} – ${MONTHS_S[+bm - 1]} ${+bd}, ${ay}`;
+  return `${one(ay, am, ad)} – ${one(by, bm, bd)}`;
+};
+
 /* quiet monochrome line icons for wings (inline, no icon font) — used by hub + wing pages */
 const _svgIcon = body => `<svg class="wicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const wingIcon = {
@@ -497,12 +508,15 @@ for (const g of games) {
     <h2>Entries <span class="count">${g.entries.length}</span></h2>
     <ol class="entry-index-list">${g.entries.map(e =>
       `<li><a href="#e-${e.slug}"><span class="ei-t">${esc(e.meta.title || e.slug)}</span><span class="ei-m">${esc(typeLabel[e.meta.type] || e.meta.type || '')}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}</span></a></li>`).join('')}</ol></nav>` : '';
+  const eDates = g.entries.map(e => e.meta.date).filter(Boolean).map(String).sort();
+  const shapeCue = g.entries.length ? `<p class="game-shape">${g.entries.length} ${g.entries.length > 1 ? 'entries' : 'entry'}${eDates.length ? ' · ' + dateSpan(eDates[0], eDates[eDates.length - 1]) : ''}</p>` : '';
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
     `${coverImg(coverUrl(g, 'cover.jpg'), 'cover-page')}
      <h1>${esc(g.meta.title)}</h1>
      <div class="meta">${chip(g.meta.status || 'to-play', 'st-' + (g.meta.status || 'to-play'))}
      ${g.meta['added-by'] ? chip('added by ' + g.meta['added-by'], 'author') : ''}
      ${g.meta['recommended-by'] ? chip('★ recommended by ' + g.meta['recommended-by'], 'rec') : ''}</div>
+     ${shapeCue}
      ${g.meta.summary ? `<p class="summary">${esc(g.meta.summary)}</p>` : ''}
      ${(g.meta.tags || []).length || (g.meta.mood || []).length || g.meta.pace ? `<div class="meta facets">${
        (g.meta.tags || []).map(t => `<a class="chip" href="../../index.html?tag=${encodeURIComponent(t)}">${esc(t)}</a>`).join('')
