@@ -46,9 +46,13 @@
   function render(items) {
     cur = items; sel = 0;
     list.innerHTML = items.map(function (r, i) {
-      return '<li class="search-ov-item' + (i === 0 ? ' on' : '') + '" data-u="' + esc(r.u) + '">' +
-        '<span class="so-t">' + esc(r.t) + '</span>' +
-        '<span class="so-k">' + esc(r.k) + (r.c ? ' · ' + esc(r.c) : '') + '</span></li>';
+      var src = r.img ? (r.img.indexOf('http') === 0 ? r.img : BASE + r.img) : '';
+      var cover = src
+        ? '<img class="so-cover" src="' + src + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">'
+        : '<span class="so-cover so-cover-none"></span>';
+      return '<li class="search-ov-item' + (i === 0 ? ' on' : '') + '" data-u="' + esc(r.u) + '">' + cover +
+        '<span class="so-main"><span class="so-t">' + esc(r.t) + '</span>' +
+        '<span class="so-k">' + esc(r.k) + (r.c ? ' · ' + esc(r.c) : '') + '</span></span></li>';
     }).join('');
   }
 

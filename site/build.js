@@ -274,6 +274,14 @@ const ogImage = g => {
   return '';
 };
 
+/* cover for search results: root-relative for local jpg (prefixed client-side), else absolute */
+const searchCover = g => {
+  if (exists(path.join(g.dir, 'cover.jpg'))) return `games/${g.slug}/cover.jpg`;
+  if (g.meta.cover) return g.meta.cover;
+  if (g.meta.steam) return `https://cdn.cloudflare.steamstatic.com/steam/apps/${g.meta.steam}/library_600x900.jpg`;
+  return '';
+};
+
 /* related games: rank the rest of the library by shared genre / mood / topic (+ same pace) */
 const relatedGames = (g, n = 6) => {
   const gt = new Set(g.meta.tags || []), gm = new Set(g.meta.mood || []);
@@ -803,12 +811,12 @@ for (const w of wings) {
   for (const g of games) {
     const x = [g.meta.title, g.meta.summary, ...(g.meta.tags || []), ...(g.meta.mood || []),
       g.meta.pace, plain(g.body)].filter(Boolean).join(' ').toLowerCase();
-    rec.push({ t: g.meta.title, k: 'game', c: '', u: `games/${g.slug}/index.html`, x });
+    rec.push({ t: g.meta.title, k: 'game', c: '', u: `games/${g.slug}/index.html`, img: searchCover(g), x });
   }
   for (const e of allEntries) {
     const x = [e.meta.title, typeLabel[e.meta.type] || e.meta.type, e.meta.author,
       ...(e.meta.topics || []), ...(e.meta.patterns || []), plain(e.body)].filter(Boolean).join(' ').toLowerCase();
-    rec.push({ t: e.meta.title || e.slug, k: 'entry', c: e.game.meta.title, u: `games/${e.game.slug}/index.html#e-${e.slug}`, x });
+    rec.push({ t: e.meta.title || e.slug, k: 'entry', c: e.game.meta.title, u: `games/${e.game.slug}/index.html#e-${e.slug}`, img: searchCover(e.game), x });
   }
   for (const w of wings) {
     const wt = w.meta.title || title(w.slug);
