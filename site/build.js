@@ -771,35 +771,49 @@ for (const w of wings) {
 /* ---------- lists / collections ---------- */
 (function buildLists() {
   if (!lists.length) return;
-  const gamesOf = l => (l.meta.games || []).map(s => gameBySlug[s]).filter(Boolean);
+  /* a list's games: annotated body lines "- slug — note" (per-item notes), else the `games:` frontmatter */
+  const ANN = /^-\s+([a-z0-9-]+)\s*(?:—|–|:)\s*(.+?)\s*$/;
+  const listItems = l => {
+    const ann = (l.body || '').split('\n').map(line => line.match(ANN))
+      .filter(m => m && gameBySlug[m[1]]).map(m => ({ g: gameBySlug[m[1]], note: m[2].trim() }));
+    if (ann.length) return ann;
+    return (l.meta.games || []).map(s => ({ g: gameBySlug[s], note: '' })).filter(o => o.g);
+  };
+  const listProse = l => (l.body || '').split('\n')
+    .filter(line => { const m = line.match(ANN); return !(m && gameBySlug[m[1]]); }).join('\n').trim();
 
   const cards = lists.map(l => {
-    const gs = gamesOf(l);
-    const thumbs = gs.slice(0, 5).map(g => {
-      const c = coverUrl(g, `games/${g.slug}/cover.jpg`);
+    const items = listItems(l);
+    const thumbs = items.slice(0, 5).map(x => {
+      const c = coverUrl(x.g, `games/${x.g.slug}/cover.jpg`);
       return c ? `<img loading="lazy" src="${c}" alt="" onerror="this.remove()">` : '';
     }).join('');
     return `<a class="list-card" href="lists/${l.slug}.html">
       <div class="list-covers">${thumbs}</div>
       <h3>${esc(l.meta.title || l.slug)}</h3>
-      <p class="list-meta">${l.meta.by ? 'by ' + esc(l.meta.by) + ' · ' : ''}${gs.length} game${gs.length !== 1 ? 's' : ''}</p>
+      <p class="list-meta">${l.meta.by ? 'by ' + esc(l.meta.by) + ' · ' : ''}${items.length} game${items.length !== 1 ? 's' : ''}</p>
       ${l.meta.summary ? `<p class="list-sum">${esc(l.meta.summary)}</p>` : ''}</a>`;
   }).join('\n');
   write(path.join(OUT, 'lists.html'), page('Lists', 'lists',
     `<h1>Lists <span class="count">${lists.length}</span></h1><div class="list-index">${cards}</div>`, 0));
 
   for (const l of lists) {
-    const gs = gamesOf(l);
-    const grid = gs.map(g => {
-      const c = coverUrl(g, `../games/${g.slug}/cover.jpg`);
-      return `<a class="card" href="../games/${g.slug}/index.html">${coverTile(c, g.meta.title)}<h3>${esc(g.meta.title)}</h3></a>`;
-    }).join('');
+    const items = listItems(l);
+    const hasNotes = items.some(x => x.note);
+    const gamesBlock = hasNotes
+      ? `<ul class="list-items">` + items.map(x => {
+          const c = coverUrl(x.g, `../games/${x.g.slug}/cover.jpg`);
+          return `<li><a class="list-item" href="../games/${x.g.slug}/index.html">${c ? `<img loading="lazy" src="${c}" alt="" onerror="this.remove()">` : ''}<span class="li-body"><span class="li-t">${esc(x.g.meta.title)}</span>${x.note ? `<span class="li-note">${esc(x.note)}</span>` : ''}</span></a></li>`;
+        }).join('') + `</ul>`
+      : `<div class="grid">` + items.map(x =>
+          `<a class="card" href="../games/${x.g.slug}/index.html">${coverTile(coverUrl(x.g, `../games/${x.g.slug}/cover.jpg`), x.g.meta.title)}<h3>${esc(x.g.meta.title)}</h3></a>`).join('') + `</div>`;
+    const prose = listProse(l);
     write(path.join(OUT, 'lists', l.slug + '.html'), page(l.meta.title || l.slug, 'lists',
       `<p class="crumb"><a href="../lists.html">Lists</a></p>
        <h1>${esc(l.meta.title || l.slug)}</h1>
        ${l.meta.summary || l.meta.by ? `<p class="summary">${l.meta.summary ? esc(l.meta.summary) : ''}${l.meta.by ? ` <span class="dim">— ${esc(l.meta.by)}</span>` : ''}</p>` : ''}
-       <div class="grid">${grid}</div>
-       ${l.body.trim() ? md2html(l.body) : ''}`, 1, '', l.meta.summary || '', gs[0] ? ogImage(gs[0]) : ''));
+       ${prose ? md2html(prose) : ''}
+       ${gamesBlock}`, 1, '', l.meta.summary || '', items[0] ? ogImage(items[0].g) : ''));
   }
 })();
 

@@ -75,15 +75,19 @@ status: draft               # optional; marks it a draft
 ```
 
 ### List — `lists/<slug>.md`
+Two ways to list the games. **Preferred (with a note per game):** write them in the body as `- slug — why it's here`:
 ```yaml
 ---
 title: Wayfinding without a map
 by: jachym
 summary: "One line on the theme."
-games: [half-life-2, sable, outer-wilds]   # game slugs
 ---
-Prose about the theme goes below.
+Optional intro prose about the theme.
+
+- half-life-2 — framed sightlines; the environment is the map.
+- sable — landmarks on the horizon, no waypoints.
 ```
+The separator can be `—`, `–`, or `:`; the slug must be lowercase. Each game renders as a cover + title + your note. **Simple (no notes):** just `games: [half-life-2, sable]` in the frontmatter and no body list — renders as a plain cover grid.
 
 ### Recommend a game
 On a game's `index.md`, set `recommended-by:` (you) and `recommend-note:` (one line on *why*). It leads the **To Play** page as a recommendation card.

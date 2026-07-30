@@ -60,6 +60,10 @@ Drop the image/photo into the game's `sketches/` folder, reference it from the e
 3. Reference it from your entry's frontmatter (`prototypes: [pp02-navigation-by-sound.html]`) — the site embeds it playable.
 4. Outgrew one file? Build it in Godot/Unity, put a link in the entry instead.
 
+## Make a list
+
+Drop a file in `lists/`. Frontmatter: `title`, `by`, `summary`. Then in the body write the games with a note each — `- slug — why it's here` (e.g. `- portal-series — the canonical silent tutorial`). Optional intro prose above the list. (No note needed? Just `games: [slug, slug]` in the frontmatter for a plain cover grid.)
+
 ## Recommend a game
 
 In the game's `index.md`, set `recommended-by:` (you) and `recommend-note:` (one line on *why* the other one should play it). It leads the **To Play** page as a recommendation card. Update `status:` as you go: `to-play` → `playing` → `recorded`.

@@ -197,6 +197,15 @@ a.chip:hover { border-color: var(--mut); color: var(--ink); }
 .list-card:hover h3 { text-decoration: underline; text-decoration-color: var(--faint); }
 .list-meta { margin: .15rem 0 .3rem; font: 12px monospace; color: var(--faint); }
 .list-sum { margin: 0; font: 14px/1.5 Georgia, serif; color: var(--mut); }
+/* annotated list items: cover + title + why-note */
+.list-items { list-style: none; padding: 0; margin: 1.2rem 0 .5rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1.3rem 1.6rem; }
+.list-item { display: flex; gap: 1rem; align-items: flex-start; text-decoration: none; }
+.list-item img { width: 58px; aspect-ratio: 2/3; object-fit: cover; border-radius: 4px; background: var(--panel); flex: none; }
+.li-body { min-width: 0; }
+.li-t { display: block; font: 15px/1.4 Georgia, serif; color: var(--ink); }
+.li-note { display: block; margin-top: .25rem; font: 14px/1.5 Georgia, serif; color: var(--mut); }
+.list-item:hover .li-t { text-decoration: underline; text-decoration-color: var(--faint); }
 .in-lists { font: 12px monospace; color: var(--faint); margin: .4rem 0 0; }
 .in-lists a { color: var(--mut); text-decoration: none; }
 .in-lists a:hover { color: var(--ink); }
