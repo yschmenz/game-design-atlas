@@ -5,6 +5,7 @@
   "description": "Shared games-pedia of design findings — schmenz & Jachym",
   "scripts": {
     "build": "node site/build.js",
+    "lint": "node site/lint-content.js",
     "serve": "npx -y http-server _site -p 8080"
   },
   "dependencies": {
