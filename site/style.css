@@ -47,8 +47,6 @@ main { max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 2rem; }
 /* 12px, not 11 — the last stragglers at the small-text contrast floor (see DESIGN.md a11y pass) */
 .search-ov-item .so-k { font: 12px monospace; color: var(--faint); white-space: nowrap; }
 .search-ov-hint { margin: .5rem .4rem 0; font: 12px monospace; color: var(--faint); }
-footer { text-align: center; color: var(--faint); font: 12px monospace;
-  padding: 2.5rem 0 2rem; }
 
 /* type */
 h1 { font-size: 1.7rem; font-weight: 400; margin: .2rem 0 1rem; }

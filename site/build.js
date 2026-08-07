@@ -166,7 +166,6 @@ ${image ? `<meta property="og:image" content="${esc(image)}">
 <link rel="stylesheet" href="${p}style.css"></head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}><header><a class="brand" href="${p}index.html"><img class="brand-mark" src="${p}mark.svg" alt="" width="20" height="20">game design atlas</a><nav>${nav}</nav><button class="nav-search" data-open-search aria-label="Search the atlas">search ( / )</button></header>
 <main>${content}</main>
-<footer>schmenz &amp; Jachym — play, record, prototype.</footer>
 <script>window.SEARCH_BASE=${JSON.stringify(p)}</script>
 <script src="${p}search-index.js" defer></script>
 <script src="${p}search.js" defer></script>
