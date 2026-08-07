@@ -6,7 +6,7 @@ wing: level-design
 topics: []
 patterns: []
 prototypes: []      # the rebuild itself, if playable — e.g. [first-room-rebuild.html]
-author: <schmenz | jachym>
+author: <schmenz | jachym | kuzeycn>
 date: <YYYY-MM-DD>
 status: draft
 ---

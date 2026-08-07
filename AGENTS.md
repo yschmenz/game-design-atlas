@@ -4,7 +4,7 @@ Instructions for any AI helping add content to this repo. Read this in full befo
 
 ## What this is
 
-A two-person games-pedia by **schmenz** and **jachym**: we play games, record what we learn about game design, and prototype the ideas worth keeping. It's a static site (one Node build script, `site/build.js`, reads markdown → writes `_site/`). You author markdown; the site renders it. Push to `main` and it rebuilds.
+A games-pedia by **schmenz**, **jachym**, and **kuzeycn**: we play games, record what we learn about game design, and prototype the ideas worth keeping. It's a static site (one Node build script, `site/build.js`, reads markdown → writes `_site/`). You author markdown; the site renders it. Push to `main` and it rebuilds.
 
 ## Golden rules
 
@@ -47,13 +47,13 @@ A vibe (cozy, atmospheric, surreal) is a **mood**, not a genre. If a word is gen
 ---
 title: Pentiment
 status: to-play            # to-play | playing | recorded
-added-by: schmenz          # schmenz | jachym
+added-by: schmenz          # schmenz | jachym | kuzeycn
 steam: 1205520             # Steam appid → cover art (omit if not on Steam; then add cover.jpg)
 summary: "One sentence, own words — what it is and why it's interesting."
 tags: [narrative, detective, historical]   # genre, from the list
 mood: [contemplative, melancholic]
 pace: slow
-recommended-by:            # set to a name to flag it for the other one (see below)
+recommended-by:            # set to a name to flag it for the others (see below)
 recommend-note:            # one line on why they should play it
 ---
 ```
@@ -67,7 +67,7 @@ type: reverse-engineering   # reverse-engineering | rebuild-fragment | topic-cas
 wing: level-design          # level-design | game-design | sound-design | narrative-design
 topics: [navigation, landmarks, verticality]   # kebab-case, from the wing's 20 core topics
 patterns: [PP-12, PP-24]    # optional; codes from the wing's pattern library
-author: jachym              # schmenz | jachym
+author: jachym              # schmenz | jachym | kuzeycn
 date: 2026-07-07            # YYYY-MM-DD (add time "2026-07-07 23:00" to order same-day entries)
 prototypes: [pp12-framing.html]   # optional; file must exist in the game's prototypes/ folder
 status: draft               # optional; marks it a draft

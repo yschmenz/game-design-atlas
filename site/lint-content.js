@@ -29,7 +29,7 @@ function loadVocab() {
   return { MOODS: evalArray(m[1]), PACES: evalArray(m[2]), GENRES: evalArray(m[3]) };
 }
 const { MOODS, PACES, GENRES } = loadVocab();
-const PEOPLE = ['schmenz', 'jachym'];
+const PEOPLE = ['schmenz', 'jachym', 'kuzeycn'];
 const TYPES = ['reverse-engineering', 'rebuild-fragment', 'topic-case-study'];
 
 /* ---------- tiny helpers (a deliberately independent re-read of disk, so linting
@@ -160,7 +160,7 @@ function checkEntry(game, e) {
   if (e.meta.wing && !wingDirs.includes(e.meta.wing)) err(f, `wing "${e.meta.wing}" has no atlas/${e.meta.wing}/ folder`);
   if (e.meta.date && !/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/.test(e.meta.date))
     err(f, `date "${e.meta.date}" is not YYYY-MM-DD (optional " HH:MM")`);
-  if (e.meta.author && !PEOPLE.includes(e.meta.author)) err(f, `author "${e.meta.author}" is not schmenz | jachym`);
+  if (e.meta.author && !PEOPLE.includes(e.meta.author)) err(f, `author "${e.meta.author}" is not ${PEOPLE.join(" | ")}`);
 
   /* topics:/patterns: are scoped to the entry's own wing per AGENTS.md; fall back to the
      atlas-wide set only when the wing itself is missing/invalid (that's already a separate
@@ -241,9 +241,9 @@ for (const g of games) {
 
   if (!g.meta.title) err(gf, 'missing required field "title"');
   if (!g.meta['added-by']) err(gf, 'missing required field "added-by"');
-  else if (!PEOPLE.includes(g.meta['added-by'])) err(gf, `added-by "${g.meta['added-by']}" is not schmenz | jachym`);
+  else if (!PEOPLE.includes(g.meta['added-by'])) err(gf, `added-by "${g.meta['added-by']}" is not ${PEOPLE.join(" | ")}`);
   if (g.meta['recommended-by'] && !PEOPLE.includes(g.meta['recommended-by']))
-    err(gf, `recommended-by "${g.meta['recommended-by']}" is not schmenz | jachym`);
+    err(gf, `recommended-by "${g.meta['recommended-by']}" is not ${PEOPLE.join(" | ")}`);
 
   /* feel-vocabulary guardrail — was build.js's checkFeel(), now lives here */
   const moods = g.meta.mood || [];

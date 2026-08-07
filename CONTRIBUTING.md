@@ -41,7 +41,7 @@ Not sure which moods fit? Add the game with just `title`/`steam`, then ask Claud
    - `wing`: `level-design` (later: `narrative-design`, `sound-design`)
    - `topics`: from the 20 core topics, kebab-case (e.g. `[navigation, curiosity]`)
    - `patterns`: related prototyping principles (e.g. `[PP-02]`)
-   - `author`: `schmenz` or `jachym`
+   - `author`: `schmenz`, `jachym`, or `kuzeycn`
    - `date`: `YYYY-MM-DD`, optionally with time (`2026-07-06 23:00`) — time decides the order in "Latest entries" when several land on one day
 4. Below the frontmatter: total freedom. Text, images, YouTube links (they auto-embed, timestamps work). Link to another game/topic/pattern inline with `[[slug]]` (e.g. `[[navigation]]`, `[[portal-series]]`, `[[PP-01]]`) — the target page auto-lists everything that links to it under "Linked references". Capture a short quote with a `>` blockquote (keep it brief and attributed — no long copyrighted passages).
    Long reference material (full transcripts, walkthroughs) goes in a collapsible block so the entry stays scannable:
@@ -66,7 +66,7 @@ Drop a file in `lists/`. Frontmatter: `title`, `by`, `summary`. Then in the body
 
 ## Recommend a game
 
-In the game's `index.md`, set `recommended-by:` (you) and `recommend-note:` (one line on *why* the other one should play it). It leads the **To Play** page as a recommendation card. Update `status:` as you go: `to-play` → `playing` → `recorded`.
+In the game's `index.md`, set `recommended-by:` (you) and `recommend-note:` (one line on *why* the others should play it). It leads the **To Play** page as a recommendation card. Update `status:` as you go: `to-play` → `playing` → `recorded`.
 
 ```yaml
 recommended-by: schmenz

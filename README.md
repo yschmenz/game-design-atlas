@@ -1,6 +1,6 @@
 # Game Design Atlas
 
-A shared games-pedia by **schmenz** & **Jachym** — playing games we love (or always wanted to finish), recording what we learn about game design, and prototyping the ideas worth keeping.
+A games-pedia by **schmenz**, **jachym**, and **kuzeycn** — playing games we love (or always wanted to finish), recording what we learn about game design, and prototyping the ideas worth keeping.
 
 ## How it works
 

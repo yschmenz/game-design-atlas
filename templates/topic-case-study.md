@@ -6,7 +6,7 @@ wing: level-design
 topics: [<primary-topic>]     # at least one of the 20 core topics
 patterns: []
 prototypes: []
-author: <schmenz | jachym>
+author: <schmenz | jachym | kuzeycn>
 date: <YYYY-MM-DD>
 status: draft
 ---

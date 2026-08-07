@@ -6,7 +6,7 @@ wing: level-design
 topics: []          # e.g. [navigation, player-guidance]
 patterns: []        # e.g. [PP-02]
 prototypes: []      # e.g. [my-experiment.html] in this game's prototypes/
-author: <schmenz | jachym>
+author: <schmenz | jachym | kuzeycn>
 date: <YYYY-MM-DD>
 status: draft       # draft | done
 ---
