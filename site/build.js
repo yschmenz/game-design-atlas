@@ -517,6 +517,15 @@ for (const g of games) {
       `<li><a href="#e-${e.slug}"><span class="ei-t">${esc(e.meta.title || e.slug)}</span><span class="ei-m">${esc(typeLabel[e.meta.type] || e.meta.type || '')}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}</span></a></li>`).join('')}</ol></nav>` : '';
   const eDates = g.entries.map(e => e.meta.date).filter(Boolean).map(String).sort();
   const shapeCue = g.entries.length ? `<p class="game-shape">${g.entries.length} ${g.entries.length > 1 ? 'entries' : 'entry'}${eDates.length ? ' · ' + dateSpan(eDates[0], eDates[eDates.length - 1]) : ''}</p>` : '';
+  /* stub pages (no entries yet) should read as "not started", not "abandoned" — the cover,
+     summary and mood/pace chips above already carry the page; this just points forward */
+  const emptyLead = g.meta.status === 'playing' ? 'Mid-playthrough — nothing written up yet.'
+    : g.meta.status === 'recorded' ? 'Marked recorded, but the write-up hasn’t landed yet.'
+    : 'Nothing recorded yet — the first note starts here.';
+  const emptyState = `<div class="empty-state">
+     <p class="empty-state-lead">${emptyLead}</p>
+     <p class="empty-state-hint">Starts as a template from <code>templates/</code>, next to this file.</p>
+   </div>`;
   write(path.join(OUT, 'games', g.slug, 'index.html'), page(g.meta.title, 'games',
     `${coverImg(coverUrl(g, 'cover.jpg'), 'cover-page')}
      <h1>${esc(g.meta.title)}</h1>
@@ -533,7 +542,7 @@ for (const g of games) {
        `<a href="../../lists/${l.slug}.html">${esc(l.meta.title)}</a>`).join(', ')}</p>` : ''}
      ${body ? linkWiki(md2html(body), '../../') : ''}
      ${entryIndex}
-     ${entriesHtml || '<p class="dim">Nothing recorded here yet. When we play it, the first note lands on this page — copy a template from <code>templates/</code> to start.</p>'}
+     ${entriesHtml || emptyState}
      ${looseProtos}
      ${backlinkBlock('game:' + g.slug, '../../')}
      ${relatedBlock}`, 2, 'reading', g.meta.summary || '', ogImage(g)));
