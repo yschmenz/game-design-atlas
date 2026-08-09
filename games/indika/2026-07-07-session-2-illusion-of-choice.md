@@ -3,7 +3,7 @@ title: "Session 2: verticality, minigames, and the illusion of choice"
 game: indika
 type: reverse-engineering
 wing: level-design
-topics: [verticality, player-guidance, level-rhythm, pacing, illusory-choice, minigames]
+topics: [verticality, player-guidance, level-rhythm]
 patterns: [PP-12, PP-24, PP-13]
 prototypes: []
 author: jachym

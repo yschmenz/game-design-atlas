@@ -3,7 +3,7 @@ title: "Session 4: first-person, and freeing herself from the devil"
 game: indika
 type: reverse-engineering
 wing: level-design
-topics: [player-guidance, level-rhythm, pacing, camera-perspective, sound-design, restricted-agency]
+topics: [player-guidance, level-rhythm, camera-perspective]
 patterns: [PP-13, PP-12]
 prototypes: []
 author: jachym
@@ -26,7 +26,7 @@ faith → silence and eerie music, end.
 
 ## Observations
 
-1. **Barely any agency, maximum dramatic delivery.** This session is explicit about the
+1. **Barely any [[agency]], maximum dramatic delivery.** This session is explicit about the
    trade: player agency is almost nonexistent throughout, but level design is doing all
    the work of carrying the drama to its end — specifically, making the tension and
    experience of the protagonist something you feel *through* the environment and the
@@ -148,7 +148,7 @@ the story in a way left open to interpretation.
   free pacing through a maze, still no real destination choice. Same toolkit, dialed from
   restrictive to merely unhurried.
   Candidate framing pattern alongside **PP-13**.
-- **Sound design as emotional contrast, made explicit.** Loud, hostile street noise
+- **[[sound-and-emotion|Sound design]] as emotional contrast, made explicit.** Loud, hostile street noise
   (screams, growls, mumbling) set directly against a calm pawn-shop interior — the first
   time this playthrough's notes call out sound design as doing thematic contrast work on
   its own, rather than just orientation/atmosphere as in earlier sessions.

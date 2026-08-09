@@ -3,7 +3,7 @@ title: "Session 3: gravity rooms, giant machines, and playing someone else"
 game: indika
 type: reverse-engineering
 wing: level-design
-topics: [verticality, player-guidance, level-rhythm, scale-shift, gravity-puzzle, environmental-storytelling]
+topics: [verticality, player-guidance, level-rhythm, scale, environmental-storytelling]
 patterns: [PP-13, PP-12]
 prototypes: []
 author: jachym

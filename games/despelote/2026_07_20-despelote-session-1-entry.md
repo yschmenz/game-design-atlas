@@ -3,7 +3,7 @@ title: "Session 1: minimal mechanics, maximal memory"
 game: despelote
 type: reverse-engineering
 wing: level-design
-topics: [navigation, landmarks, level-rhythm, environmental-storytelling, visual-style, soft-blocking, diegetic-time, scale]
+topics: [navigation, landmarks, level-rhythm, environmental-storytelling, world-building, architecture, emotional-design, scale, camera-perspective]
 patterns: [PP-13]
 prototypes: []
 author: jachym
