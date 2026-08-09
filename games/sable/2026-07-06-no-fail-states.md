@@ -3,7 +3,7 @@ title: An open world with no fail states
 game: sable
 type: topic-case-study
 wing: game-design
-topics: [rules, goals, agency, open-world-structure]
+topics: [rules, goals, agency, space]
 patterns: [GP-01]
 prototypes: []
 author: schmenz

@@ -4,7 +4,7 @@ game: indika
 type: reverse-engineering
 wing: level-design
 topics: [verticality, player-guidance, level-rhythm, scale-shift, gravity-puzzle, environmental-storytelling]
-patterns: [PP-13, PP-12, NP-02]
+patterns: [PP-13, PP-12]
 prototypes: []
 author: jachym
 date: 2026-07-09 12:57
@@ -38,7 +38,7 @@ bridge minigame → church conflict → flashback as Miro (Pac-Man chase).
    art. Almost no NPCs populate it, yet the debris, signage, and layout alone sell it as a place
    people actually live and use — detail carrying inhabitedness without needing bodies in it.
 3. **Two bridges, one door.** Two visible bridges, only one enters — the other is a look-but-
-   can't-touch landmark, the same illusory-choice/fake-corridor logic flagged in session 2 (**NP-02**):
+   can't-touch landmark, the same illusory-choice/fake-corridor logic flagged in session 2 (**[[NP-02]]**):
    the world shows you an alternate route it never lets you take.
 4. **Heavy safe as box-variant.** The familiar "movable box" mechanic reappears reskinned as a
    heavy safe — same interaction, new dressing, used to reach a higher opening.
@@ -146,7 +146,7 @@ capture, before the sequence ends and the story resumes.
 - **The devil made physical** — the mirrored-gravity room is the first time the devil appears in a
   visible, embodied form rather than just as a voice, doing so through the level geometry itself
   (two exits looking into a parallel, differently-oriented copy of the same room). Strong candidate
-  for its own narrative-design writeup alongside **NP-02**.
+  for its own narrative-design writeup alongside **[[NP-02]]**.
 - **A gravity-orientation puzzle, unannounced.** New spatial mechanic (align your "down" with a
   target's) introduced and resolved within a single room, never taught elsewhere — a self-contained
   puzzle built to carry theme rather than to be reused.

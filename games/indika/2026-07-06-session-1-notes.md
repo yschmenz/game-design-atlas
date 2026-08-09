@@ -4,7 +4,7 @@ game: indika
 type: reverse-engineering
 wing: level-design
 topics: [navigation, landmarks, verticality, player-guidance, level-rhythm]
-patterns: [PP-12, PP-24, PP-13, NP-02]
+patterns: [PP-12, PP-24, PP-13]
 prototypes: []
 author: jachym
 date: 2026-07-06
@@ -59,9 +59,9 @@ Jachym's commentary from the session recording, cleaned & structured — detail 
 ### New threads from the recording (beyond the scribble)
 
 - Style/genre switch for flashbacks → memory as a different *game*
-- The fake-choice fork (paths merge) → candidate for narrative pattern **NP-02 The Fake Choice**
+- The fake-choice fork (paths merge) → candidate for narrative pattern **[[NP-02]] The Fake Choice**
 - Window as planted foreshadowing (cutscene camera = later entrance)
-- "Honest architecture" that secretly serves the player (the village ramp) → relates to **PP-13 Framing** / indirect control
+- "Honest architecture" that secretly serves the player (the village ramp) → relates to **[[PP-13]] Framing** / indirect control
 - No-sprint as deliberate tension tool in the chase
 
 ## Conclusion

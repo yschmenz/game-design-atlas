@@ -4,7 +4,7 @@ game: indika
 type: reverse-engineering
 wing: level-design
 topics: [verticality, player-guidance, level-rhythm, pacing, illusory-choice, minigames]
-patterns: [PP-12, PP-24, PP-13, NP-02]
+patterns: [PP-12, PP-24, PP-13]
 prototypes: []
 author: jachym
 date: 2026-07-07 15:29
@@ -220,7 +220,7 @@ the philosophical talks with Ilya about fate and destiny. That was the end of th
 
 - **Illusory choice as level-design language** — choices of path/door/elevator that all
   converge, made to *mean* fate and destiny. Direct evolution of session 1's fake-choice
-  fork → strengthens the case for narrative pattern **NP-02 The Fake Choice**, now doing
+  fork → strengthens the case for narrative pattern **[[NP-02]] The Fake Choice**, now doing
   thematic work, not just corridor-preservation.
 - **Counterweight logic as a taught-then-reused mechanic** — introduced at the mill, reprised
   in the twin-elevator puzzle. A clean example of teach-once, vary-later.

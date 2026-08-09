@@ -3,8 +3,8 @@ title: "Session 1: every track has a source"
 game: the-norwood-suite
 type: reverse-engineering
 wing: sound-design
-topics: [adaptive-music, diegetic-vs-non-diegetic, spatial-audio, music-gameplay-sync, audio-feedback, dialogue]
-patterns: [GP-05, PP-11]
+topics: [adaptive-music, diegetic-vs-non-diegetic, spatial-audio, music-gameplay-sync, audio-feedback, voice-and-dialogue]
+patterns: []
 prototypes: []
 author: schmenz
 date: 2026-07-06 23:00
@@ -56,7 +56,7 @@ the title credits appear *on the road* — the world presents the game.
 ![singing statue head](sketches/04-singing-statue-head.jpg)
 
 **Entrance reveal.** From afar the open hotel doors are pure black; approach and the
-interior suddenly resolves — a doorway-sized delayed reveal (PP-11/PP-12 territory).
+interior suddenly resolves — a doorway-sized delayed reveal ([[PP-11]]/[[PP-12]] territory).
 
 ![entrance arch](sketches/06-entrance-arch-reveal.jpg)
 ![lobby](sketches/07-lobby-red-carpet.jpg)
@@ -82,7 +82,7 @@ world keeps moving.
 
 - The visible-source rule is a *complete* sound-design stance, not a trick — candidate
   for a new pattern (**SP-06 Visible Source?**) once it shows up in a second game.
-- Diegetic tutorials (GP-05 run in production): the environment can carry all onboarding.
+- Diegetic tutorials ([[GP-05]] run in production): the environment can carry all onboarding.
 - For our own game: ultra-wide support mattered a lot here (fully surrounded by the scene) —
   worth budgeting from the start.
 - Open design question from the friction: is "no quest log" a cost worth paying for
