@@ -37,7 +37,7 @@ Not sure which moods fit? Add the game with just `title`/`steam`, then ask Claud
 1. Find the game's folder in `games/` (e.g. `games/half-life-2/`). If it's missing, copy any existing game folder, edit `index.md`, and set `added-by:` to yourself.
 2. Copy the matching template from `templates/` into that folder. Name it something like `2026-07-canal-navigation.md`.
 3. Fill in the frontmatter (the `---` block at the top) — it powers search and filtering on the site:
-   - `type`: `reverse-engineering` | `rebuild-fragment` | `topic-case-study`
+   - `type`: `reverse-engineering` | `rebuild-fragment` | `topic-case-study` | `player-interview` (a transcribed conversation with a non-designer player — `author:` is the interviewer, the interviewee is named in the prose, not in frontmatter)
    - `wing`: `level-design` (later: `narrative-design`, `sound-design`)
    - `topics`: from the 20 core topics, kebab-case (e.g. `[navigation, curiosity]`)
    - `patterns`: related prototyping principles (e.g. `[PP-02]`)

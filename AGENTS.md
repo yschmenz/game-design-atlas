@@ -63,11 +63,11 @@ Only `title` and `added-by` are strictly required; everything else degrades grac
 ```yaml
 ---
 title: Session 2 — the hotel is the map
-type: reverse-engineering   # reverse-engineering | rebuild-fragment | topic-case-study
+type: reverse-engineering   # reverse-engineering | rebuild-fragment | topic-case-study | player-interview
 wing: level-design          # level-design | game-design | sound-design | narrative-design
 topics: [navigation, landmarks, verticality]   # kebab-case, from the wing's 20 core topics
 patterns: [PP-12, PP-24]    # optional; codes from the wing's pattern library
-author: jachym              # schmenz | jachym | kuzeycn
+author: jachym              # schmenz | jachym | kuzeycn — for player-interview, the interviewer (not the person interviewed)
 date: 2026-07-07            # YYYY-MM-DD (add time "2026-07-07 23:00" to order same-day entries)
 prototypes: [pp12-framing.html]   # optional; file must exist in the game's prototypes/ folder
 status: draft               # optional; marks it a draft
@@ -120,11 +120,12 @@ Below the frontmatter you have freedom, **but specific markdown triggers special
 - **Capture a quote with `>`.** A markdown blockquote renders as a quiet pull-quote — use it for a line worth pausing on (a moment of the game's text, a line from a talk or design book). Keep it short and attributed; **never paste long copyrighted passages** (a sentence or two, in quotes, with a source).
 - **Link to other pages with `[[…]]`.** `[[navigation]]` links to that topic, `[[portal-series]]` to that game, `[[PP-01]]` to that pattern; add an alias with a pipe: `[[navigation|wayfinding]]`. Use the **slug** (a game/topic) or **code** (a pattern) — an unresolved link is left as plain `[[text]]` so you notice and fix it. Every target page automatically grows a **"Linked references"** section listing what points to it — this reverse-linking is what makes the atlas a connected web, so link generously.
 
-## The three entry types
+## The four entry types
 
 - **reverse-engineering** — *How is it built? Why like this?* Observations of an existing game.
 - **rebuild-fragment** — *Recreate a piece to find out why it works.* Often paired with a prototype.
 - **topic-case-study** — *Recognise and remember,* tied to one of the 20 core topics.
+- **player-interview** — *What does someone outside game design actually experience?* A recorded/transcribed conversation with a player who isn't schmenz/jachym/kuzeycn — a partner, friend, anyone playing without a designer's lens. `author:` is the interviewer, who runs the transcript through the same rendering conventions as any other entry (numbered observations, `### New threads`, `topics:`) — the interviewee is named in the prose and in quote attributions, not in frontmatter. Put the raw Q&A in a collapsible block; the entry body itself is the interviewer's distilled read on what the answers reveal.
 
 Copy the matching file from `templates/` as your starting structure.
 

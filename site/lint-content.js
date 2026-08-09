@@ -30,7 +30,7 @@ function loadVocab() {
 }
 const { MOODS, PACES, GENRES } = loadVocab();
 const PEOPLE = ['schmenz', 'jachym', 'kuzeycn'];
-const TYPES = ['reverse-engineering', 'rebuild-fragment', 'topic-case-study'];
+const TYPES = ['reverse-engineering', 'rebuild-fragment', 'topic-case-study', 'player-interview'];
 
 /* ---------- tiny helpers (a deliberately independent re-read of disk, so linting
    never triggers a full site build as a side effect — see loadVocab above) ---------- */

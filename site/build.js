@@ -172,7 +172,7 @@ ${image ? `<meta property="og:image" content="${esc(image)}">
 </body></html>`;
 }
 
-const typeLabel = { 'reverse-engineering': 'Reverse Engineering', 'rebuild-fragment': 'Rebuild Fragment', 'topic-case-study': 'Case Study' };
+const typeLabel = { 'reverse-engineering': 'Reverse Engineering', 'rebuild-fragment': 'Rebuild Fragment', 'topic-case-study': 'Case Study', 'player-interview': 'Player Interview' };
 const chip = (txt, cls = '') => `<span class="chip ${cls}">${esc(txt)}</span>`;
 
 /* lookup maps so tags can link to their pages (cross-wing safe) */
