@@ -153,6 +153,7 @@ function page(titleText, active, content, depth = 0, bodyClass = '', desc = '', 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(titleText)} — Game Design Atlas</title>
 <link rel="icon" href="${p}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${p}apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Game Design Atlas">
 <meta property="og:title" content="${esc(ogTitle || titleText)}">
@@ -865,6 +866,7 @@ copy(path.join(__dirname, 'style.css'), path.join(OUT, 'style.css'));
 copy(path.join(__dirname, 'favicon.svg'), path.join(OUT, 'favicon.svg'));
 copy(path.join(__dirname, 'mark.svg'), path.join(OUT, 'mark.svg'));
 if (exists(path.join(__dirname, 'og-card.png'))) copy(path.join(__dirname, 'og-card.png'), path.join(OUT, 'og-card.png'));
+if (exists(path.join(__dirname, 'apple-touch-icon.png'))) copy(path.join(__dirname, 'apple-touch-icon.png'), path.join(OUT, 'apple-touch-icon.png'));
 write(path.join(OUT, '.nojekyll'), '');
 
 console.log(`Built: ${games.length} games, ${allEntries.length} entries, ` +
