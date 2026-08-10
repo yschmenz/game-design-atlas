@@ -203,8 +203,23 @@ function checkEntry(game, e) {
   const seq = body.match(/^##\s*Sequence\s*$/im);
   if (seq) {
     const after = body.slice(seq.index + seq[0].length);
-    const nextBlock = after.split(/\n\s*\n/).find(b => b.trim()) || '';
-    if (!nextBlock.includes('→')) warn(f, '"## Sequence" has no → arrows — won\'t render as a flow-line');
+    /* Bound the scan to the Sequence section itself (up to the next heading, or the
+       end of the entry if there isn't one) — otherwise an unrelated → used later in
+       Observations/New threads would be mistaken for the flow-line. Within that
+       section, check *every* block, not just the first: dressEntry() in build.js only
+       re-styles the block immediately after the heading, so a stray leading paragraph
+       (a placeholder note, an embedded image) pushes the real arrow line one block too
+       late to render — that's a real, silent failure worth its own message, distinct
+       from "no arrows anywhere". */
+    const nextHeading = after.search(/^#{1,6}\s/m);
+    const section = nextHeading === -1 ? after : after.slice(0, nextHeading);
+    const blocks = section.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+    const arrowIdx = blocks.findIndex(b => b.includes('→'));
+    if (arrowIdx === -1) {
+      warn(f, '"## Sequence" has no → arrows — won\'t render as a flow-line');
+    } else if (arrowIdx > 0) {
+      warn(f, `"## Sequence" has → arrows, but only after ${arrowIdx} leading paragraph${arrowIdx === 1 ? '' : 's'} — build.js only re-styles the block immediately after the heading, so this won't render as a flow-line`);
+    }
   }
 
   if (!/^###\s*New threads/im.test(body)) warn(f, 'no "### New threads" section — no forward hook');
@@ -232,7 +247,15 @@ function checkEntry(game, e) {
       if (days > 30) warn(f, `status: draft, dated ${days} days ago — finish it or drop the draft flag`);
     }
   }
-  if (/<todo>/i.test(body)) warn(f, 'stray <todo> left in the body');
+  /* Both are errors, not warnings: per the severity model above, these are structurally
+     wrong, not just untidy. A bare, unclosed <todo> isn't a real HTML element, so per the
+     HTML5 parsing algorithm everything that follows becomes its *child* until the entry
+     ends (confirmed via an html5lib parse) — real headings/paragraphs end up nested inside
+     draft-note styling instead of rendering as authored. The <todo — …> variant (an
+     em-dash right after the tag name, no closing tag) is invalid tag syntax, so it's never
+     recognized as an element at all — it gets escaped and printed as literal, visible text. */
+  if (/<todo>/i.test(body)) err(f, 'stray <todo> left in the body — unclosed tag will swallow every following heading/paragraph as its own child, corrupting the rest of the entry');
+  if (/<todo[\s—–-]/i.test(body)) err(f, 'stray <todo — …> left in the body — invalid tag syntax means it never parses as an element and renders as literal visible text');
 }
 
 /* ---------- run over every game ---------- */
