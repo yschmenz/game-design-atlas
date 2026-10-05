@@ -381,6 +381,7 @@ const wingIcon = {
     tag: c => c.dataset.tags.split(' '), mood: c => c.dataset.moods.split(' '),
     topic: c => c.dataset.topics.split(' '), author: c => c.dataset.authors.split(' ')
   };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   function applyFilters() {
     /* selected values per facet; multi-select = OR within a facet, AND across facets */
     const sel = {};
@@ -394,8 +395,8 @@ const wingIcon = {
     });
     shown.textContent = count;
     let h = '';
-    for (const f in sel) sel[f].forEach(v => h += '<button class="af-chip" data-clear="' + f + '|' + v + '">' + v + ' ✕</button>');
-    if (q) h += '<button class="af-chip" data-clear="__q">“' + q + '” ✕</button>';
+    for (const f in sel) sel[f].forEach(v => h += '<button class="af-chip" data-clear="' + esc(f + '|' + v) + '">' + esc(v) + ' ✕</button>');
+    if (q) h += '<button class="af-chip" data-clear="__q">“' + esc(q) + '” ✕</button>';
     if (h) h = '<span class="af-label">active</span>' + h + '<button class="af-clear" data-clear="__all">clear all</button>';
     activeBar.innerHTML = h; activeBar.hidden = !h;
   }
@@ -436,7 +437,7 @@ const wingIcon = {
     } else if (c === '__q') { searchBox.value = ''; }
     else {
       const i = c.indexOf('|'), f = c.slice(0, i), v = c.slice(i + 1);
-      const btn = filters.querySelector('button[data-f="' + f + '"][data-v="' + v + '"]');
+      const btn = filters.querySelector('button[data-f="' + CSS.escape(f) + '"][data-v="' + CSS.escape(v) + '"]');
       if (btn) { btn.classList.remove('on'); syncAll(f); }
     }
     applyFilters();
@@ -456,7 +457,7 @@ const wingIcon = {
   const touched = new Set();
   for (const [k, v] of params) {
     if (k === 'q') continue;
-    const b = filters.querySelector('button[data-f="' + k + '"][data-v="' + v + '"]');
+    const b = filters.querySelector('button[data-f="' + CSS.escape(k) + '"][data-v="' + CSS.escape(v) + '"]');
     if (b) { b.classList.add('on'); b.classList.remove('hid'); touched.add(k); }
   }
   touched.forEach(syncAll);
