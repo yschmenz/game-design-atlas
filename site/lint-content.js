@@ -250,15 +250,20 @@ function checkEntry(game, e) {
       if (days > 30) warn(f, `status: draft, dated ${days} days ago — finish it or drop the draft flag`);
     }
   }
-  /* Both are errors, not warnings: per the severity model above, these are structurally
-     wrong, not just untidy. A bare, unclosed <todo> isn't a real HTML element, so per the
+  /* A closed <todo>note</todo> (optionally <todo>jachym: note</todo>) is the valid draft-note
+     form and renders as a styled note. Two broken forms are errors, not warnings: per the
+     severity model above, these are structurally wrong, not just untidy. An unclosed <todo>
+     (no </todo> before the next <todo> or the end of the body) isn't a real HTML element, so per the
      HTML5 parsing algorithm everything that follows becomes its *child* until the entry
      ends (confirmed via an html5lib parse) — real headings/paragraphs end up nested inside
      draft-note styling instead of rendering as authored. The <todo — …> variant (an
      em-dash right after the tag name, no closing tag) is invalid tag syntax, so it's never
      recognized as an element at all — it gets escaped and printed as literal, visible text. */
-  if (/<todo>/i.test(body)) err(f, 'stray <todo> left in the body — unclosed tag will swallow every following heading/paragraph as its own child, corrupting the rest of the entry');
-  if (/<todo[\s—–-]/i.test(body)) err(f, 'stray <todo — …> left in the body — invalid tag syntax means it never parses as an element and renders as literal visible text');
+  const opens = [...body.matchAll(/<todo>/gi)];
+  const unclosed = opens.filter((m, i) =>
+    !/<\/todo>/i.test(body.slice(m.index, i + 1 < opens.length ? opens[i + 1].index : body.length))).length;
+  if (unclosed) err(f, `${unclosed} unclosed <todo> — it swallows every following heading/paragraph; write <todo>note</todo> (optionally <todo>jachym: note</todo>)`);
+  if (/<todo[\s—–-]/i.test(body)) err(f, 'invalid <todo — …> form — it renders as literal visible text; write <todo>note</todo> (optionally <todo>jachym: note</todo>)');
 }
 
 /* ---------- run over every game ---------- */

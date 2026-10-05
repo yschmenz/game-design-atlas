@@ -113,7 +113,7 @@ Below the frontmatter you have freedom, **but specific markdown triggers special
   - **Delayed reveal** — hold the vista until after the corridor.
   ```
 - **Collapsible detail** (transcripts, long reference): `<details><summary><strong>▸ Full transcript</strong></summary> … </details>`
-- **Draft note inline:** `<todo>still need to check the second playthrough</todo>`
+- **Draft note inline:** `<todo>still need to check the second playthrough</todo>` — to sign it, put the name first inside the tag: `<todo>jachym: compare with session 2</todo>`. Always close it with `</todo>`: an unclosed `<todo>` swallows everything after it, and `<todo — …>` renders as literal text. `npm run lint` flags both.
 - **YouTube:** a bare video URL on its own line auto-embeds (timestamps via `?t=` work).
 - **Playable prototype:** put a single self-contained `.html` in the game's `prototypes/` folder and list it in the entry's `prototypes:` frontmatter — it embeds playable in the page.
 - **`**bold**`** inside prose renders in the brighter ink colour — use it for the key term, not whole sentences.
