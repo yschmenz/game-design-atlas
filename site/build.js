@@ -42,6 +42,7 @@ function write(f, c) { mkdirp(path.dirname(f)); fs.writeFileSync(f, c); }
 function copy(src, dst) { mkdirp(path.dirname(dst)); fs.copyFileSync(src, dst); }
 
 function parseFrontmatter(raw) {
+  raw = raw.replace(/\r\n/g, '\n'); /* files saved on Windows */
   const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m) return { meta: {}, body: raw };
   const meta = {};

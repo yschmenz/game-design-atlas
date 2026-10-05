@@ -40,6 +40,7 @@ const listDirs = d => exists(d) ? fs.readdirSync(d, { withFileTypes: true }).fil
 const listFiles = (d, ext) => exists(d) ? fs.readdirSync(d).filter(f => !ext || f.endsWith(ext)) : [];
 
 function parseFrontmatter(raw) {
+  raw = raw.replace(/\r\n/g, '\n'); /* files saved on Windows */
   const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m) return { meta: {}, body: raw };
   const meta = {};
