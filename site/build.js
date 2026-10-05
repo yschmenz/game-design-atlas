@@ -638,7 +638,7 @@ for (const w of wings) {
   }
   for (const p of w.patterns) {
     const related = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern));
-    const rel = related.length ? `<h2>Entries & prototypes</h2><ul class="entry-list">` + related.map(e =>
+    const rel = related.length ? `<h2>Entries</h2><ul class="entry-list">` + related.map(e =>
       `<li><a href="../../../games/${e.game.slug}/index.html#e-${e.slug}">${esc(e.meta.title)}</a>
        <span class="dim">— ${esc(e.game.meta.title)} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
