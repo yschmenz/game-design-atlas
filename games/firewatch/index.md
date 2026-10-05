@@ -1,6 +1,6 @@
 ---
 title: Firewatch
-status: to-play
+status: playing
 added-by: jachym
 steam: 383870
 summary: "A summer as a fire lookout in Wyoming — mystery carried almost entirely by radio dialogue."

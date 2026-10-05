@@ -4,7 +4,7 @@ game: indika
 type: reverse-engineering
 wing: level-design
 topics: [verticality, player-guidance, level-rhythm]
-patterns: [PP-12, PP-24, PP-13]
+patterns: [PP-12, PP-24, PP-13, PP-01]
 prototypes: []
 author: jachym
 date: 2026-07-07 15:29
