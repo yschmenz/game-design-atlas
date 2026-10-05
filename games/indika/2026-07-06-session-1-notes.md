@@ -66,7 +66,7 @@ Jachym's commentary from the session recording, cleaned & structured — detail 
 
 ## Conclusion
 
-<todo — Jachym: the two threads that stand out are (3)+(5): the same space carrying
-two layers (height levels / realities). Worth a follow-up entry or prototype?>
+<todo>Jachym: the two threads that stand out are (3)+(5): the same space carrying
+two layers (height levels / realities). Worth a follow-up entry or prototype?</todo>
 
 <!-- [bracketed words] = uncertain readings from the handwriting — Jachym, please correct. -->

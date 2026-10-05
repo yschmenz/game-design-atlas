@@ -206,10 +206,10 @@ the game, used as a cinematic wrap-up.
 
 ## Conclusion
 
-<todo — Jachym: the throughline here is minimal-mechanics-as-vessel — kick, walk, talk,
+<todo>Jachym: the throughline here is minimal-mechanics-as-vessel — kick, walk, talk,
 draw, and everything else is level design and art doing the storytelling. The
 photogrammetry-square beat feels like the strongest single idea in the game and worth
 its own short writeup, maybe cross-referenced against Indika's scale-shift thread even
 though the effect used is basically opposite (raw documentary vs. surreal stylization).
 Also want to go back and specifically map where navigation broke down — was it always
-the top-down football sections, or did it happen in first-person too?>
+the top-down football sections, or did it happen in first-person too?</todo>

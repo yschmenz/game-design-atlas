@@ -144,7 +144,7 @@ memory.
 
 ## Conclusion
 
-<todo — jachym: this was the first hour only. Curious whether the level design escalates
+<todo>jachym: this was the first hour only. Curious whether the level design escalates
 once telekinesis and the rest of the kit are unlocked, or whether the repetition flagged in
 observation 16 gets addressed as the building's geometry gets stranger. Continue next
-session.>
+session.</todo>

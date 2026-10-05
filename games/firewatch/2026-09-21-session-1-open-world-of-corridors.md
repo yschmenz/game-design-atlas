@@ -110,6 +110,6 @@ find the broken cable (landmark navigation reprised)
 
 ## Conclusion
 
-<todo — jachym: first session only, up through the second tower task. Curious whether the
+<todo>jachym: first session only, up through the second tower task. Curious whether the
 linear-dressed-as-open-world illusion holds up as the map fills in further, or whether the
-corridor becomes more visible as fewer regions stay unexplored. Continue next session.>
+corridor becomes more visible as fewer regions stay unexplored. Continue next session.</todo>

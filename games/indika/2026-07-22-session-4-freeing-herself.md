@@ -164,13 +164,13 @@ the story in a way left open to interpretation.
 
 ## Conclusion
 
-<todo — Jachym: the throughline across this whole playthrough turns out to be reduction —
+<todo>Jachym: the throughline across this whole playthrough turns out to be reduction —
 of agency, of faith, of the devil's presence — and every session found a different level-design
 tool to carry it (framing/light in session 1, illusory choice in session 2, embodiment
 via geometry in session 3, and here, camera perspective + sound design + the mirror
 payoff). Worth writing up the full arc as a single retrospective piece once the game's
 done, cross-linking PP-12, PP-13, and NP-02 together. Also want to isolate the sound
 design contrast (noise vs. pawn shop calm) as its own short entry — feels underexplored
-compared to how much work it's doing here.>
+compared to how much work it's doing here.</todo>
 
 <!-- Session 4 — final session for Indika. -->

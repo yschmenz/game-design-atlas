@@ -27,4 +27,4 @@ Recreation of the first room, expanding the distance to the exit.
 
 ## Observation & Conclusion
 
-<todo — what does more distance do to the moment of understanding?>
+<todo>what does more distance do to the moment of understanding?</todo>

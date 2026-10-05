@@ -165,10 +165,10 @@ capture, before the sequence ends and the story resumes.
 
 ## Conclusion
 
-<todo — Jachym: the gravity room is the standout here — first embodiment of the devil, and a
+<todo>Jachym: the gravity room is the standout here — first embodiment of the devil, and a
 puzzle mechanic built once, purely to carry theme (aligning your gravity with Ilya's = literally
 "getting on the same side" as him). Worth a dedicated write-up, maybe cross-linked with the
 illusory-choice thread from session 2. Also keep an eye on the flashback-genre-swap thread: if a
-fourth flashback shows up in a third genre entirely, that's a pattern, not a one-off.>
+fourth flashback shows up in a third genre entirely, that's a pattern, not a one-off.</todo>
 
 <!-- Session 3 notes updated. -->

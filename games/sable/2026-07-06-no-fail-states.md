@@ -42,5 +42,5 @@ point, letting tasks wait instead of die may serve exploration better.
 ## Emotion check
 
 - What emotion was the designer trying to create? — calm, unhurried curiosity; safety without stakes
-- What spatial decisions created that emotion? — <todo — next session: does the *space* also signal safety, or only the rules?>
+- What spatial decisions created that emotion? — <todo>next session: does the *space* also signal safety, or only the rules?</todo>
 - Could the same emotion be achieved differently? — <todo>

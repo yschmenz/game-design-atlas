@@ -236,10 +236,10 @@ the philosophical talks with Ilya about fate and destiny. That was the end of th
 
 ## Conclusion
 
-<todo — Jachym: the through-line this session is **choice that doesn't branch** — the plank,
+<todo>Jachym: the through-line this session is **choice that doesn't branch** — the plank,
 the twin elevators, and especially the final door/path/elevator picks that all converge. Pairs
 with session 1's fork. Strong candidate for a dedicated NP-02 write-up or a small prototype:
 a room offering three doors that provably lead to one place. Also flag the counterweight as a
-reusable "teach-once" mechanic.>
+reusable "teach-once" mechanic.</todo>
 
 <!-- Session 2 notes updated with scribbles from the session. -->
