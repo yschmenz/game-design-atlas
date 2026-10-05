@@ -8,7 +8,7 @@ patterns: [PP-06, PP-24]
 prototypes: []
 author: jachym
 date: 2026-07-06
-status: done
+status: draft
 ---
 
 ## Principle
