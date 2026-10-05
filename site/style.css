@@ -18,9 +18,9 @@ header { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; align-items: baselin
 .brand:hover { color: var(--ink); }
 .brand-mark { width: 20px; height: 20px; flex: none; }
 nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
-nav a { color: var(--faint); text-decoration: none; font: 13px monospace; }
+nav a { color: var(--mut); text-decoration: none; font: 13px monospace; }
 nav a.active, nav a:hover { color: var(--ink); }
-.nav-search { margin-left: auto; font: 12px monospace; color: var(--faint);
+.nav-search { margin-left: auto; font: 12px monospace; color: var(--mut);
   background: none; border: none; cursor: pointer; padding: 0; }
 .nav-search:hover { color: var(--ink); }
 main { max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 2rem; }
