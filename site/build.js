@@ -15,6 +15,8 @@ function gitTime(file) {
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, '_site');
+/* start clean so pages for deleted/renamed content don't linger */
+fs.rmSync(OUT, { recursive: true, force: true });
 
 /* canonical feel vocabulary — the source of truth (mirrored in CONTRIBUTING.md).
    Add a word here first, then use it; the build warns on anything off-list or missing. */
