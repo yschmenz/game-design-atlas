@@ -117,8 +117,16 @@ const lists = listFiles(path.join(ROOT, 'lists'), '.md').map(f => {
   const l = parseFrontmatter(read(path.join(ROOT, 'lists', f)));
   return { slug: f.replace(/\.md$/, ''), meta: l.meta, body: l.body };
 }).sort((a, b) => String(a.meta.title || '').localeCompare(String(b.meta.title || '')));
+/* a list's games: annotated body lines "- slug — note" (per-item notes), else the `games:` frontmatter */
+const ANN = /^-\s+([a-z0-9-]+)\s*(?:—|–|:)\s*(.+?)\s*$/;
+const listItems = l => {
+  const ann = (l.body || '').split('\n').map(line => line.match(ANN))
+    .filter(m => m && gameBySlug[m[1]]).map(m => ({ g: gameBySlug[m[1]], note: m[2].trim() }));
+  if (ann.length) return ann;
+  return (l.meta.games || []).map(s => ({ g: gameBySlug[s], note: '' })).filter(o => o.g);
+};
 const listsForGame = {};
-for (const l of lists) for (const s of (l.meta.games || [])) (listsForGame[s] ??= []).push(l);
+for (const l of lists) for (const { g } of listItems(l)) (listsForGame[g.slug] ??= []).push(l);
 
 const wings = listDirs(path.join(ROOT, 'atlas')).map(w => {
   const dir = path.join(ROOT, 'atlas', w);
@@ -781,14 +789,6 @@ for (const w of wings) {
 /* ---------- lists / collections ---------- */
 (function buildLists() {
   if (!lists.length) return;
-  /* a list's games: annotated body lines "- slug — note" (per-item notes), else the `games:` frontmatter */
-  const ANN = /^-\s+([a-z0-9-]+)\s*(?:—|–|:)\s*(.+?)\s*$/;
-  const listItems = l => {
-    const ann = (l.body || '').split('\n').map(line => line.match(ANN))
-      .filter(m => m && gameBySlug[m[1]]).map(m => ({ g: gameBySlug[m[1]], note: m[2].trim() }));
-    if (ann.length) return ann;
-    return (l.meta.games || []).map(s => ({ g: gameBySlug[s], note: '' })).filter(o => o.g);
-  };
   const listProse = l => (l.body || '').split('\n')
     .filter(line => { const m = line.match(ANN); return !(m && gameBySlug[m[1]]); }).join('\n').trim();
 
@@ -854,7 +854,7 @@ for (const w of wings) {
     }
   }
   for (const l of lists) {
-    const gs = (l.meta.games || []).map(s => gameBySlug[s] && gameBySlug[s].meta.title).filter(Boolean);
+    const gs = listItems(l).map(x => x.g.meta.title);
     const x = [l.meta.title, l.meta.summary, l.meta.by, ...gs, plain(l.body)].filter(Boolean).join(' ').toLowerCase();
     rec.push({ t: l.meta.title || l.slug, k: 'list', c: l.meta.by ? 'by ' + l.meta.by : '', u: `lists/${l.slug}.html`, x });
   }
