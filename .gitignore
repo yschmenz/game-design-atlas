@@ -4,3 +4,5 @@ _site/
 # session recordings stay local — GitHub blocks files >100MB; link YouTube instead
 *.mp4
 *.mov
+# IDE settings stay local
+.idea/
