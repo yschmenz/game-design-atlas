@@ -99,10 +99,9 @@ const wings = wingDirs.map(w => {
   });
   return { slug: w, dir, file: `atlas/${w}/index.md`, meta: idx.meta, body: idx.body, topics, patterns };
 });
-/* atlas-wide topic/pattern lookups — used only for [[wiki-link]] resolution below, which
-   mirrors build.js's own topicWing/patternRef maps: those resolve a slug/code to whichever
-   wing first defines it, not to the wing a page happens to declare, so a [[link]] is
-   correctly wing-agnostic. */
+/* atlas-wide topic/pattern lookups — used only for [[wiki-link]] resolution below. A bare
+   [[slug]] resolves if any wing has it (build.js's topicRef then picks the linking page's
+   own wing, else the first alphabetically); [[wing/slug]] pins one wing explicitly. */
 const topicSlugs = new Set(wings.flatMap(w => w.topics.map(t => t.slug)));
 const patternCodes = new Set(wings.flatMap(w => w.patterns.map(p => p.meta.pattern).filter(Boolean)));
 
@@ -122,9 +121,13 @@ function wikiResolves(id) {
     const i = id.indexOf(':');
     const ns = id.slice(0, i), rest = id.slice(i + 1);
     if (ns === 'game') return !!gameBySlug[rest];
-    if (ns === 'topic') return topicSlugs.has(rest);
+    if (ns === 'topic') return rest.includes('/') ? wikiResolves(rest) : topicSlugs.has(rest);
     if (ns === 'pattern') return patternCodes.has(rest.toUpperCase());
     return false;
+  }
+  if (id.includes('/')) {
+    const [w, slug] = id.split('/');
+    return !!(wingTopicSlugs[w] && wingTopicSlugs[w].has(slug));
   }
   return patternCodes.has(id.toUpperCase()) || topicSlugs.has(id) || !!gameBySlug[id];
 }
@@ -288,6 +291,12 @@ for (const w of wings) {
   checkLinks(w.file, w.body);
   for (const t of w.topics) checkLinks(t.file, t.body);
   for (const p of w.patterns) checkLinks(p.file, p.body);
+}
+/* the same topic slug in several wings is allowed, but a bare [[slug]] then depends on context */
+for (const slug of topicSlugs) {
+  const owners = topicOwnerWings(slug);
+  if (owners.length > 1) warn(`atlas/${owners[0]}/topics/${slug}.md`,
+    `topic slug "${slug}" also exists in ${owners.slice(1).map(o => `atlas/${o}/topics/`).join(', ')} — bare [[${slug}]] resolves to the linking entry's wing, else ${[...owners].sort()[0]}; use [[wing/${slug}]] to pin one`);
 }
 
 /* ---------- report ---------- */

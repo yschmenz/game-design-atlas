@@ -185,13 +185,22 @@ const typeLabel = { 'reverse-engineering': 'Reverse Engineering', 'rebuild-fragm
 const chip = (txt, cls = '') => `<span class="chip ${cls}">${esc(txt)}</span>`;
 
 /* lookup maps so tags can link to their pages (cross-wing safe) */
-const topicWing = {}, patternRef = {};
+const topicWings = {}, patternRef = {};
 for (const w of wings) {
-  for (const t of w.topics) topicWing[t.slug] ??= w.slug;
+  for (const t of w.topics) (topicWings[t.slug] ??= []).push(w.slug);
   for (const p of w.patterns) patternRef[p.meta.pattern] ??= { wing: w.slug, slug: p.slug };
 }
-const topicChip = (t, p) => topicWing[t]
-  ? `<a class="chip" href="${p}atlas/${topicWing[t]}/topics/${t}.html">${esc(title(t))}</a>`
+for (const s in topicWings) topicWings[s].sort();
+/* a topic slug can live in several wings (e.g. curiosity): resolve it to `wing` when that wing
+   has it, else to the first wing alphabetically that does (null if none) */
+const topicRef = (slug, wing) => {
+  const ws = topicWings[slug];
+  return ws ? (ws.includes(wing) ? wing : ws[0]) : null;
+};
+/* does entry e tag topic `slug` of wing `w`? (an entry's topics belong to its own wing) */
+const tagsTopic = (e, w, slug) => (e.meta.topics || []).includes(slug) && topicRef(slug, e.meta.wing) === w;
+const topicChip = (t, p, wing) => topicRef(t, wing)
+  ? `<a class="chip" href="${p}atlas/${topicRef(t, wing)}/topics/${t}.html">${esc(title(t))}</a>`
   : chip(title(t));
 const patternChip = (id, p) => patternRef[id]
   ? `<a class="chip pp" href="${p}atlas/${patternRef[id].wing}/patterns/${patternRef[id].slug}.html">${esc(id)}</a>`
@@ -205,28 +214,33 @@ const patName = p => {
 
 /* ---------- wiki-links + backlinks ----------
    [[target]] in any body resolves to a game / topic / pattern page.
-   Forms: [[navigation]] (auto), [[game:portal-series]] (explicit), [[PP-01]], [[navigation|see wayfinding]] (alias). */
+   Forms: [[navigation]] (auto), [[game:portal-series]] (explicit), [[PP-01]], [[navigation|see wayfinding]] (alias),
+   [[level-design/curiosity]] (topic in a given wing). A bare topic slug resolves via topicRef against the
+   linking page's wing (`wing` arg), so duplicate slugs across wings stay unambiguous. */
 const wikiMap = {};
 for (const g of games) wikiMap['game:' + g.slug] = { url: `games/${g.slug}/index.html`, title: g.meta.title };
 const WIKI_RE = /\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]/g;
-const wikiKey = raw => {
-  const id = raw.trim();
-  if (id.includes(':')) return wikiMap[id] ? id : null;
+const wikiKey = (raw, wing) => {
+  let id = raw.trim();
+  if (id.startsWith('topic:')) id = id.slice(6);
+  else if (id.includes(':')) return wikiMap[id] ? id : null;
+  if (id.includes('/')) return wikiMap['topic:' + id] ? 'topic:' + id : null;
   if (wikiMap['pattern:' + id.toUpperCase()]) return 'pattern:' + id.toUpperCase();
-  if (wikiMap['topic:' + id]) return 'topic:' + id;
+  const tw = topicRef(id, wing);
+  if (tw) return 'topic:' + tw + '/' + id;
   if (wikiMap['game:' + id]) return 'game:' + id;
   return null;
 };
 /* inline: turn [[x]] into a link relative to the page (p = depth prefix); leave unresolved as-is */
-const linkWiki = (html, p) => html.replace(WIKI_RE, (full, id, alias) => {
-  const k = wikiKey(id);
+const linkWiki = (html, p, wing) => html.replace(WIKI_RE, (full, id, alias) => {
+  const k = wikiKey(id, wing);
   return k ? `<a class="wikilink" href="${p}${wikiMap[k].url}">${esc((alias || wikiMap[k].title).trim())}</a>` : full;
 });
 /* reverse index: which pages [[link]] to each target */
 const backlinks = {};
-const scanLinks = (text, src) => {
+const scanLinks = (text, src, wing) => {
   let m; WIKI_RE.lastIndex = 0;
-  while ((m = WIKI_RE.exec(text || ''))) { const k = wikiKey(m[1]); if (k) (backlinks[k] = backlinks[k] || []).push(src); }
+  while ((m = WIKI_RE.exec(text || ''))) { const k = wikiKey(m[1], wing); if (k) (backlinks[k] = backlinks[k] || []).push(src); }
 };
 const backlinkBlock = (key, p) => {
   const bl = backlinks[key]; if (!bl || !bl.length) return '';
@@ -236,17 +250,17 @@ const backlinkBlock = (key, p) => {
   return `<h2>Linked references</h2><ul class="entry-list">${items}</ul>`;
 };
 for (const w of wings) {
-  for (const t of w.topics) wikiMap['topic:' + t.slug] = { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title };
+  for (const t of w.topics) wikiMap['topic:' + w.slug + '/' + t.slug] = { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title };
   for (const p of w.patterns) wikiMap['pattern:' + p.meta.pattern] = { url: `atlas/${w.slug}/patterns/${p.slug}.html`, title: patName(p) };
 }
 /* pre-pass: index every [[link]] across all writing surfaces (must run before pages render) */
 for (const g of games) {
   scanLinks(g.body, { url: `games/${g.slug}/index.html`, title: g.meta.title });
-  for (const e of g.entries) scanLinks(e.body, { url: `games/${g.slug}/index.html#e-${e.slug}`, title: `${e.meta.title || e.slug} — ${g.meta.title}` });
+  for (const e of g.entries) scanLinks(e.body, { url: `games/${g.slug}/index.html#e-${e.slug}`, title: `${e.meta.title || e.slug} — ${g.meta.title}` }, e.meta.wing);
 }
 for (const w of wings) {
-  for (const t of w.topics) scanLinks(t.body, { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title });
-  for (const p of w.patterns) scanLinks(p.body, { url: `atlas/${w.slug}/patterns/${p.slug}.html`, title: patName(p) });
+  for (const t of w.topics) scanLinks(t.body, { url: `atlas/${w.slug}/topics/${t.slug}.html`, title: t.meta.title }, w.slug);
+  for (const p of w.patterns) scanLinks(p.body, { url: `atlas/${w.slug}/patterns/${p.slug}.html`, title: patName(p) }, w.slug);
 }
 
 /* cover art: local cover.jpg wins, else Steam CDN, else none.
@@ -507,9 +521,9 @@ for (const g of games) {
     return `<article class="entry" id="e-${e.slug}">
       <div class="entry-head"><h2>${esc(e.meta.title || e.slug)}</h2>
       <p class="entry-meta">${esc(typeLabel[e.meta.type] || e.meta.type)}${e.meta.author ? ' · ' + esc(e.meta.author) : ''}${e.meta.date ? ' · ' + esc(String(e.meta.date).slice(0, 10)) : ''}${e.meta.status === 'draft' ? ' · <span class="draft-flag">draft</span>' : ''}</p>
-      <div class="meta">${(e.meta.topics || []).map(t => topicChip(t, '../../')).join('')}
+      <div class="meta">${(e.meta.topics || []).map(t => topicChip(t, '../../', e.meta.wing)).join('')}
       ${(e.meta.patterns || []).map(p => patternChip(p, '../../')).join('')}</div></div>
-      ${dressEntry(linkWiki(md2html(e.body), '../../'))}${protos}</article>`;
+      ${dressEntry(linkWiki(md2html(e.body), '../../', e.meta.wing))}${protos}</article>`;
   }).join('\n');
   const otherProtos = g.prototypes.filter(p => !g.entries.some(e => (e.meta.prototypes || []).includes(p)));
   const looseProtos = otherProtos.length ? `<h2>Prototypes</h2>` + otherProtos.map(p =>
@@ -561,7 +575,7 @@ for (const g of games) {
 }
 
 /* ---------- wings, topics, patterns ---------- */
-const entryWing = e => e.meta.wing || (e.meta.topics || []).map(t => topicWing[t]).find(Boolean);
+const entryWing = e => e.meta.wing || (e.meta.topics || []).map(t => topicRef(t)).find(Boolean);
 const countLabel = n => `<span class="count" aria-label="${n} ${n > 1 ? 'entries' : 'entry'}">· ${n} ${n > 1 ? 'entries' : 'entry'}</span>`;
 for (const w of wings) {
   /* the living front door: latest entries in this wing */
@@ -576,7 +590,7 @@ for (const w of wings) {
   }).join('') + `</div>` : '';
   /* lit spots: topics/patterns with entries glow, empty ones recede */
   const topicLi = t => {
-    const n = allEntries.filter(e => (e.meta.topics || []).includes(t.slug)).length;
+    const n = allEntries.filter(e => tagsTopic(e, w.slug, t.slug)).length;
     return `<li${n ? ' class="lit"' : ''}><a href="topics/${t.slug}.html">${esc(t.meta.title)}</a>${n ? ' ' + countLabel(n) : ''}</li>`;
   };
   /* group core topics by cluster when the wing declares them (contiguous `order` ranges); else flat */
@@ -610,14 +624,14 @@ for (const w of wings) {
      ${provenance ? `<div class="provenance">${md2html(provenance)}</div>` : ''}`, 2));
 
   for (const t of w.topics) {
-    const related = allEntries.filter(e => (e.meta.topics || []).includes(t.slug));
+    const related = allEntries.filter(e => tagsTopic(e, w.slug, t.slug));
     const rel = related.length ? `<h2>Entries</h2><ul class="entry-list">` + related.map(e =>
       `<li><a href="../../../games/${e.game.slug}/index.html#e-${e.slug}">${esc(e.meta.title)}</a>
        <span class="dim">— ${esc(e.game.meta.title)}, ${esc(typeLabel[e.meta.type] || '')} by ${esc(e.meta.author || '?')}</span></li>`).join('') + `</ul>`
       : `<p class="dim">Nothing tagged <code>${t.slug}</code> yet.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'topics', t.slug + '.html'), page(t.meta.title, w.slug,
       `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
-       <h1>${esc(t.meta.title)}</h1>${linkWiki(md2html(t.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../')}${rel}${backlinkBlock('topic:' + t.slug, '../../../')}`, 3, 'reading'));
+       <h1>${esc(t.meta.title)}</h1>${linkWiki(md2html(t.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../', w.slug)}${rel}${backlinkBlock('topic:' + w.slug + '/' + t.slug, '../../../')}`, 3, 'reading'));
   }
   for (const p of w.patterns) {
     const related = allEntries.filter(e => (e.meta.patterns || []).includes(p.meta.pattern));
@@ -627,7 +641,7 @@ for (const w of wings) {
       : `<p class="dim">Not run yet — copy <code>templates/prototype.html</code> and try it.</p>`;
     write(path.join(OUT, 'atlas', w.slug, 'patterns', p.slug + '.html'), page(p.meta.title, w.slug,
       `<p class="crumb"><a href="../../index.html">Knowledge</a> / <a href="../index.html">${esc(w.meta.title || title(w.slug))}</a></p>
-       <h1 class="pattern-title">${esc(patName(p))} <span class="pcode">${esc(p.meta.pattern)}</span></h1>${linkWiki(md2html(p.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../')}${rel}${backlinkBlock('pattern:' + p.meta.pattern, '../../../')}`, 3, 'reading'));
+       <h1 class="pattern-title">${esc(patName(p))} <span class="pcode">${esc(p.meta.pattern)}</span></h1>${linkWiki(md2html(p.body.replace(/<!--[\s\S]*?-->/g, '')), '../../../', w.slug)}${rel}${backlinkBlock('pattern:' + p.meta.pattern, '../../../')}`, 3, 'reading'));
   }
 }
 
@@ -644,7 +658,7 @@ for (const w of wings) {
     return s;
   };
   const wingEntryCount = w => allEntries.filter(e =>
-    (e.meta.topics || []).some(t => topicWing[t] === w.slug) ||
+    (e.meta.topics || []).some(t => topicRef(t, e.meta.wing) === w.slug) ||
     (e.meta.patterns || []).some(pp => patternRef[pp] && patternRef[pp].wing === w.slug)).length;
 
   const cards = wings.map(w => {
@@ -721,7 +735,7 @@ for (const w of wings) {
   /* wing filter: an entry can touch several wings (via its topics + patterns) */
   const entryWings = e => [...new Set([
     ...(e.meta.wing ? [e.meta.wing] : []),
-    ...(e.meta.topics || []).map(t => topicWing[t]).filter(Boolean),
+    ...(e.meta.topics || []).map(t => topicRef(t, e.meta.wing)).filter(Boolean),
     ...(e.meta.patterns || []).map(p => patternRef[p] && patternRef[p].wing).filter(Boolean),
   ])];
   const wingTitle = {}; for (const w of wings) wingTitle[w.slug] = w.meta.title || title(w.slug);
