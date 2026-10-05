@@ -2,6 +2,9 @@
   "name": "game-design-atlas",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "description": "Shared games-pedia of design findings — schmenz & Jachym",
   "scripts": {
     "build": "node site/build.js",
