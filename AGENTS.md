@@ -42,6 +42,8 @@ A vibe (cozy, atmospheric, surreal) is a **mood**, not a genre. If a word is gen
 
 ## Frontmatter by file type
 
+The frontmatter only looks like YAML; the build reads it with a simple line parser. So: a ` #` inside a value starts a comment and cuts off the rest; lists must be one line (`topics: [a, b]`), because multi-line `- item` lists are ignored; and a list splits on every comma, even inside quotes.
+
 ### Game — `games/<slug>/index.md`
 ```yaml
 ---
